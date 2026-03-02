@@ -1,0 +1,86 @@
+# Product Documentation
+
+Product documentation for {{PROJECT_NAME}} lives in a three-tier hierarchy: platform-level specifications that apply across all surfaces, app-level specifications tied to a specific surface's interaction model, and package-level code artifacts (types, schemas, domain models) that carry shared concepts into code.
+
+## Hierarchy
+
+### Platform level (`/docs/product/`)
+
+Product governance and cross-surface specifications. Artifacts here describe what the product does, why, and architectural decisions that apply regardless of surface.
+
+- `vision.md` — north-star product vision
+- `constitution.md` — governance principles and engineering steering expectations
+- `features/{feature}/PRD.md` — product requirements (what and why)
+- `features/{feature}/TRD.md` — technical requirements (how, architecturally)
+- `features/{feature}/stories/` — user stories decomposing the PRD's requirements
+- `features/{feature}/scenarios/` — platform-level behavioral contracts (`.feature` files in Gherkin)
+
+### App level (`/apps/{surface}/docs/`)
+
+Surface-specific specifications. Artifacts here describe behaviors and interactions that are bound to a specific surface's interaction model.
+
+- `features/{feature}/scenarios/` — surface-specific `.feature` files (e.g., {{SURFACE_SCENARIO_EXAMPLE}})
+
+Step definitions (automation code that implements both platform and surface scenarios) live in each app's test directory, not in `docs/`.
+
+### Package level (`/packages/*/`)
+
+Shared types, schemas, hooks, and domain models. Documentation at this level is code-level: READMEs, JSDoc/TSDoc, and inline documentation. Packages carry the "one domain model, many surfaces" principle into code.
+
+## Artifact flow
+
+Each artifact type references the one above it:
+
+```
+Constitution
+  ↓
+PRD (cites constitution principles)
+  ↓
+TRD (references PRD requirements)
+  ↓
+User Stories (decompose PRD requirements into user-facing narratives)
+  ↓
+Platform Scenarios (verify stories' acceptance criteria as behavioral contracts)
+  ↓
+Surface Scenarios (extend with interaction-specific behaviors)
+  ↓
+Step Definitions (automate scenarios as executable tests)
+```
+
+## Boundary rule
+
+A specification belongs at **platform level** if it holds true regardless of whether the user is on {{SURFACE_LIST_PROSE}}.
+
+> "{{PLATFORM_SCENARIO_EXAMPLE}}"
+
+A specification belongs at **app level** if its language references a surface-specific interaction model.
+
+> "{{SURFACE_SCENARIO_EXAMPLE_FULL}}"
+
+When in doubt, start at platform level. Move to app level only when the Given/When/Then language cannot be written without referencing a specific interaction model.
+
+## Directory structure
+
+```
+docs/product/
+├── README.md                 ← this file
+├── AGENTS.md                 ← guidance for AI coding agents
+├── vision.md                 ← north-star product vision
+├── constitution.md           ← governance principles
+└── features/
+    └── {feature}/
+        ├── PRD.md            ← product requirements
+        ├── TRD.md            ← technical requirements
+        ├── stories/          ← user stories (.md)
+        └── scenarios/        ← platform-level .feature files
+
+apps/{surface}/
+├── docs/
+│   └── features/
+│       └── {feature}/
+│           └── scenarios/    ← surface-specific .feature files
+└── tests/ or __tests__/
+    └── features/
+        └── {feature}/
+            └── steps/        ← step definitions (all scenarios)
+```

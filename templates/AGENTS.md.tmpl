@@ -1,0 +1,24 @@
+# Agent Guidance: Product Documentation
+
+When creating or organizing product documentation in this directory, refer to [README.md](./README.md) for the documentation hierarchy, artifact types, directory structure, and boundary rules.
+
+## Key rules
+
+- **PRDs, TRDs, user stories, and platform-level scenarios** belong under `docs/product/features/{feature}/`.
+- **Surface-specific scenarios** (those whose Given/When/Then language references a specific interaction model) belong under `apps/{surface}/docs/features/{feature}/scenarios/`.
+- **Step definitions** (test automation) always belong under each app's test directory, never in `docs/`.
+- Every PRD must include a constitution alignment check. See `./constitution.md`.
+- Every TRD must reference its corresponding PRD.
+{{EXAMPLE_FEATURES_LINE}}
+
+## When adding a new feature
+
+1. Create `docs/product/features/{feature}/PRD.md`
+2. Create `docs/product/features/{feature}/TRD.md`
+3. Add user stories under `docs/product/features/{feature}/stories/` as work progresses
+4. Add platform-level behavioral scenarios under `docs/product/features/{feature}/scenarios/` as acceptance criteria are defined
+5. Surface-specific scenarios and step definitions are created during implementation under the relevant app
+
+## Specification evolution
+
+PRDs and TRDs are living documents — update in place and append to the changelog section (date, change, rationale). For evolution strategies per artifact type, consult the product-development methodology documentation (installed at `.agents/local-skills/product-development/docs/METHODOLOGY.md` or `.agents/skills/product-development/docs/METHODOLOGY.md`).

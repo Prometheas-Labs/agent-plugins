@@ -1,0 +1,82 @@
+# Project Initialization
+
+## Purpose
+
+Set up the `docs/product/` directory structure for a project that will use the product development lifecycle. This is a one-time step that creates the documentation hierarchy, agent guidance, and feature directory.
+
+## What gets created
+
+| File | Purpose |
+|------|---------|
+| `docs/product/README.md` | Documentation hierarchy, artifact flow, boundary rule, directory structure |
+| `docs/product/AGENTS.md` | Agent guidance for organizing product documentation |
+| `docs/product/features/` | Empty directory, ready for the first feature |
+
+Files that already exist are skipped — the script never overwrites.
+
+## Running the script
+
+The initialization script lives at `scripts/init.sh` relative to this skill's root directory.
+
+### Via agent orchestration
+
+1. Identify the project root directory
+2. Read the template files in `templates/` to understand the placeholders
+3. Ask the user for values the script cannot auto-detect (see Placeholders below)
+4. Run the script with the collected values:
+
+```bash
+scripts/init.sh /path/to/project \
+  --project-name "MyProject" \
+  --surfaces "mobile,web" \
+  --platform-scenario-example "Error reports contain no PII." \
+  --surface-scenario-example "Swiping down pauses the session."
+```
+
+### Via standalone execution
+
+```bash
+./scripts/init.sh /path/to/project
+```
+
+The script prompts interactively for any values not provided as arguments.
+
+### Non-interactive mode
+
+```bash
+./scripts/init.sh /path/to/project --non-interactive
+```
+
+Uses auto-detected and default values without prompting.
+
+## Placeholders
+
+| Placeholder | Source | Fallback |
+|-------------|--------|----------|
+| `{{PROJECT_NAME}}` | `package.json` name field, then directory name | Directory name |
+| `{{SURFACES}}` | Subdirectories under `apps/` | `mobile` |
+| `{{SURFACE_LIST_PROSE}}` | Derived from surfaces (e.g., "mobile, web, or tv") | — |
+| `{{PLATFORM_SCENARIO_EXAMPLE}}` | Ask user | "Error reports for non-consented users contain no persistent identifier." |
+| `{{SURFACE_SCENARIO_EXAMPLE}}` | Ask user | "Swiping down during a breathing round triggers haptic feedback." |
+| `{{SURFACE_SCENARIO_EXAMPLE_FULL}}` | Same as above (full sentence) | — |
+| `{{EXAMPLE_FEATURES_LINE}}` | Auto-detected from existing `docs/product/features/` subdirs | Empty (omitted) |
+
+### What to ask the user
+
+The script auto-detects project name and surfaces. The two values that genuinely need user input are the **example scenarios** — these appear in the README's boundary rule section and should reflect the project's domain:
+
+1. **Platform-level scenario example** — a behavioral statement that holds true regardless of surface. Should reference the project's actual domain, not a generic example.
+2. **Surface-specific scenario example** — a behavioral statement that references a specific interaction model (touch gesture, keyboard shortcut, voice command, etc.).
+
+If the user doesn't have examples yet, the defaults are reasonable placeholders that can be edited later.
+
+## Post-initialization
+
+After running the script:
+
+1. Review the generated files and adjust wording if needed
+2. Create `docs/product/constitution.md` — governance principles (use the immutable + supersede evolution strategy)
+3. Create `docs/product/vision.md` — product north star (use the immutable + supersede evolution strategy)
+4. Proceed to Phase 1 (brainstorming) or Phase 2 (requirements) for the first feature
+
+The constitution and vision are not templated because their content is entirely project-specific. They are the foundation that all PRDs reference, so they should be written deliberately rather than scaffolded.
