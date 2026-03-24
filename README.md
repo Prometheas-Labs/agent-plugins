@@ -11,7 +11,7 @@ This skill orchestrates the creation of product artifacts in a deliberate sequen
                      [G1]       [G2a]   [G2]      [G3]             [G4]
 ```
 
-Each arrow is a gate where you review and approve before the agent proceeds. No phase runs without your sign-off.
+Each arrow is a gate where you review and approve before the agent proceeds. No phase runs without your sign-off. For serious spec work, red-team review should run at each gate before the human decision.
 
 ## Getting started
 
@@ -100,6 +100,18 @@ You can:
 - **Request changes** — the agent iterates on the current phase
 - **Reject** — the agent stops and discusses the concern
 
+### Recommended red-team pattern
+
+Human review alone is usually too weak once a feature spans multiple artifacts. Treat red-team review as the default automated pass:
+
+- `G1` — design red-team
+- `G2a` — PRD red-team
+- `G2` — TRD red-team plus constitution alignment
+- `G3` — story red-team plus traceability audit
+- `G4` — scenario red-team, traceability audit, and a final full-chain review
+
+Detailed guidance lives in `skills/product-development/references/review-passes.md`, including shielded sub-agent review and non-interactive review backends for Claude Code, Codex, and GitHub Copilot.
+
 ## Artifacts produced
 
 | Phase | Artifact | Location |
@@ -117,7 +129,7 @@ Platform-level artifacts describe what the product does regardless of which app 
 
 ## Configuration
 
-Configuration is optional. Without it, the skill runs with human-only gates and no automated review passes.
+Configuration is optional. Without it, the skill runs with human-only gates and no automated review passes. That is acceptable for lightweight work, but it leaves real gaps on complex features.
 
 ### Config locations
 
@@ -131,14 +143,25 @@ Project-level settings override user-level.
 Controls what automated review passes run at each gate:
 
 ```toml
+[gates.G1]
+reviews = ["red-team:design"]
+
+[gates.G2a]
+reviews = ["red-team:prd"]
+
 [gates.G2]
-reviews = ["constitution-check"]
+reviews = ["constitution-check", "red-team:trd"]
 
 [gates.G3]
-reviews = ["traceability-audit"]
+reviews = ["traceability-audit", "red-team:stories"]
 
 [gates.G4]
-reviews = ["traceability-audit", "coderabbit:review"]
+reviews = ["traceability-audit", "red-team:scenarios", "red-team:full-chain"]
+
+[reviews.red-team]
+backend = "subagent"      # Or: claude-cli, codex-cli, copilot-cli
+shielded = true           # Keep reviewer isolated from writer context
+structured_output = true  # Findings grouped by severity with file references
 
 [phases]
 use_subagents = true      # Prefer sub-agents for heavy writing phases
@@ -149,9 +172,9 @@ prd_before_trd = true     # Require PRD approval before TRD is written
 
 | Review | What it checks |
 |--------|---------------|
+| `red-team:*` | Adversarial gate review with phase-specific criteria |
 | `constitution-check` | PRD/TRD alignment with project governance principles |
 | `traceability-audit` | Every requirement is covered by a story; every story by a scenario |
-| `coderabbit:review` | General document quality via CodeRabbit |
 | Any skill name | Runs the named skill as a review pass |
 
 ### AGENTS.md
@@ -190,7 +213,8 @@ product-development/
 │   ├── initialization.md                  ← project initialization workflow
 │   ├── phase-2-requirements.md            ← PRD + TRD structure and conventions
 │   ├── phase-3-user-stories.md            ← story format and acceptance criteria
-│   └── phase-4-scenarios.md               ← Gherkin conventions and boundary rules
+│   ├── phase-4-scenarios.md               ← Gherkin conventions and boundary rules
+│   └── review-passes.md                   ← gate-by-gate red-team strategy and review backends
 ├── scripts/
 │   └── init.sh                            ← project initialization script
 ├── templates/
