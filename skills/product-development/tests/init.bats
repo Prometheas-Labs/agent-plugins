@@ -203,6 +203,7 @@ teardown() {
 
 @test "README contains foundation gate section" {
   run "$INIT_SCRIPT" "$TEST_PROJECT" --non-interactive --project-name "X"
+  [ "$status" -eq 0 ]
   grep -q "## Foundation gate" "$TEST_PROJECT/docs/product/README.md"
   grep -q "Foundation Gate" "$TEST_PROJECT/docs/product/README.md"
   grep -q "approved, versioned north-star product vision required before the first PRD" "$TEST_PROJECT/docs/product/README.md"
@@ -225,6 +226,7 @@ teardown() {
 
 @test "AGENTS.md contains vision gate and context-map guidance" {
   run "$INIT_SCRIPT" "$TEST_PROJECT" --non-interactive --project-name "X"
+  [ "$status" -eq 0 ]
   grep -q "Before creating the first feature PRD" "$TEST_PROJECT/docs/product/AGENTS.md"
   grep -q "approved, and has version metadata" "$TEST_PROJECT/docs/product/AGENTS.md"
   grep -q "CONTEXT-MAP.md" "$TEST_PROJECT/docs/product/AGENTS.md"
@@ -243,6 +245,7 @@ teardown() {
 
 @test "init output directs users through foundation gate" {
   run "$INIT_SCRIPT" "$TEST_PROJECT" --non-interactive --project-name "X"
+  [ "$status" -eq 0 ]
   grep -q "Foundation Gate" <<< "$output"
   grep -q "Create and approve docs/product/constitution.md" <<< "$output"
   grep -q "Run Phase 0.5 Product Vision" <<< "$output"
