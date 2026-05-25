@@ -232,6 +232,7 @@ fi
 
 echo ""
 echo "Done. Next steps:"
-echo "  1. Review the generated files under docs/product/"
-echo "  2. Create docs/product/constitution.md and docs/product/vision.md if they don't exist"
-echo "  3. Start your first feature with: docs/product/features/{feature}/PRD.md"
+echo "  1. Review docs/product/README.md and docs/product/AGENTS.md"
+echo "  2. Create and approve docs/product/constitution.md"
+echo "  3. Run the Product Vision workflow to create approved, versioned docs/product/vision.md"
+echo "  4. Start the first PRD only after the Foundation Gate passes"

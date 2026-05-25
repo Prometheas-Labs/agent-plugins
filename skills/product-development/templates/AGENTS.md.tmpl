@@ -7,17 +7,24 @@ When creating or organizing product documentation in this directory, refer to [R
 - **PRDs, TRDs, user stories, and platform-level scenarios** belong under `docs/product/features/{feature}/`.
 - **Surface-specific scenarios** (those whose Given/When/Then language references a specific interaction model) belong under `apps/{surface}/docs/features/{feature}/scenarios/`.
 - **Step definitions** (test automation) always belong under each app's test directory, never in `docs/`.
+- Before creating the first feature PRD, confirm `docs/product/constitution.md` exists and is approved.
+- Before creating the first feature PRD, confirm `docs/product/vision.md` exists, is approved, and has version metadata.
+- If either foundation document is missing, complete the Foundation Gate before Requirements.
+- If product context lives at `docs/product/CONTEXT.md`, ensure root `CONTEXT-MAP.md` points to it so Matt-style `grill-with-docs` agents can discover it.
+- Keep `docs/product/CONTEXT.md` limited to glossary and domain language. Put assumptions in vision/research synthesis and decisions in ADRs.
+- ADRs default to `docs/adr/` unless the repository already has an ADR convention.
 - Every PRD must include a constitution alignment check. See `./constitution.md`.
 - Every TRD must reference its corresponding PRD.
 {{EXAMPLE_FEATURES_LINE}}
 
 ## When adding a new feature
 
-1. Create `docs/product/features/{feature}/PRD.md`
-2. Create `docs/product/features/{feature}/TRD.md`
-3. Add user stories under `docs/product/features/{feature}/stories/` as work progresses
-4. Add platform-level behavioral scenarios under `docs/product/features/{feature}/scenarios/` as acceptance criteria are defined
-5. Surface-specific scenarios and step definitions are created during implementation under the relevant app
+1. Confirm the Foundation Gate has passed before Requirements.
+2. Create `docs/product/features/{feature}/PRD.md`.
+3. Create `docs/product/features/{feature}/TRD.md`.
+4. Add user stories under `docs/product/features/{feature}/stories/` as work progresses.
+5. Add platform-level behavioral scenarios under `docs/product/features/{feature}/scenarios/` as acceptance criteria are defined.
+6. Surface-specific scenarios and step definitions are created during implementation under the relevant app.
 
 ## Specification evolution
 
