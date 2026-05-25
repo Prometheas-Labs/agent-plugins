@@ -14,7 +14,7 @@ This is a docs and skill-resource change. No runtime feature code is expected. T
   - Operational workflow for creating, maintaining, and applying `docs/product/vision.md`.
   - Primary reference loaded by the skill.
 - Create `skills/product-development/references/source/vision-document-guide.md`
-  - Source archive copied from `/Users/yanni/Downloads/Vision Document Guide.md`.
+  - Source archive copied from a local guide file provided by the author.
   - Loaded only when exact guide detail, worksheets, or source fidelity is needed.
 - Modify `skills/product-development/SKILL.md`
   - Add Phase 0.5 and Foundation Gate before first PRD.
@@ -45,7 +45,7 @@ This is a docs and skill-resource change. No runtime feature code is expected. T
 
 - [ ] **Step 1: Add source guide archive**
 
-  Copy `/Users/yanni/Downloads/Vision Document Guide.md` into `skills/product-development/references/source/vision-document-guide.md`.
+  Copy the provided source guide into `skills/product-development/references/source/vision-document-guide.md`. If the source path is not already known, ask the user for the file path or set `VISION_GUIDE_SOURCE` to the local source file before copying.
 
   Keep the guide substantially as-is. Do not rewrite the source archive except for path-safe markdown normalization if needed.
 
@@ -344,10 +344,11 @@ This is a docs and skill-resource change. No runtime feature code is expected. T
   Locate the skill-creator validation script and run it against the skill folder:
 
   ```bash
-  /Users/yanni/.codex/skills/.system/skill-creator/scripts/quick_validate.py skills/product-development
+  quick_validate="$(find "${CODEX_HOME:-$HOME/.codex}/skills/.system/skill-creator" -path "*/scripts/quick_validate.py" -print -quit)"
+  python3 "$quick_validate" skills/product-development
   ```
 
-  If that exact path is unavailable, find `quick_validate.py` under `/Users/yanni/.codex/skills/.system/skill-creator` and run it.
+  If the validator cannot be found, search the installed skill-creator location and run the discovered script.
 
 - [ ] **Step 2: Check progressive disclosure**
 

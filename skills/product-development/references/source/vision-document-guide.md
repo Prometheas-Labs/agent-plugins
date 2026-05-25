@@ -500,7 +500,7 @@ The power of combining this guide with NotebookLM is the ability to iterate:
 
 Complete each line, then synthesize into 1–2 sentences:
 
-```
+```text
 FOR: _______________________________________________
      [Describe your target users in specific, behavioral terms]
 
@@ -534,7 +534,7 @@ OUR PRODUCT: _______________________________________________
 
 For each principle (aim for 5–8):
 
-```
+```text
 PRINCIPLE NAME: _______________________________________________
 
 STATEMENT: _______________________________________________
@@ -555,7 +555,7 @@ EXAMPLE SCENARIO: _______________________________________________
 
 For each surface:
 
-```
+```text
 SURFACE: _______________________________________________
 
 PRIMARY USER(S): _______________________________________________
@@ -588,7 +588,7 @@ RELATIONSHIP TO OTHER SURFACES:
 
 ### 7.6 North Star Metric Definition Template
 
-```
+```text
 NORTH STAR METRIC: _______________________________________________
 
 DEFINITION: _______________________________________________
