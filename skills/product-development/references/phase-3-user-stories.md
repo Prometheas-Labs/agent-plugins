@@ -1,4 +1,6 @@
-# Phase 3: User Stories
+# User Stories
+
+This file keeps its `phase-3-user-stories.md` name as a legacy compatibility path. The public workflow name is User Stories.
 
 ## Inputs
 
@@ -57,7 +59,7 @@ Each criterion must be:
 - **Specific** — no ambiguity about what "done" means
 - **Independent** — doesn't depend on other criteria being checked first
 
-Write criteria in plain language, not Gherkin. Gherkin comes in Phase 4.
+Write criteria in plain language, not Gherkin. Gherkin comes in BDD Scenarios.
 
 **Good:** "Error reports for opted-out users contain no persistent identifier"
 **Bad:** "Error reports work correctly" (not testable — what does "correctly" mean?)
@@ -72,7 +74,7 @@ Every story references one or more PRD requirements by ID (FR-1, NFR-2, etc.). E
 
 ## Platform-Level Artifacts
 
-User stories describe **user intent**, not surface-specific interactions. A story like "As a practitioner, I want my breathwork errors reported automatically" applies to every surface. The surface-specific details (how errors manifest on mobile vs TV) are captured in Phase 4 scenarios.
+User stories describe **user intent**, not surface-specific interactions. A story like "As a practitioner, I want my breathwork errors reported automatically" applies to every surface. The surface-specific details (how errors manifest on mobile vs TV) are captured in BDD Scenarios.
 
 If a story can only apply to one surface, note the surface in the story's metadata but keep the file at platform level. This makes it visible in cross-surface planning.
 
@@ -90,7 +92,7 @@ Done and archived stories remain in `stories/` for traceability. If the director
 
 ## Quality Criteria
 
-Stories are ready for Phase 4 when:
+Stories are ready for BDD Scenarios when:
 - Every PRD functional requirement is covered by at least one story
 - Acceptance criteria are testable and specific
 - Stories are small enough to implement individually

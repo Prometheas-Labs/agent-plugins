@@ -248,7 +248,7 @@ teardown() {
   [ "$status" -eq 0 ]
   grep -q "Foundation Gate" <<< "$output"
   grep -q "Create and approve docs/product/constitution.md" <<< "$output"
-  grep -q "Run Phase 0.5 Product Vision" <<< "$output"
+  grep -q "Run the Product Vision workflow" <<< "$output"
   grep -q "approved, versioned docs/product/vision.md" <<< "$output"
   ! grep -q "Start your first feature with: docs/product/features/{feature}/PRD.md" <<< "$output"
 }

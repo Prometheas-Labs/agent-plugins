@@ -17,12 +17,13 @@ This is a docs and skill-resource change. No runtime feature code is expected. T
   - Source archive copied from a local guide file provided by the author.
   - Loaded only when exact guide detail, worksheets, or source fidelity is needed.
 - Modify `skills/product-development/SKILL.md`
-  - Add Phase 0.5 and Foundation Gate before first PRD.
-  - Update phase-selection guidance so Phase 2 cannot bypass the Foundation Gate.
+  - Add Foundation Stage and Foundation Gate before first PRD.
+  - Update workflow-selection guidance so Requirements cannot bypass the Foundation Gate.
   - Point to `references/product-vision.md`.
 - Modify `skills/product-development/references/initialization.md`
-  - Explain post-init foundation-doc requirement.
+  - Explain post-init Foundation Gate requirement.
 - Modify `skills/product-development/references/phase-2-requirements.md`
+  - Legacy compatibility path for the Requirements workflow.
   - Make approved `docs/product/constitution.md` and approved, versioned `docs/product/vision.md` required before the first PRD.
   - Add PRD vision alignment checks.
 - Modify `skills/product-development/templates/README.md.tmpl`
@@ -118,7 +119,7 @@ This is a docs and skill-resource change. No runtime feature code is expected. T
   git commit -m "docs: add product vision reference resources"
   ```
 
-## Task 2: Wire Vision Phase into Skill Lifecycle
+## Task 2: Wire Foundation Stage into Skill Workflow Map
 
 **Files:**
 
@@ -128,28 +129,29 @@ This is a docs and skill-resource change. No runtime feature code is expected. T
 
 **Steps:**
 
-- [ ] **Step 1: Update lifecycle diagram in `SKILL.md`**
+- [ ] **Step 1: Update public workflow map in `SKILL.md`**
 
-  Insert Foundation Docs after initialization and before first Phase 2 PRD work. Do not block idea brainstorming or design exploration on this phase; block Phase 2 PRD creation.
+  Insert Foundation Stage after Project Setup and before first Requirements PRD work. Do not block idea brainstorming or design exploration on this stage; block first Requirements PRD creation.
 
   ```text
-  [Initialize project]
+  [Project Setup]
     ↓
-  Foundation Docs
-    ↓  [F1: human approves constitution + versioned vision]
-  Idea
+  Foundation Stage
+    - Product Constitution approval
+    - Product Vision workflow
+    - future product-anchor workflows
+    ↓  [Foundation Gate: human approves constitution + versioned vision]
+  Discovery and Design
     ↓  (brainstorming skill)
-  Design
-    ↓  [G1: human approves design]
-  PRD
+  Requirements
   ```
 
-- [ ] **Step 2: Add Phase 0.5 in `SKILL.md`**
+- [ ] **Step 2: Add Product Vision workflow in `SKILL.md`**
 
   Add a short section:
 
   ```md
-  ### Phase 0.5: Product Vision
+  ### Product Vision Workflow
 
   **Trigger:** `docs/product/vision.md` is missing, the user asks to create or update product vision, or the agent is about to create the first feature PRD.
 
@@ -157,19 +159,19 @@ This is a docs and skill-resource change. No runtime feature code is expected. T
 
   **Output:** Approved, versioned `docs/product/vision.md`; optional `CONTEXT-MAP.md`, `docs/product/CONTEXT.md`, and ADRs when `grill-with-docs` is used.
 
-  **Gate F1:** Do not create the first PRD until the user approves `docs/product/constitution.md` and approved, versioned `docs/product/vision.md` exists.
+  **Foundation Gate:** Do not create the first PRD until the user approves `docs/product/constitution.md` and approved, versioned `docs/product/vision.md` exists.
   ```
 
-- [ ] **Step 3: Update Phase 2 in `SKILL.md`**
+- [ ] **Step 3: Update Requirements in `SKILL.md`**
 
-  In Phase 2, state that approved `docs/product/constitution.md` and approved, versioned `docs/product/vision.md` are required inputs. Missing foundation docs block Phase 2.
+  In Requirements, state that approved `docs/product/constitution.md` and approved, versioned `docs/product/vision.md` are required inputs. Missing foundation documents block the first PRD.
 
-- [ ] **Step 4: Update phase-selection guidance in `SKILL.md`**
+- [ ] **Step 4: Update workflow-selection guidance in `SKILL.md`**
 
-  Find any phase-selection or shortcut guidance that lets agents proceed directly to Phase 2 when requirements are clear. Add this constraint:
+  Find any workflow-selection or shortcut guidance that lets agents proceed directly to Requirements when requirements are clear. Add this constraint:
 
   ```md
-  Clear requirements may skip brainstorming only after the Foundation Gate passes. If this is the first PRD and `docs/product/constitution.md` or approved, versioned `docs/product/vision.md` is missing, run the foundation phase before Phase 2.
+  Clear requirements may skip brainstorming only after the Foundation Gate passes. If this is the first PRD and `docs/product/constitution.md` or approved, versioned `docs/product/vision.md` is missing, complete the Foundation Stage before Requirements.
   ```
 
 - [ ] **Step 5: Update reference list in `SKILL.md`**
@@ -182,7 +184,7 @@ This is a docs and skill-resource change. No runtime feature code is expected. T
 
   ```md
   1. Create and approve `docs/product/constitution.md` — governance principles.
-  2. Run Phase 0.5 Product Vision before the first PRD.
+  2. Run the Product Vision workflow before the first PRD.
   3. Create approved, versioned `docs/product/vision.md` through the Vision Grill.
   4. Proceed to the first PRD only after the Foundation Gate passes.
   ```
@@ -209,7 +211,7 @@ This is a docs and skill-resource change. No runtime feature code is expected. T
 
   ```bash
   git add skills/product-development/SKILL.md skills/product-development/references/initialization.md skills/product-development/references/phase-2-requirements.md
-  git commit -m "docs: require foundation docs before first PRD"
+  git commit -m "docs: require foundation stage before first PRD"
   ```
 
 ## Task 3: Update Generated Product Docs Templates
@@ -261,7 +263,7 @@ This is a docs and skill-resource change. No runtime feature code is expected. T
   ```md
   - Before creating the first feature PRD, confirm `docs/product/constitution.md` exists and is approved.
   - Before creating the first feature PRD, confirm `docs/product/vision.md` exists, is approved, and has version metadata.
-  - If either foundation document is missing, complete the Foundation Gate before Phase 2 requirements.
+  - If either foundation document is missing, complete the Foundation Gate before Requirements.
   - If product context lives at `docs/product/CONTEXT.md`, ensure root `CONTEXT-MAP.md` points to it so Matt-style `grill-with-docs` agents can discover it.
   - Keep `docs/product/CONTEXT.md` limited to glossary and domain language. Put assumptions in vision/research synthesis and decisions in ADRs.
   - ADRs default to `docs/adr/` unless the repository already has an ADR convention.
@@ -274,7 +276,7 @@ This is a docs and skill-resource change. No runtime feature code is expected. T
   ```text
   1. Review docs/product/README.md and docs/product/AGENTS.md
   2. Create and approve docs/product/constitution.md
-  3. Run Phase 0.5 Product Vision to create approved, versioned docs/product/vision.md
+  3. Run the Product Vision workflow to create approved, versioned docs/product/vision.md
   4. Start the first PRD only after the Foundation Gate passes
   ```
 
@@ -375,7 +377,7 @@ This is a docs and skill-resource change. No runtime feature code is expected. T
   Search for contradictory first-PRD guidance:
 
   ```bash
-  rg -n "first PRD|first feature PRD|vision.md|constitution.md|Foundation Gate|Product Vision|Phase 0.5|Phase 2|Start your first feature" skills/product-development
+  rg -n "first PRD|first feature PRD|vision.md|constitution.md|Foundation Gate|Product Vision workflow|Requirements|Start your first feature" skills/product-development
   ```
 
   Confirm no file says the first PRD may proceed before approved constitution and approved, versioned vision exist.

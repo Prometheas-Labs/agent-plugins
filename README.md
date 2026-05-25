@@ -1,17 +1,18 @@
 # Product Development Lifecycle Skill
 
-A skill that guides AI coding agents through a structured product development lifecycle, from initial idea through to implementation planning.
+A skill that guides AI coding agents through a structured product development lifecycle, from project setup through implementation planning.
 
 ## What it does
 
-This skill orchestrates the creation of product artifacts in a deliberate sequence, with human review gates between each phase:
+This skill orchestrates the creation of product artifacts in a deliberate sequence, with human review gates between each workflow:
 
 ```
-[Init]  →  Idea  →  Design  →  PRD  →  TRD  →  User Stories  →  BDD Scenarios  →  Implementation Plan
-                     [G1]       [G2a]   [G2]      [G3]             [G4]
+Project Setup  →  Foundation Stage  →  Discovery and Design  →  Requirements  →  User Stories  →  BDD Scenarios  →  Implementation Planning
+                         ↓                       ↓                    ↓                ↓                ↓
+                  Foundation Gate          Design Approval       PRD/TRD Approval  Story Approval  Scenario Approval
 ```
 
-Each arrow is a gate where you review and approve before the agent proceeds. No phase runs without your sign-off.
+Foundation Stage contains Product Constitution approval, the Product Vision workflow, and future product-anchor workflows. Foundation Gate blocks the first PRD until constitution is approved and vision is approved and versioned. Discovery and Design can still happen before the gate passes. Each approval point pauses for your review before the agent proceeds.
 
 ## Getting started
 
@@ -83,9 +84,9 @@ bats tests/init.bats
 
 Tell your agent what you want to build. The skill activates on phrases like "create a feature", "write a PRD", "plan a feature", etc.
 
-You don't need to start at the beginning. If you already have a PRD, say "write user stories for the analytics feature" and the agent enters at Phase 3.
+You don't need to start at the beginning. If you already have a PRD, say "write user stories for the analytics feature" and the agent enters the User Stories workflow.
 
-### During a phase
+### During a workflow
 
 The agent will either:
 - **Collaborate with you** in the main conversation (for smaller features or when you want to shape the artifact interactively)
@@ -96,22 +97,24 @@ The agent will either:
 The agent pauses and presents the artifacts for your review. If you've configured automated review passes (see Configuration), those run first and findings are included.
 
 You can:
-- **Approve** — the agent proceeds to the next phase
-- **Request changes** — the agent iterates on the current phase
+- **Approve** — the agent proceeds to the next workflow
+- **Request changes** — the agent iterates on the current workflow
 - **Reject** — the agent stops and discusses the concern
 
 ## Artifacts produced
 
-| Phase | Artifact | Location |
-|-------|----------|----------|
-| 0 | Documentation structure | `docs/product/README.md`, `docs/product/AGENTS.md` |
-| 1 | Design document | `docs/plans/YYYY-MM-DD-<topic>-design.md` |
-| 2 | PRD | `docs/product/features/{feature}/PRD.md` |
-| 2 | TRD | `docs/product/features/{feature}/TRD.md` |
-| 3 | User stories | `docs/product/features/{feature}/stories/*.md` |
-| 4 | Platform scenarios | `docs/product/features/{feature}/scenarios/*.feature` |
-| 4 | Surface scenarios | `apps/{surface}/docs/features/{feature}/scenarios/*.feature` |
-| 5 | Implementation plan | `docs/plans/YYYY-MM-DD-<topic>.md` |
+| Workflow | Artifact | Location |
+|----------|----------|----------|
+| Project Setup | Documentation structure | `docs/product/README.md`, `docs/product/AGENTS.md` |
+| Foundation Stage | Constitution | `docs/product/constitution.md` |
+| Foundation Stage | Product vision | `docs/product/vision.md`, `docs/product/visions/vision-vX.Y.Z.md` |
+| Discovery and Design | Design document | `docs/plans/YYYY-MM-DD-<topic>-design.md` |
+| Requirements | PRD | `docs/product/features/{feature}/PRD.md` |
+| Requirements | TRD | `docs/product/features/{feature}/TRD.md` |
+| User Stories | User stories | `docs/product/features/{feature}/stories/*.md` |
+| BDD Scenarios | Platform scenarios | `docs/product/features/{feature}/scenarios/*.feature` |
+| BDD Scenarios | Surface scenarios | `apps/{surface}/docs/features/{feature}/scenarios/*.feature` |
+| Implementation Planning | Implementation plan | `docs/plans/YYYY-MM-DD-<topic>.md` |
 
 Platform-level artifacts describe what the product does regardless of which app surface (mobile, web, TV) delivers it. Surface-specific artifacts capture behaviors tied to a particular interaction model (touch gestures, remote control, etc.).
 
@@ -131,17 +134,17 @@ Project-level settings override user-level.
 Controls what automated review passes run at each gate:
 
 ```toml
-[gates.G2]
+[review_gates.requirements]
 reviews = ["constitution-check"]
 
-[gates.G3]
+[review_gates.user_stories]
 reviews = ["traceability-audit"]
 
-[gates.G4]
+[review_gates.bdd_scenarios]
 reviews = ["traceability-audit", "coderabbit:review"]
 
-[phases]
-use_subagents = true      # Prefer sub-agents for heavy writing phases
+[workflows]
+use_subagents = true      # Prefer sub-agents for heavy writing workflows
 prd_before_trd = true     # Require PRD approval before TRD is written
 ```
 
@@ -163,7 +166,7 @@ Natural language instructions that review agents receive as context. Use this fo
 When reviewing PRDs, pay attention to privacy implications.
 Our default stance is zero tracking unless explicitly justified.
 
-## Phase 2 Notes
+## Requirements Notes
 All TRDs must follow the vendor-agnostic facade pattern.
 ```
 
@@ -188,9 +191,12 @@ product-development/
 │   └── METHODOLOGY.md                     ← specification evolution strategies
 ├── references/
 │   ├── initialization.md                  ← project initialization workflow
-│   ├── phase-2-requirements.md            ← PRD + TRD structure and conventions
-│   ├── phase-3-user-stories.md            ← story format and acceptance criteria
-│   └── phase-4-scenarios.md               ← Gherkin conventions and boundary rules
+│   ├── product-vision.md                  ← Product Vision workflow and Foundation Gate
+│   ├── source/
+│   │   └── vision-document-guide.md       ← archived source guide
+│   ├── phase-2-requirements.md            ← Requirements workflow; legacy compatibility path
+│   ├── phase-3-user-stories.md            ← User Stories workflow; legacy compatibility path
+│   └── phase-4-scenarios.md               ← BDD Scenarios workflow; legacy compatibility path
 ├── scripts/
 │   └── init.sh                            ← project initialization script
 ├── templates/
@@ -200,7 +206,7 @@ product-development/
     └── init.bats                          ← BATS tests for init.sh
 ```
 
-Reference files are loaded by the agent only when it enters the corresponding phase, keeping context focused.
+Reference files are loaded by the agent only when it enters the corresponding workflow, keeping context focused. The `phase-*` filenames remain for compatibility.
 
 ## Installation
 

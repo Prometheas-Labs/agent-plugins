@@ -1,12 +1,14 @@
-# Phase 2: Requirements (PRD + TRD)
+# Requirements (PRD + TRD)
+
+This file keeps its `phase-2-requirements.md` name as a legacy compatibility path. The public workflow name is Requirements.
 
 ## Inputs
 
-- Approved design document from Phase 1 (brainstorming)
+- Approved design document from Discovery and Design
 - `docs/product/constitution.md` — approved governance principles. Required before the first PRD.
 - `docs/product/vision.md` — approved, versioned product north star. Required before the first PRD.
 
-If either foundation document is missing, unapproved, or the vision is not versioned, stop Phase 2 and complete the Foundation Gate first. Clear requirements do not bypass this gate for the first PRD.
+If either foundation document is missing, unapproved, or the vision is not versioned, stop Requirements and complete the Foundation Gate first. Clear requirements do not bypass this gate for the first PRD.
 
 If the PRD would change strategic direction, stop and supersede the vision before writing the PRD.
 
@@ -76,14 +78,14 @@ The Technical Requirements Document describes **how**, architecturally.
 
 ## Quality Criteria
 
-A PRD is ready for Phase 3 when:
+A PRD is ready for User Stories when:
 - All constitutional principles are PASS (or RISK with documented mitigation)
 - Vision alignment is explicit: target users, value proposition, platform principles, and relevant surface vision are consistent with `docs/product/vision.md`
 - User stories have clear acceptance criteria
 - Functional requirements are prioritized
 - Privacy model is explicit about what is and isn't collected
 
-A TRD is ready for Phase 3 when:
+A TRD is ready for User Stories when:
 - Architecture diagram is clear and matches the file structure
 - Public API signatures are defined
 - Dependencies are listed

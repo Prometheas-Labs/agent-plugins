@@ -16,14 +16,14 @@ Use this reference when:
 - A proposed PRD, TRD, story, scenario, implementation plan, or delivery result appears to change strategic product direction.
 - A product-planning task needs to check alignment with the approved vision.
 
-## Hard gate before first PRD
+## Foundation Gate before first PRD
 
 First feature PRD work is blocked until both foundation documents exist and are approved:
 
 - `docs/product/constitution.md` — approved product governance principles.
 - `docs/product/vision.md` — approved, versioned product north star.
 
-Do not create the first feature PRD while either document is missing, unapproved, or unversioned. Clear requirements may skip brainstorming only after this foundation gate passes.
+Do not create the first feature PRD while either document is missing, unapproved, or unversioned. Clear requirements may skip brainstorming only after Foundation Gate passes.
 
 ## Preferred dependency: grill-with-docs
 

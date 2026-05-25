@@ -1,4 +1,6 @@
-# Phase 4: BDD Scenarios
+# BDD Scenarios
+
+This file keeps its `phase-4-scenarios.md` name as a legacy compatibility path. The public workflow name is BDD Scenarios.
 
 Scenarios are **living + self-verifying** artifacts (see `docs/METHODOLOGY.md`). They are tied to automated tests via step definitions. When behavior changes, the scenario is updated and the test suite validates that the specification matches reality. A failing scenario means the spec and the implementation have diverged.
 
@@ -123,7 +125,7 @@ This makes it possible to audit which stories have scenario coverage and which d
 
 ## Quality Criteria
 
-Scenarios are ready for Phase 5 (implementation planning) when:
+Scenarios are ready for Implementation Planning when:
 - Every user story acceptance criterion has at least one corresponding scenario
 - Platform-level and surface-specific scenarios are filed in the correct locations
 - Scenarios use domain language, not implementation language

@@ -4,7 +4,7 @@ Date: 2026-05-25
 
 ## Goal
 
-Integrate the attached Vision Document Guide into the `product-development` skill so agents can create, maintain, and use a product vision document as part of the product development lifecycle.
+Integrate the attached Vision Document Guide into the `product-development` skill so agents can create, maintain, and use a product vision document as part of the product-development workflow set.
 
 The integration must preserve progressive disclosure:
 
@@ -15,17 +15,16 @@ The integration must preserve progressive disclosure:
 
 ## Current Context
 
-The skill currently defines this lifecycle:
+The skill should expose this public workflow map:
 
 ```text
-Initialize project
-Idea
-Design
-PRD
-TRD
+Project Setup
+Foundation Stage
+Discovery and Design
+Requirements
 User Stories
 BDD Scenarios
-Implementation Plan
+Implementation Planning
 ```
 
 The current docs already expect foundation artifacts:
@@ -36,30 +35,31 @@ The current docs already expect foundation artifacts:
 
 `references/initialization.md` says vision and constitution are not scaffolded because their contents are project-specific. This design keeps that principle: initialization may create the directory structure, but the product vision is produced through an interactive grilling workflow, not a generic template.
 
-## Lifecycle Change
+## Workflow Map Change
 
-Add `Phase 0.5: Product Vision` between initialization and first feature PRD.
+Add a `Foundation Stage` after Project Setup and before the first feature PRD.
 
 ```text
-Initialize docs
+Project Setup
   |
-Vision Grill
+Foundation Stage
+  - Product Constitution approval
+  - Product Vision workflow
+  - future product-anchor workflows
   |
-Gate F1: user approves foundation docs
-  |
-docs/product/vision.md
+Foundation Gate: user approves constitution + versioned vision
   |
 First PRD allowed
 ```
 
-Phase 0.5 is required before the first Phase 2 PRD, not before brainstorming or design exploration. Agents may brainstorm and shape feature ideas before the foundation is complete, but Phase 2 must block until the Foundation Gate passes.
+The Foundation Stage is required before the first Requirements PRD, not before brainstorming or design exploration. Agents may brainstorm and shape feature ideas before the foundation is complete, but the first Requirements PRD must block until the Foundation Gate passes.
 
 The Foundation Gate requires:
 
 - approved `docs/product/constitution.md`
 - approved, versioned `docs/product/vision.md`
 
-The agent should not create a first PRD and merely note missing foundation docs as a risk. Missing foundation docs are a hard gate for Phase 2.
+The agent should not create a first PRD and merely note missing foundation documents as a risk. Missing foundation documents are a hard gate for the Requirements workflow.
 
 ## Vision Grill Workflow
 
@@ -76,7 +76,7 @@ The vision workflow should:
 9. Run a red-team pass for contradictions, weak evidence, and over-commitment before presenting a draft.
 10. Synthesize a draft `docs/product/vision.md`.
 11. Present the vision draft and any proposed side-effect docs (`CONTEXT.md`, `CONTEXT-MAP.md`, ADRs) for user approval.
-12. Only after approval, allow Phase 2 PRD work.
+12. Only after approval, allow Requirements PRD work.
 
 ## Matt Pocock Skill Integration
 
@@ -195,19 +195,20 @@ Progressive disclosure rule:
 
 Update `skills/product-development/SKILL.md`:
 
-- Add Phase 0.5 to the lifecycle.
+- Add Foundation Stage to the public workflow map.
 - Mention `references/product-vision.md`.
-- State that Phase 2 is blocked until approved `docs/product/constitution.md` and approved, versioned `docs/product/vision.md` exist.
+- State that the first Requirements PRD is blocked until approved `docs/product/constitution.md` and approved, versioned `docs/product/vision.md` exist.
 - Keep the body concise.
 
 Update `skills/product-development/references/initialization.md`:
 
-- After initialization, direct the agent to create foundation docs before the first PRD.
+- After initialization, direct the agent to complete the Foundation Stage before the first PRD.
 - Clarify that vision is produced by grilling, not scaffolding.
 - Include the `grill-with-docs` recommendation behavior.
 
 Update `skills/product-development/references/phase-2-requirements.md`:
 
+- Treat this filename as a legacy compatibility path for the Requirements workflow.
 - Make approved `docs/product/constitution.md` and approved, versioned `docs/product/vision.md` required inputs for the first PRD.
 - Add vision alignment expectations to PRD readiness.
 - Block first PRD if either foundation document is missing.
@@ -228,8 +229,8 @@ Update `skills/product-development/templates/AGENTS.md.tmpl`:
 
 Update `skills/product-development/scripts/init.sh`:
 
-- Update the final next-step output so it directs users to create foundation docs before the first PRD.
-- Remove any wording that says users can start the first feature PRD immediately after init when foundation docs are missing.
+- Update the final next-step output so it directs users to complete the Foundation Stage before the first PRD.
+- Remove any wording that says users can start the first feature PRD immediately after init when foundation documents are missing.
 
 ## Validation
 
@@ -241,7 +242,7 @@ After implementation:
 4. Confirm no generated template contradicts Matt's `grill-with-docs` discovery model.
 5. Confirm missing constitution or vision is described as a blocker before first PRD.
 6. Confirm `scripts/init.sh` stdout matches the Foundation Gate.
-7. Confirm `SKILL.md` phase-selection guidance cannot bypass the Foundation Gate for Phase 2.
+7. Confirm `SKILL.md` workflow-selection guidance cannot bypass the Foundation Gate for the first Requirements PRD.
 
 ## Out of Scope
 

@@ -1,39 +1,41 @@
 ---
 name: product-development
-description: "This skill should be used when the user asks to 'create a feature', 'write a PRD', 'write a TRD', 'write a product vision', 'create a product vision', 'run a vision grill', 'add user stories', 'write scenarios', 'create acceptance criteria', 'plan a feature', 'initialize product docs', 'set up product documentation', or mentions any phase of product development from idea through implementation planning. Guides the full product development lifecycle: Initialization -> Foundation Docs/Product Vision -> Idea -> Brainstorm -> PRD + TRD -> User Stories -> BDD Scenarios -> Implementation Plan, with a Foundation Gate before the first PRD."
+description: "Use when the user asks to create a feature, write a PRD or TRD, create or maintain product vision, run a vision grill, add user stories, write scenarios, create acceptance criteria, plan implementation, initialize product docs, set up product documentation, or work anywhere in the product development lifecycle from project setup through implementation planning."
 ---
 
 # Product Development Lifecycle
 
-Guide features through the product development lifecycle from idea to implementation plan. Each phase produces specific artifacts that feed into the next. Phase transitions are gated by human review, with optional automated review passes.
+Guide features through the product development lifecycle from idea to implementation plan. Each workflow produces specific artifacts that feed into the next. Workflow transitions are gated by human review, with optional automated review passes.
 
-## Phase Sequence
+## Lifecycle Map
 
 ```
-[Initialize project]                          ←  one-time setup (scripts/init.sh)
+[Project Setup]                              ← one-time setup (scripts/init.sh)
   ↓
-Foundation Docs
-  ↓  [F1: human approves constitution + versioned vision before first PRD]
-Idea
-  ↓  (brainstorming skill)
-Design
-  ↓  [G1: human approves design]
-PRD
-  ↓  [G2a: human approves PRD]
-TRD
-  ↓  [G2: human approves PRD + TRD]  →  optional review pass
+Foundation Stage
+  ├─ Product Constitution approval
+  ├─ Product Vision workflow (Vision Grill)
+  ├─ future product-anchor workflows
+  └─ Foundation Gate: approved constitution + approved, versioned vision before first PRD
+  ↓
+Discovery and Design
+  ↓  [human approves design]
+Requirements
+  ├─ PRD  [human approves before TRD]
+  └─ TRD  [human approves PRD + TRD]  → optional review pass
+  ↓
 User Stories
-  ↓  [G3: human approves stories]    →  optional review pass
+  ↓  [human approves stories]         → optional review pass
 BDD Scenarios
-  ↓  [G4: human approves scenarios]  →  optional review pass
-Implementation Plan
+  ↓  [human approves scenarios]       → optional review pass
+Implementation Planning
 ```
 
-Foundation Docs do not block idea brainstorming or design exploration. They block creation of the first Phase 2 PRD.
+Foundation Stage does not block brainstorming or design exploration. Foundation Gate blocks creation of the first PRD. Later PRDs must check constitution and vision alignment before proceeding.
 
-## Phase Overview
+## Workflows
 
-### Phase 0: Project Initialization
+### Project Setup
 
 **Trigger:** The project does not yet have a `docs/product/` directory, or the user asks to "initialize product docs" or "set up product documentation."
 
@@ -44,19 +46,24 @@ Foundation Docs do not block idea brainstorming or design exploration. They bloc
 - `docs/product/AGENTS.md` — agent guidance for organizing product docs
 - `docs/product/features/` — empty directory ready for the first feature
 
-**This phase runs once per project.** Skip if `docs/product/README.md` already exists.
+**This workflow runs once per project.** Skip if `docs/product/README.md` already exists.
 
-### Phase 0.5: Product Vision
+### Foundation Stage
 
-**Trigger:** `docs/product/vision.md` is missing, the user asks to create or update product vision, or the agent is about to create the first feature PRD.
+**Trigger:** `docs/product/constitution.md` or `docs/product/vision.md` is missing, the user asks to create or update product-anchor docs, or the agent is about to create the first feature PRD.
 
-**Process:** Run the Vision Grill. Consult `references/product-vision.md` for the workflow, `grill-with-docs` dependency behavior, context/ADR coordination, and vision versioning.
+**Process:** Establish product-anchor docs in this hierarchy:
 
-**Output:** Approved, versioned `docs/product/vision.md`; optional `CONTEXT-MAP.md`, `docs/product/CONTEXT.md`, and ADRs when approved and used.
+1. Product Constitution approval: approved `docs/product/constitution.md`. Constitution-grill is future work and is not implemented by this skill revision.
+2. Product Vision workflow: run the Vision Grill. Consult `references/product-vision.md` for `grill-with-docs` dependency behavior, context/ADR coordination, and vision versioning.
+3. Future product-anchor workflows: add here when approved.
+4. Foundation Gate: complete only when `docs/product/constitution.md` is approved and approved, versioned `docs/product/vision.md` exists.
 
-**Gate F1:** Do not create the first PRD until the user approves `docs/product/constitution.md` and approved, versioned `docs/product/vision.md` exists.
+**Output:** Approved `docs/product/constitution.md`; approved, versioned `docs/product/vision.md`; optional `CONTEXT-MAP.md`, `docs/product/CONTEXT.md`, and ADRs when approved and used.
 
-### Phase 1: Idea to Design
+**Foundation Gate:** Do not create the first PRD until the user approves `docs/product/constitution.md` and approved, versioned `docs/product/vision.md` exists.
+
+### Discovery and Design
 
 **Trigger:** An idea, feature request, or problem statement arrives.
 
@@ -64,27 +71,27 @@ Foundation Docs do not block idea brainstorming or design exploration. They bloc
 
 **Output:** Approved design document at `docs/plans/YYYY-MM-DD-<topic>-design.md`.
 
-**Gate G1:** Do not proceed to Phase 2 until the design is approved.
+**Gate:** Do not proceed to Requirements until the design is approved.
 
-### Phase 2: Requirements (PRD + TRD)
+### Requirements
 
 **Trigger:** Design document is approved.
 
-**Required inputs:** Approved design document, approved `docs/product/constitution.md`, and approved, versioned `docs/product/vision.md`. Missing foundation docs block Phase 2.
+**Required inputs:** Approved design document, approved `docs/product/constitution.md`, and approved, versioned `docs/product/vision.md`. Missing foundation documents block first-PRD requirements work.
 
 **Process:** Create product and technical requirements documents. Consult `references/phase-2-requirements.md` for structure, conventions, constitution alignment, and vision alignment.
 
-**Gate G2a:** The PRD defines *what*; the TRD defines *how*. Present the PRD for human approval before writing the TRD. This prevents wasted architectural work if the requirements shift.
+**Gate:** The PRD defines *what*; the TRD defines *how*. Present the PRD for human approval before writing the TRD. This prevents wasted architectural work if the requirements shift.
 
 **Output:**
 - `docs/product/features/{feature}/PRD.md`
 - `docs/product/features/{feature}/TRD.md`
 
-**Gate G2:** Both documents reviewed and approved before proceeding. Run configured review passes (see Configuration).
+**Gate:** Both documents reviewed and approved before proceeding. Run configured review passes (see Configuration).
 
 **Artifacts live at platform level** — requirements describe what the product does regardless of surface.
 
-### Phase 3: User Stories
+### User Stories
 
 **Trigger:** PRD and TRD are reviewed and stable.
 
@@ -92,11 +99,11 @@ Foundation Docs do not block idea brainstorming or design exploration. They bloc
 
 **Output:** Story files at `docs/product/features/{feature}/stories/`.
 
-**Gate G3:** Stories reviewed and approved. Run configured review passes.
+**Gate:** Stories reviewed and approved. Run configured review passes.
 
 **Stories are platform-level** — they describe user intent, not surface-specific interactions.
 
-### Phase 4: BDD Scenarios
+### BDD Scenarios
 
 **Trigger:** User stories have acceptance criteria defined.
 
@@ -106,11 +113,11 @@ Foundation Docs do not block idea brainstorming or design exploration. They bloc
 - Platform-level scenarios: `docs/product/features/{feature}/scenarios/*.feature`
 - Surface-specific scenarios: `apps/{surface}/docs/features/{feature}/scenarios/*.feature`
 
-**Gate G4:** Scenarios reviewed and approved. Run configured review passes.
+**Gate:** Scenarios reviewed and approved. Run configured review passes.
 
 **Boundary rule:** If the Given/When/Then language is surface-neutral, the scenario is platform-level. If it references a specific interaction model (swipe, D-pad, gaze), it is surface-specific.
 
-### Phase 5: Implementation Planning
+### Implementation Planning
 
 **Trigger:** Scenarios are reviewed and cover the acceptance criteria.
 
@@ -126,7 +133,7 @@ At each gate:
 1. The agent presents artifacts to the human for review
 2. If review passes are configured for this gate, they run first and findings are included in the presentation
 3. The human approves, requests changes, or rejects
-4. On approval, proceed to next phase. On changes, iterate and re-present.
+4. On approval, proceed to next workflow. On changes, iterate and re-present.
 
 ### Configurable review passes
 
@@ -151,18 +158,18 @@ Configuration lives in two locations, with project-level overriding user-level:
 Declarative, structured configuration for what runs where:
 
 ```toml
-[gates.G2]
+[review_gates.requirements]
 reviews = ["constitution-check"]
 
-[gates.G3]
+[review_gates.user_stories]
 reviews = ["traceability-audit"]
 
-[gates.G4]
+[review_gates.bdd_scenarios]
 reviews = ["traceability-audit", "coderabbit:review"]
 
-[phases]
+[workflows]
 use_subagents = true      # Delegate heavy writing to sub-agents
-prd_before_trd = true     # G2a gate: human approves PRD before TRD
+prd_before_trd = true     # Human approves PRD before TRD
 ```
 
 ### AGENTS.md
@@ -174,7 +181,7 @@ Natural language instructions that review agents receive as context. Use this fo
 When reviewing PRDs, ensure constitution alignment with particular
 attention to Principle II (Privacy).
 
-## Phase 2 Notes
+## Requirements Notes
 All TRDs must follow the vendor-agnostic facade pattern.
 ```
 
@@ -188,24 +195,24 @@ If neither config location exists, the skill runs with defaults: human-only gate
 
 ## Context Management
 
-Phases 2-4 involve substantial writing. To keep the main context focused on orchestration and human collaboration, delegate heavy writing to sub-agents. The lifecycle is sequential — never run phases in parallel.
+Requirements, User Stories, and BDD Scenarios involve substantial writing. To keep the main context focused on orchestration and human collaboration, delegate heavy writing to sub-agents. The lifecycle is sequential — never run workflows in parallel.
 
 ### Sub-agent dispatch pattern
 
-For each writing phase, dispatch a sub-agent with only the inputs it needs:
+For each writing workflow, dispatch a sub-agent with only the inputs it needs:
 
-| Phase | Sub-agent receives | Sub-agent returns |
-|-------|-------------------|-------------------|
-| 2 (PRD) | Design doc, constitution, vision, `references/phase-2-requirements.md`, example features | PRD written to disk |
-| 2 (TRD) | Approved PRD, `references/phase-2-requirements.md`, example features | TRD written to disk |
-| 3 | Approved PRD, `references/phase-3-user-stories.md` | Story files written to disk |
-| 4 | User stories, TRD, `references/phase-4-scenarios.md` | `.feature` files written to disk |
+| Workflow | Sub-agent receives | Sub-agent returns |
+|----------|-------------------|-------------------|
+| Requirements PRD | Design doc, constitution, vision, `references/phase-2-requirements.md`, example features | PRD written to disk |
+| Requirements TRD | Approved PRD, `references/phase-2-requirements.md`, example features | TRD written to disk |
+| User Stories | Approved PRD, `references/phase-3-user-stories.md` | Story files written to disk |
+| BDD Scenarios | User stories, TRD, `references/phase-4-scenarios.md` | `.feature` files written to disk |
 
 The main context reviews sub-agent output with the human and iterates if needed.
 
 ### When to stay in main context
 
-Not every phase needs a sub-agent. Stay in the main context when:
+Not every workflow needs a sub-agent. Stay in the main context when:
 - The human wants to collaborate interactively on the artifact
 - The feature is small enough that writing fits comfortably in context
 - The human explicitly asks to work through it together
@@ -220,28 +227,29 @@ All product documentation follows a three-tier hierarchy. See `docs/product/READ
 | App | `apps/{surface}/docs/` | Surface-specific scenarios |
 | Code | `apps/{surface}/tests/` | Step definitions (test automation) |
 
-## Phase Selection
+## Workflow Selection
 
-Not every feature starts at Phase 1. Match the entry point to the current state:
+Not every feature starts at the beginning. Match the entry point to the current state:
 
 | Starting point | Enter at |
 |---------------|----------|
-| No `docs/product/` directory | Phase 0 (initialization) |
-| Vague idea, no clarity on approach | Phase 1 (brainstorming) |
-| Clear requirements, needs documentation | Phase 2 (PRD + TRD) after Foundation Gate |
-| PRD exists, needs decomposition | Phase 3 (user stories) |
-| Stories exist, needs testable criteria | Phase 4 (scenarios) |
-| Scenarios exist, needs implementation | Phase 5 (writing-plans) |
+| No `docs/product/` directory | Project Setup |
+| Missing constitution or vision before first PRD | Foundation Stage |
+| Vague idea, no clarity on approach | Discovery and Design |
+| Clear requirements, needs documentation | Requirements after Foundation Gate |
+| PRD exists, needs decomposition | User Stories |
+| Stories exist, needs testable criteria | BDD Scenarios |
+| Scenarios exist, needs implementation | Implementation Planning |
 
-Clear requirements may skip brainstorming only after the Foundation Gate passes. If this is the first PRD and `docs/product/constitution.md` or approved, versioned `docs/product/vision.md` is missing, run the foundation phase before Phase 2.
+Clear requirements may skip brainstorming only after Foundation Gate passes. If this is the first PRD and `docs/product/constitution.md` or approved, versioned `docs/product/vision.md` is missing, run Foundation Stage before Requirements.
 
 ## Skill Delegation
 
-This skill orchestrates the lifecycle but delegates to specialized skills for bookend phases:
+This skill orchestrates the lifecycle but delegates to specialized skills for bookend workflows:
 
-- **Phase 1:** Delegate to `brainstorming` skill
-- **Phases 2-4:** Follow the reference files in this skill
-- **Phase 5:** Delegate to `writing-plans` skill
+- **Discovery and Design:** Delegate to `brainstorming` skill
+- **Requirements, User Stories, BDD Scenarios:** Follow the reference files in this skill
+- **Implementation Planning:** Delegate to `writing-plans` skill
 
 ## Specification Evolution
 
@@ -259,10 +267,10 @@ When updating an existing spec, append to its changelog with date, change, and r
 
 ## Reference Files
 
-Detailed guidance for each phase lives in reference files to keep context targeted. Load only the reference for the current phase:
+Detailed guidance for each workflow lives in reference files to keep context targeted. The `phase-*` filenames are legacy compatibility paths; load them by the workflow names below:
 
 - **`references/initialization.md`** — Project initialization workflow, placeholders, post-init steps
-- **`references/product-vision.md`** — Phase 0.5 Product Vision workflow, Foundation Gate, Vision Grill, versioning, and context/ADR coordination
+- **`references/product-vision.md`** — Product Vision workflow, Foundation Gate, Vision Grill, versioning, and context/ADR coordination
 - **`references/phase-2-requirements.md`** — PRD and TRD structure, conventions, constitution and vision checks
 - **`references/phase-3-user-stories.md`** — Story format, acceptance criteria, sizing
 - **`references/phase-4-scenarios.md`** — Gherkin conventions, boundary rule, file placement
