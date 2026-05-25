@@ -1,6 +1,6 @@
 ---
 name: product-development
-description: "This skill should be used when the user asks to 'create a feature', 'write a PRD', 'write a TRD', 'add user stories', 'write scenarios', 'create acceptance criteria', 'plan a feature', 'initialize product docs', 'set up product documentation', or mentions any phase of product development from idea through implementation planning. Guides the full product development lifecycle: Initialization -> Idea -> Brainstorm -> PRD + TRD -> User Stories -> BDD Scenarios -> Implementation Plan."
+description: "This skill should be used when the user asks to 'create a feature', 'write a PRD', 'write a TRD', 'write a product vision', 'create a product vision', 'run a vision grill', 'add user stories', 'write scenarios', 'create acceptance criteria', 'plan a feature', 'initialize product docs', 'set up product documentation', or mentions any phase of product development from idea through implementation planning. Guides the full product development lifecycle: Initialization -> Foundation Docs/Product Vision -> Idea -> Brainstorm -> PRD + TRD -> User Stories -> BDD Scenarios -> Implementation Plan, with a Foundation Gate before the first PRD."
 ---
 
 # Product Development Lifecycle

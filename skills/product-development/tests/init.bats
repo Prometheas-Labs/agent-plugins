@@ -244,5 +244,8 @@ teardown() {
 @test "init output directs users through foundation gate" {
   run "$INIT_SCRIPT" "$TEST_PROJECT" --non-interactive --project-name "X"
   grep -q "Foundation Gate" <<< "$output"
+  grep -q "Create and approve docs/product/constitution.md" <<< "$output"
+  grep -q "Run Phase 0.5 Product Vision" <<< "$output"
+  grep -q "approved, versioned docs/product/vision.md" <<< "$output"
   ! grep -q "Start your first feature with: docs/product/features/{feature}/PRD.md" <<< "$output"
 }
