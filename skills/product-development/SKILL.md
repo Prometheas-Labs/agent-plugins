@@ -12,6 +12,8 @@ Guide features through the product development lifecycle from idea to implementa
 ```
 [Initialize project]                          ←  one-time setup (scripts/init.sh)
   ↓
+Foundation Docs
+  ↓  [F1: human approves constitution + versioned vision before first PRD]
 Idea
   ↓  (brainstorming skill)
 Design
@@ -26,6 +28,8 @@ BDD Scenarios
   ↓  [G4: human approves scenarios]  →  optional review pass
 Implementation Plan
 ```
+
+Foundation Docs do not block idea brainstorming or design exploration. They block creation of the first Phase 2 PRD.
 
 ## Phase Overview
 
@@ -42,6 +46,16 @@ Implementation Plan
 
 **This phase runs once per project.** Skip if `docs/product/README.md` already exists.
 
+### Phase 0.5: Product Vision
+
+**Trigger:** `docs/product/vision.md` is missing, the user asks to create or update product vision, or the agent is about to create the first feature PRD.
+
+**Process:** Run the Vision Grill. Consult `references/product-vision.md` for the workflow, `grill-with-docs` dependency behavior, context/ADR coordination, and vision versioning.
+
+**Output:** Approved, versioned `docs/product/vision.md`; optional `CONTEXT-MAP.md`, `docs/product/CONTEXT.md`, and ADRs when approved and used.
+
+**Gate F1:** Do not create the first PRD until the user approves `docs/product/constitution.md` and approved, versioned `docs/product/vision.md` exists.
+
 ### Phase 1: Idea to Design
 
 **Trigger:** An idea, feature request, or problem statement arrives.
@@ -56,7 +70,9 @@ Implementation Plan
 
 **Trigger:** Design document is approved.
 
-**Process:** Create product and technical requirements documents. Consult `references/phase-2-requirements.md` for structure, conventions, and the constitution alignment check.
+**Required inputs:** Approved design document, approved `docs/product/constitution.md`, and approved, versioned `docs/product/vision.md`. Missing foundation docs block Phase 2.
+
+**Process:** Create product and technical requirements documents. Consult `references/phase-2-requirements.md` for structure, conventions, constitution alignment, and vision alignment.
 
 **Gate G2a:** The PRD defines *what*; the TRD defines *how*. Present the PRD for human approval before writing the TRD. This prevents wasted architectural work if the requirements shift.
 
@@ -212,10 +228,12 @@ Not every feature starts at Phase 1. Match the entry point to the current state:
 |---------------|----------|
 | No `docs/product/` directory | Phase 0 (initialization) |
 | Vague idea, no clarity on approach | Phase 1 (brainstorming) |
-| Clear requirements, needs documentation | Phase 2 (PRD + TRD) |
+| Clear requirements, needs documentation | Phase 2 (PRD + TRD) after Foundation Gate |
 | PRD exists, needs decomposition | Phase 3 (user stories) |
 | Stories exist, needs testable criteria | Phase 4 (scenarios) |
 | Scenarios exist, needs implementation | Phase 5 (writing-plans) |
+
+Clear requirements may skip brainstorming only after the Foundation Gate passes. If this is the first PRD and `docs/product/constitution.md` or approved, versioned `docs/product/vision.md` is missing, run the foundation phase before Phase 2.
 
 ## Skill Delegation
 
@@ -244,10 +262,13 @@ When updating an existing spec, append to its changelog with date, change, and r
 Detailed guidance for each phase lives in reference files to keep context targeted. Load only the reference for the current phase:
 
 - **`references/initialization.md`** — Project initialization workflow, placeholders, post-init steps
-- **`references/phase-2-requirements.md`** — PRD and TRD structure, conventions, constitution check
+- **`references/product-vision.md`** — Phase 0.5 Product Vision workflow, Foundation Gate, Vision Grill, versioning, and context/ADR coordination
+- **`references/phase-2-requirements.md`** — PRD and TRD structure, conventions, constitution and vision checks
 - **`references/phase-3-user-stories.md`** — Story format, acceptance criteria, sizing
 - **`references/phase-4-scenarios.md`** — Gherkin conventions, boundary rule, file placement
 - **`docs/METHODOLOGY.md`** — Specification evolution strategies, changelog conventions, supersession rules
+
+Load `references/source/vision-document-guide.md` only through `references/product-vision.md` when exact source detail is needed.
 
 ## Scripts
 

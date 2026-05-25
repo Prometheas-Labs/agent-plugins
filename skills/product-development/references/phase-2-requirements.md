@@ -3,8 +3,12 @@
 ## Inputs
 
 - Approved design document from Phase 1 (brainstorming)
-- `docs/product/constitution.md` — governance principles every feature must satisfy
-- `docs/product/vision.md` — product north-star for alignment
+- `docs/product/constitution.md` — approved governance principles. Required before the first PRD.
+- `docs/product/vision.md` — approved, versioned product north star. Required before the first PRD.
+
+If either foundation document is missing, unapproved, or the vision is not versioned, stop Phase 2 and complete the Foundation Gate first. Clear requirements do not bypass this gate for the first PRD.
+
+If the PRD would change strategic direction, stop and supersede the vision before writing the PRD.
 
 ## Output Location
 
@@ -28,7 +32,8 @@ The Product Requirements Document describes **what** and **why**.
 6. **Privacy Model** — what data is collected, what is never collected, consent model
 7. **Success Metrics** — measurable criteria with pass/fail or target values
 8. **Constitution Alignment** — table checking each of the five constitutional principles (see below)
-9. **Open Questions** — unresolved decisions to address during implementation
+9. **Vision Alignment** — explicit check that target users, value proposition, platform principles, and relevant surface vision match `docs/product/vision.md`
+10. **Open Questions** — unresolved decisions to address during implementation
 
 ### Constitution alignment check
 
@@ -73,6 +78,7 @@ The Technical Requirements Document describes **how**, architecturally.
 
 A PRD is ready for Phase 3 when:
 - All constitutional principles are PASS (or RISK with documented mitigation)
+- Vision alignment is explicit: target users, value proposition, platform principles, and relevant surface vision are consistent with `docs/product/vision.md`
 - User stories have clear acceptance criteria
 - Functional requirements are prioritized
 - Privacy model is explicit about what is and isn't collected
