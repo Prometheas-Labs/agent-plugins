@@ -15,7 +15,7 @@ Guide features through the product development lifecycle from idea to implementa
 Foundation Stage
   ├─ Product Constitution approval
   ├─ Product Vision workflow (Vision Grill)
-  ├─ future product-anchor workflows
+  ├─ additional product-anchor workflows (planned extension point)
   └─ Foundation Gate: approved constitution + approved, versioned vision before first PRD
   ↓
 Discovery and Design
@@ -50,13 +50,13 @@ Foundation Stage does not block brainstorming or design exploration. Foundation 
 
 ### Foundation Stage
 
-**Trigger:** `docs/product/constitution.md` or `docs/product/vision.md` is missing, the user asks to create or update product-anchor docs, or the agent is about to create the first feature PRD.
+**Trigger:** `docs/product/constitution.md` or `docs/product/vision.md` is missing, the user asks to create or update product-anchor docs, or the agent is preparing to start the first feature PRD and must verify Foundation Gate before drafting.
 
 **Process:** Establish product-anchor docs in this hierarchy:
 
 1. Product Constitution approval: approved `docs/product/constitution.md`. Constitution-grill is future work and is not implemented by this skill revision.
 2. Product Vision workflow: run the Vision Grill. Consult `references/product-vision.md` for `grill-with-docs` dependency behavior, context/ADR coordination, and vision versioning.
-3. Future product-anchor workflows: add here when approved.
+3. Additional product-anchor workflows: planned extension point for product-anchor documents when approved.
 4. Foundation Gate: complete only when `docs/product/constitution.md` is approved and approved, versioned `docs/product/vision.md` exists.
 
 **Output:** Approved `docs/product/constitution.md`; approved, versioned `docs/product/vision.md`; optional `CONTEXT-MAP.md`, `docs/product/CONTEXT.md`, and ADRs when approved and used.

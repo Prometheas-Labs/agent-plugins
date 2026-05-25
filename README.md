@@ -12,7 +12,7 @@ Project Setup  →  Foundation Stage  →  Discovery and Design  →  Requiremen
                   Foundation Gate          Design Approval       PRD/TRD Approval  Story Approval  Scenario Approval
 ```
 
-Foundation Stage contains Product Constitution approval, the Product Vision workflow, and future product-anchor workflows. Foundation Gate blocks the first PRD until constitution is approved and vision is approved and versioned. Discovery and Design can still happen before the gate passes. Each approval point pauses for your review before the agent proceeds.
+Foundation Stage contains Product Constitution approval and the Product Vision workflow. Foundation Gate blocks the first PRD until constitution is approved and vision is approved and versioned. Discovery and Design can still happen before the gate passes. Each approval point pauses for your review before the agent proceeds.
 
 ## Getting started
 
