@@ -8,7 +8,7 @@ Product documentation for {{PROJECT_NAME}} lives in a three-tier hierarchy: plat
 
 Product governance and cross-surface specifications. Artifacts here describe what the product does, why, and architectural decisions that apply regardless of surface.
 
-- `vision.md` — north-star product vision
+- `vision.md` — approved, versioned north-star product vision required before the first PRD
 - `constitution.md` — governance principles and engineering steering expectations
 - `features/{feature}/PRD.md` — product requirements (what and why)
 - `features/{feature}/TRD.md` — technical requirements (how, architecturally)
@@ -34,6 +34,8 @@ Each artifact type references the one above it:
 ```
 Constitution
   ↓
+Vision (approved, versioned north star)
+  ↓
 PRD (cites constitution principles)
   ↓
 TRD (references PRD requirements)
@@ -46,6 +48,12 @@ Surface Scenarios (extend with interaction-specific behaviors)
   ↓
 Step Definitions (automate scenarios as executable tests)
 ```
+
+## Foundation gate
+
+Before the first feature PRD, `docs/product/constitution.md` and `docs/product/vision.md` must exist and be approved. `vision.md` must carry explicit version metadata. If either foundation document is missing, complete the Foundation Gate before starting feature requirements.
+
+When `grill-with-docs` is used, product-domain context may live in `docs/product/CONTEXT.md`; if so, root `CONTEXT-MAP.md` should point to it. `CONTEXT.md` is for glossary and domain language, not requirements. ADRs default to `docs/adr/` unless this repository already uses another ADR convention.
 
 ## Boundary rule
 
@@ -65,8 +73,9 @@ When in doubt, start at platform level. Move to app level only when the Given/Wh
 docs/product/
 ├── README.md                 ← this file
 ├── AGENTS.md                 ← guidance for AI coding agents
-├── vision.md                 ← north-star product vision
 ├── constitution.md           ← governance principles
+├── vision.md                 ← approved, versioned product vision
+├── CONTEXT.md                ← optional product-domain context for grill-with-docs
 └── features/
     └── {feature}/
         ├── PRD.md            ← product requirements
