@@ -206,7 +206,7 @@ teardown() {
   [ "$status" -eq 0 ]
   grep -q "## Foundation gate" "$TEST_PROJECT/docs/product/README.md"
   grep -q "Foundation Gate" "$TEST_PROJECT/docs/product/README.md"
-  grep -q "approved, versioned north-star product vision required before the first PRD" "$TEST_PROJECT/docs/product/README.md"
+  grep -q 'constitution.md` and `docs/product/vision.md` must exist, be approved, and carry explicit version metadata' "$TEST_PROJECT/docs/product/README.md"
 }
 
 @test "README contains boundary rule section" {
@@ -224,11 +224,13 @@ teardown() {
   grep -q "README.md" "$TEST_PROJECT/docs/product/AGENTS.md"
 }
 
-@test "AGENTS.md contains vision gate and context-map guidance" {
+@test "AGENTS.md contains foundation gate and context-map guidance" {
   run "$INIT_SCRIPT" "$TEST_PROJECT" --non-interactive --project-name "X"
   [ "$status" -eq 0 ]
   grep -q "Before creating the first feature PRD" "$TEST_PROJECT/docs/product/AGENTS.md"
-  grep -q "approved, and has version metadata" "$TEST_PROJECT/docs/product/AGENTS.md"
+  grep -q 'confirm `docs/product/constitution.md` exists, is approved, and has version metadata' "$TEST_PROJECT/docs/product/AGENTS.md"
+  grep -q 'confirm `docs/product/vision.md` exists, is approved, and has version metadata' "$TEST_PROJECT/docs/product/AGENTS.md"
+  grep -q "Constitution Grill" "$TEST_PROJECT/docs/product/AGENTS.md"
   grep -q "CONTEXT-MAP.md" "$TEST_PROJECT/docs/product/AGENTS.md"
   grep -q "docs/product/CONTEXT.md" "$TEST_PROJECT/docs/product/AGENTS.md"
 }
@@ -247,8 +249,6 @@ teardown() {
   run "$INIT_SCRIPT" "$TEST_PROJECT" --non-interactive --project-name "X"
   [ "$status" -eq 0 ]
   grep -q "Foundation Gate" <<< "$output"
-  grep -q "Create and approve docs/product/constitution.md" <<< "$output"
-  grep -q "Run the Product Vision workflow" <<< "$output"
-  grep -q "approved, versioned docs/product/vision.md" <<< "$output"
+  [[ "$output" == *"2. Run the Product Constitution workflow to create approved, versioned docs/product/constitution.md"*"3. Run the Product Vision workflow to create approved, versioned docs/product/vision.md"* ]]
   ! grep -q "Start your first feature with: docs/product/features/{feature}/PRD.md" <<< "$output"
 }
