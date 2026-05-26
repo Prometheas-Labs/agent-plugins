@@ -119,12 +119,7 @@ bats skills/product-development/tests/init.bats
 
 Expected before implementation: at least the updated foundation gate/init output assertions fail.
 
-**Commit:**
-
-```bash
-git add skills/product-development/tests/init.bats
-git commit -m "test: cover constitution foundation gate guidance"
-```
+Do not commit the intentionally failing test-only state. Carry these test changes into Task 4 and commit them only after the templates and init output pass the tests.
 
 ## Task 2: Add Constitution Source Archive And Operational Reference
 
@@ -354,7 +349,21 @@ Make Constitution workflow first-class and remove stale future-work language.
 
 **Steps:**
 
-1. In `SKILL.md`, update Foundation Stage process:
+1. Update the YAML frontmatter description to include Product Constitution and Constitution Grill trigger phrases. Keep the description concise but ensure requests to create, approve, amend, or validate a product constitution trigger the skill.
+
+Example description shape:
+
+```yaml
+description: "This skill should be used when the user asks to 'create a feature', 'write a PRD', 'write a TRD', 'add user stories', 'write scenarios', 'create acceptance criteria', 'plan a feature', 'initialize product docs', 'set up product documentation', create or update a Product Constitution, create or update a Product Vision, run the Constitution Grill or Vision Grill, or mentions any phase of product development from idea through implementation planning. Guides the full product development lifecycle: Project Setup -> Foundation Stage -> Discovery and Design -> Requirements -> User Stories -> BDD Scenarios -> Implementation Planning."
+```
+
+2. In `SKILL.md`, update Lifecycle Map Foundation Gate line:
+
+```md
+  └─ Foundation Gate: approved, versioned constitution + approved, versioned vision before first PRD
+```
+
+3. In `SKILL.md`, update Foundation Stage process:
 
 ```md
 1. Product Constitution workflow: create, ratify, or amend approved, versioned `docs/product/constitution.md`. Consult `references/product-constitution.md` for `grill-with-docs` dependency behavior, Constitution Grill workflow, versioning, amendment behavior, and constitution alignment checks.
@@ -363,45 +372,59 @@ Make Constitution workflow first-class and remove stale future-work language.
 4. Foundation Gate: complete only when approved, versioned `docs/product/constitution.md` and approved, versioned `docs/product/vision.md` exist.
 ```
 
-2. In `SKILL.md`, update Foundation Stage output:
+4. In `SKILL.md`, update Foundation Stage output:
 
 ```md
 **Output:** Approved, versioned `docs/product/constitution.md`; approved, versioned `docs/product/vision.md`; optional `CONTEXT-MAP.md`, `docs/product/CONTEXT.md`, and ADRs when approved and used.
 ```
 
-3. In `SKILL.md`, update Foundation Gate:
+5. In `SKILL.md`, update Foundation Gate:
 
 ```md
 **Foundation Gate:** Do not create the first PRD until the user approves `docs/product/constitution.md`, it has version metadata, and approved, versioned `docs/product/vision.md` exists.
 ```
 
-4. In `SKILL.md`, update Requirements required inputs:
+6. In `SKILL.md`, update Requirements required inputs:
 
 ```md
 **Required inputs:** Approved design document, approved, versioned `docs/product/constitution.md`, and approved, versioned `docs/product/vision.md`. Missing foundation documents block first-PRD requirements work.
 ```
 
-5. In `SKILL.md`, update Reference Files list:
+7. In `SKILL.md`, update Workflow Selection table/routing so first-PRD Foundation Stage routing treats missing, unapproved, or unversioned constitution the same as missing, unapproved, or unversioned vision.
+
+Expected wording:
+
+```md
+| Missing, unapproved, or unversioned constitution or vision before first PRD | Foundation Stage |
+```
+
+And:
+
+```md
+Clear requirements may skip brainstorming only after Foundation Gate passes. If this is the first PRD and `docs/product/constitution.md` or `docs/product/vision.md` is missing, unapproved, or unversioned, run Foundation Stage before Requirements.
+```
+
+8. In `SKILL.md`, update Reference Files list:
 
 ```md
 - **`references/product-constitution.md`** - Product Constitution workflow, Foundation Gate, Constitution Grill, versioning, amendment behavior, and alignment checks
 - **`references/product-vision.md`** - Product Vision workflow, Foundation Gate, Vision Grill, versioning, and context/ADR coordination
 ```
 
-6. In `SKILL.md`, update source-loading guidance:
+9. In `SKILL.md`, update source-loading guidance:
 
 ```md
 Load `references/source/product-constitution-guide.md` only through `references/product-constitution.md` when exact source detail is needed. Load `references/source/vision-document-guide.md` only through `references/product-vision.md` when exact source detail is needed.
 ```
 
-7. In `references/product-vision.md`, update Foundation Gate wording so constitution also has approval and version metadata:
+10. In `references/product-vision.md`, update Foundation Gate wording so constitution also has approval and version metadata:
 
 ```md
 - `docs/product/constitution.md` - approved product governance principles with version metadata.
 - `docs/product/vision.md` - approved, versioned product north star.
 ```
 
-8. In `references/product-vision.md`, add a sentence to the Vision workflow context:
+11. In `references/product-vision.md`, add a sentence to the Vision workflow context:
 
 ```md
 Run the Vision workflow after Product Constitution approval. The vision must reconcile against the approved constitution and cannot weaken constitutional principles.
@@ -413,13 +436,13 @@ Run:
 
 ```bash
 rg -n "constitution-grill|future work" skills/product-development/SKILL.md skills/product-development/references/product-vision.md
-rg -n "product-constitution.md|approved, versioned `docs/product/constitution.md`|version metadata" skills/product-development/SKILL.md skills/product-development/references/product-vision.md
+rg -n "Product Constitution|Constitution Grill|product-constitution.md|approved, versioned `docs/product/constitution.md`|version metadata|unapproved, or unversioned" skills/product-development/SKILL.md skills/product-development/references/product-vision.md
 ```
 
 Expected output:
 
 - first command returns no stale future-work references
-- second command finds product-constitution reference and version metadata wording
+- second command finds frontmatter trigger wording, product-constitution reference, version metadata wording, and unversioned routing language
 
 **Commit:**
 
@@ -574,13 +597,21 @@ Rules:
 - If `docs/product/constitution.md` exists but lacks approval or version metadata, ask the user whether to ratify or migrate it before proceeding.
 ```
 
-4. Update Quality Criteria:
+4. Update the first-PRD stop rule so the constitution and vision both require approval and version metadata.
+
+Expected wording:
+
+```md
+If this is the first PRD and either foundation document is missing, unapproved, or unversioned, stop and run Foundation Stage before drafting requirements. Later PRDs must still load the approved, versioned constitution and approved, versioned vision for alignment checks.
+```
+
+5. Update Quality Criteria:
 
 ```md
 - Every current constitutional principle or standard is PASS or N/A with justification; RISK has documented mitigation or amendment discussion; FAIL is not present
 ```
 
-5. Keep Vision Alignment quality criteria intact, but ensure it still references approved `docs/product/vision.md`.
+6. Keep Vision Alignment quality criteria intact, but ensure it still references approved `docs/product/vision.md`.
 
 **Verification:**
 
@@ -656,25 +687,39 @@ Expected output:
 
 ```bash
 quick_validate="$(find "${CODEX_HOME:-$HOME/.codex}/skills/.system/skill-creator" -path "*/scripts/quick_validate.py" -print -quit)"
-python3 "$quick_validate" skills/product-development
+if [ -n "$quick_validate" ]; then
+  python3 "$quick_validate" skills/product-development
+else
+  echo "skill quick validator unavailable"
+fi
 ```
 
 Expected output: validator passes. If the validator path is empty, document that the validator was unavailable and continue with the other checks.
 
-5. Inspect git status:
+5. Inspect git status for unrelated dirt:
 
 ```bash
 git status --short
 ```
 
-Expected output: clean after final commit.
+Expected output: only files intentionally changed by this implementation before the final commit. If unrelated files are dirty, leave them unstaged and report them.
 
 **Commit:**
 
-If fixes were needed:
+If fixes were needed, stage exact files only:
 
 ```bash
-git add skills/product-development
+git add \
+  skills/product-development/SKILL.md \
+  skills/product-development/references/product-constitution.md \
+  skills/product-development/references/source/product-constitution-guide.md \
+  skills/product-development/references/product-vision.md \
+  skills/product-development/references/initialization.md \
+  skills/product-development/references/phase-2-requirements.md \
+  skills/product-development/templates/README.md.tmpl \
+  skills/product-development/templates/AGENTS.md.tmpl \
+  skills/product-development/scripts/init.sh \
+  skills/product-development/tests/init.bats
 git commit -m "docs: validate product constitution workflow"
 ```
 
@@ -709,5 +754,6 @@ Review the implemented Product Constitution workflow integration. Check the diff
 - Use `apply_patch` or native edit tools for file writes. Do not use shell redirection or heredocs to write files.
 - Use context-mode tools for large reads and searches.
 - Preserve unrelated user changes.
+- Stage exact files only. Do not use broad `git add skills/product-development` or `git add .`.
 - Keep commits focused and conventional.
 - Do not push or open a PR unless the user asks.
