@@ -51,10 +51,11 @@ Continue with the fallback workflow only if the user declines installation or ex
 4. Extract candidate non-negotiables.
 5. Separate constitution content from vision, strategy, specifications, plans, ADRs, and glossary/domain context.
 6. Apply the immutability test.
-7. Draft `docs/product/constitution.md`.
+7. Draft candidate constitution material without overwriting `docs/product/constitution.md`.
 8. Run adversarial review before approval.
-9. Ask the user to ratify the constitution explicitly.
-10. Archive the approved immutable version under `docs/product/constitutions/constitution-vX.Y.Z.md`.
+9. Present the candidate constitution, review findings, and proposed version for user ratification.
+10. Write or update `docs/product/constitution.md` only after explicit user approval.
+11. Archive the approved immutable version under `docs/product/constitutions/constitution-vX.Y.Z.md`.
 
 ## Immutability test
 

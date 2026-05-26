@@ -36,9 +36,9 @@ Do not edit files. Return findings first, ordered by severity, with file/line re
 
 ## Source Archive Fidelity
 
-The attached source file is:
+The attached source file is provided by workflow input:
 
-`/Users/yanni/Downloads/Product Constitution Guide.md`
+`${PRODUCT_CONSTITUTION_SOURCE_PATH}`
 
 Expected source properties:
 
@@ -136,13 +136,13 @@ Add progressive-disclosure resources matching the Product Vision resource shape.
 
 1. Add `skills/product-development/references/source/product-constitution-guide.md`.
 
-Use the full content of `/Users/yanni/Downloads/Product Constitution Guide.md` without summarizing. Do not alter headings or major sections.
+Use the full content of `${PRODUCT_CONSTITUTION_SOURCE_PATH}` without summarizing. Do not alter headings or major sections.
 
 2. Add `skills/product-development/references/product-constitution.md`.
 
 Use this structure:
 
-```md
+````md
 # Product Constitution
 
 ## Purpose
@@ -267,7 +267,7 @@ Sync Impact Report:
 - Project artifacts reviewed: docs/product/vision.md, active PRDs, ADRs
 - Deferred items: None
 -->
-```
+````
 
 Product constitution amendments must check project artifacts that consume the approved constitution:
 
@@ -313,14 +313,14 @@ FAIL against the constitution blocks the PRD or delivery until explicit amendmen
 The full source archive is preserved at [source/product-constitution-guide.md](source/product-constitution-guide.md).
 
 Consult it when exact worksheet language, detailed anatomy guidance, examples, maintenance guidance, or source fidelity is needed. Normal product-development work should start with this operational reference and load the source guide only for deeper detail.
-```
+````
 
 **Verification:**
 
 Run:
 
 ```bash
-shasum -a 256 /Users/yanni/Downloads/Product\ Constitution\ Guide.md skills/product-development/references/source/product-constitution-guide.md
+shasum -a 256 "${PRODUCT_CONSTITUTION_SOURCE_PATH}" skills/product-development/references/source/product-constitution-guide.md
 rg -n "Source guide|grill-with-docs|Sync Impact Report|FAIL against the constitution" skills/product-development/references/product-constitution.md
 ```
 
@@ -666,7 +666,7 @@ Expected output: all tests pass.
 2. Run source archive fidelity check:
 
 ```bash
-shasum -a 256 /Users/yanni/Downloads/Product\ Constitution\ Guide.md skills/product-development/references/source/product-constitution-guide.md
+shasum -a 256 "${PRODUCT_CONSTITUTION_SOURCE_PATH}" skills/product-development/references/source/product-constitution-guide.md
 ```
 
 Expected output: both hashes are `cc34e8b2794ade47bb516394755561e60683150124ad214b7dc552c603f21326`.

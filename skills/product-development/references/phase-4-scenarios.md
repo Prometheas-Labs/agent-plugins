@@ -8,6 +8,8 @@ Scenarios are **living + self-verifying** artifacts (see `docs/METHODOLOGY.md`).
 
 - User stories at `docs/product/features/{feature}/stories/`
 - TRD at `docs/product/features/{feature}/TRD.md` (for technical context on what is feasible)
+- Approved, versioned product constitution at `docs/product/constitution.md`
+- Approved, versioned product vision at `docs/product/vision.md`
 
 ## Output Locations
 
@@ -75,6 +77,8 @@ Feature: {Feature name from PRD}
 - **Avoid UI details in platform scenarios.** "the user enables analytics" not "the user taps the Enable button." UI details belong in surface-specific scenarios.
 - **Acceptance criteria map to scenarios.** Each acceptance criterion from a user story should have at least one corresponding scenario.
 - **Tag surface-specific scenarios.** Use `@mobile`, `@tv`, `@web` tags at the Feature or Scenario level for surface-specific files.
+- **Preserve foundation constraints.** Add scenario coverage for constitutional behaviors when relevant, and do not weaken `MUST` or `MUST NOT` language.
+- **Preserve vision intent.** Scenario language should continue to reflect the approved target users, value proposition, and surface expectations.
 
 ### Example: Platform-level scenario
 
@@ -131,3 +135,4 @@ Scenarios are ready for Implementation Planning when:
 - Scenarios use domain language, not implementation language
 - Each scenario tests one behavior
 - Surface-specific scenarios are tagged with the surface name
+- Constitutional behaviors have coverage where relevant, and scenarios do not conflict with approved vision intent

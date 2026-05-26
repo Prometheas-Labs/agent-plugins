@@ -58,6 +58,7 @@ Rules:
 - Do not mitigate a constitutional FAIL inside the PRD.
 - If `docs/product/constitution.md` is missing and this is the first PRD, stop for Foundation Gate.
 - If `docs/product/constitution.md` exists but lacks approval or version metadata, ask the user whether to ratify or migrate it before proceeding.
+- If `docs/product/vision.md` exists but lacks approval or version metadata, ask the user whether to ratify or migrate it before proceeding.
 
 ## TRD Structure
 

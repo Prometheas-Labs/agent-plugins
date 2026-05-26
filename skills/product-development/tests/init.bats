@@ -199,6 +199,7 @@ teardown() {
 @test "README contains artifact flow section" {
   run "$INIT_SCRIPT" "$TEST_PROJECT" --non-interactive --project-name "X"
   grep -q "## Artifact flow" "$TEST_PROJECT/docs/product/README.md"
+  grep -q "PRD (checks constitution and vision alignment)" "$TEST_PROJECT/docs/product/README.md"
 }
 
 @test "README contains foundation gate section" {
@@ -233,6 +234,8 @@ teardown() {
   grep -q "Constitution Grill" "$TEST_PROJECT/docs/product/AGENTS.md"
   grep -q "CONTEXT-MAP.md" "$TEST_PROJECT/docs/product/AGENTS.md"
   grep -q "docs/product/CONTEXT.md" "$TEST_PROJECT/docs/product/AGENTS.md"
+  grep -q "constitution alignment check" "$TEST_PROJECT/docs/product/AGENTS.md"
+  grep -q "vision alignment check" "$TEST_PROJECT/docs/product/AGENTS.md"
 }
 
 @test "AGENTS.md contains specification evolution section" {
@@ -263,6 +266,7 @@ teardown() {
 @test "requirements reference uses dynamic constitution alignment" {
   grep -q "PASS/RISK/FAIL/N/A" "$SCRIPT_DIR/references/phase-2-requirements.md"
   grep -q "FAIL against the constitution blocks the PRD" "$SCRIPT_DIR/references/phase-2-requirements.md"
+  grep -q "vision.md.*ratify or migrate" "$SCRIPT_DIR/references/phase-2-requirements.md"
   ! grep -q "five constitutional principles" "$SCRIPT_DIR/references/phase-2-requirements.md"
 }
 
@@ -270,4 +274,16 @@ teardown() {
   grep -q "source/product-constitution-guide.md" "$SCRIPT_DIR/references/product-constitution.md"
   grep -q "operational reference overrides source-guide path examples" "$SCRIPT_DIR/references/product-constitution.md"
   grep -q "Check whether \`grill-with-docs\` is installed" "$SCRIPT_DIR/references/product-constitution.md"
+  grep -q "without overwriting \`docs/product/constitution.md\`" "$SCRIPT_DIR/references/product-constitution.md"
+}
+
+@test "downstream workflows preserve constitution and vision alignment" {
+  grep -q "docs/product/constitution.md" "$SCRIPT_DIR/references/phase-3-user-stories.md"
+  grep -q "docs/product/vision.md" "$SCRIPT_DIR/references/phase-3-user-stories.md"
+  grep -q "Constitutional constraints and approved vision intent are preserved" "$SCRIPT_DIR/references/phase-3-user-stories.md"
+  grep -q "docs/product/constitution.md" "$SCRIPT_DIR/references/phase-4-scenarios.md"
+  grep -q "docs/product/vision.md" "$SCRIPT_DIR/references/phase-4-scenarios.md"
+  grep -q "Constitutional behaviors have coverage" "$SCRIPT_DIR/references/phase-4-scenarios.md"
+  grep -q "Load the approved constitution and approved vision" "$SCRIPT_DIR/SKILL.md"
+  grep -q "| Requirements TRD | Approved PRD, constitution, vision" "$SCRIPT_DIR/SKILL.md"
 }

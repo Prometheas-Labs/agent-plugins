@@ -121,7 +121,7 @@ Foundation Stage does not block brainstorming or design exploration. Foundation 
 
 **Trigger:** Scenarios are reviewed and cover the acceptance criteria.
 
-**Process:** Invoke the `writing-plans` skill. It creates a detailed, task-by-task implementation plan with TDD steps, file paths, and verification criteria.
+**Process:** Load the approved constitution and approved vision with the reviewed scenarios, then invoke the `writing-plans` skill. It creates a detailed, task-by-task implementation plan with TDD steps, file paths, and verification criteria. Stop before planning if the plan would violate `MUST NOT` language, weaken a constitutional principle, conflict with the approved vision, or exceed clear authority.
 
 **Output:** Implementation plan at `docs/plans/YYYY-MM-DD-<topic>.md`.
 
@@ -204,9 +204,9 @@ For each writing workflow, dispatch a sub-agent with only the inputs it needs:
 | Workflow | Sub-agent receives | Sub-agent returns |
 |----------|-------------------|-------------------|
 | Requirements PRD | Design doc, constitution, vision, `references/phase-2-requirements.md`, example features | PRD written to disk |
-| Requirements TRD | Approved PRD, constitution, `references/phase-2-requirements.md`, example features | TRD written to disk |
-| User Stories | Approved PRD, constitution, `references/phase-3-user-stories.md` | Story files written to disk |
-| BDD Scenarios | User stories, TRD, constitution, `references/phase-4-scenarios.md` | `.feature` files written to disk |
+| Requirements TRD | Approved PRD, constitution, vision, `references/phase-2-requirements.md`, example features | TRD written to disk |
+| User Stories | Approved PRD, TRD, constitution, vision, `references/phase-3-user-stories.md` | Story files written to disk |
+| BDD Scenarios | User stories, TRD, constitution, vision, `references/phase-4-scenarios.md` | `.feature` files written to disk |
 
 The main context reviews sub-agent output with the human and iterates if needed.
 
