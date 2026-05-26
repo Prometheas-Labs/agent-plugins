@@ -45,15 +45,16 @@ Continue with the fallback workflow only if the user declines installation or ex
 
 ## Constitution Grill workflow
 
-1. Gather repo evidence before asking the user: existing product docs, README/AGENTS files, ADRs, prior PRDs/TRDs, design docs, codebase conventions, tickets, incidents, and review history when available.
-2. Ask one question at a time.
-3. Extract candidate non-negotiables.
-4. Separate constitution content from vision, strategy, specifications, plans, ADRs, and glossary/domain context.
-5. Apply the immutability test.
-6. Draft `docs/product/constitution.md`.
-7. Run adversarial review before approval.
-8. Ask the user to ratify the constitution explicitly.
-9. Archive the approved immutable version under `docs/product/constitutions/constitution-vX.Y.Z.md`.
+1. Check whether `grill-with-docs` is installed. If it is missing, notify the user and recommend installation before fallback.
+2. Gather repo evidence before asking the user: existing product docs, README/AGENTS files, ADRs, prior PRDs/TRDs, design docs, codebase conventions, tickets, incidents, and review history when available.
+3. Ask one question at a time.
+4. Extract candidate non-negotiables.
+5. Separate constitution content from vision, strategy, specifications, plans, ADRs, and glossary/domain context.
+6. Apply the immutability test.
+7. Draft `docs/product/constitution.md`.
+8. Run adversarial review before approval.
+9. Ask the user to ratify the constitution explicitly.
+10. Archive the approved immutable version under `docs/product/constitutions/constitution-vX.Y.Z.md`.
 
 ## Immutability test
 

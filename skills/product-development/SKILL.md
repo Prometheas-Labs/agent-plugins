@@ -204,9 +204,9 @@ For each writing workflow, dispatch a sub-agent with only the inputs it needs:
 | Workflow | Sub-agent receives | Sub-agent returns |
 |----------|-------------------|-------------------|
 | Requirements PRD | Design doc, constitution, vision, `references/phase-2-requirements.md`, example features | PRD written to disk |
-| Requirements TRD | Approved PRD, `references/phase-2-requirements.md`, example features | TRD written to disk |
-| User Stories | Approved PRD, `references/phase-3-user-stories.md` | Story files written to disk |
-| BDD Scenarios | User stories, TRD, `references/phase-4-scenarios.md` | `.feature` files written to disk |
+| Requirements TRD | Approved PRD, constitution, `references/phase-2-requirements.md`, example features | TRD written to disk |
+| User Stories | Approved PRD, constitution, `references/phase-3-user-stories.md` | Story files written to disk |
+| BDD Scenarios | User stories, TRD, constitution, `references/phase-4-scenarios.md` | `.feature` files written to disk |
 
 The main context reviews sub-agent output with the human and iterates if needed.
 

@@ -252,3 +252,22 @@ teardown() {
   [[ "$output" == *"2. Run the Product Constitution workflow to create approved, versioned docs/product/constitution.md"*"3. Run the Product Vision workflow to create approved, versioned docs/product/vision.md"* ]]
   ! grep -q "Start your first feature with: docs/product/features/{feature}/PRD.md" <<< "$output"
 }
+
+@test "skill references constitution resources and versioned foundation gate" {
+  grep -q "references/product-constitution.md" "$SCRIPT_DIR/SKILL.md"
+  grep -q "references/source/product-constitution-guide.md" "$SCRIPT_DIR/SKILL.md"
+  grep -q "approved, versioned constitution + approved, versioned vision" "$SCRIPT_DIR/SKILL.md"
+  grep -q "Missing, unapproved, or unversioned constitution or vision before first PRD" "$SCRIPT_DIR/SKILL.md"
+}
+
+@test "requirements reference uses dynamic constitution alignment" {
+  grep -q "PASS/RISK/FAIL/N/A" "$SCRIPT_DIR/references/phase-2-requirements.md"
+  grep -q "FAIL against the constitution blocks the PRD" "$SCRIPT_DIR/references/phase-2-requirements.md"
+  ! grep -q "five constitutional principles" "$SCRIPT_DIR/references/phase-2-requirements.md"
+}
+
+@test "constitution reference routes through source archive and overrides source paths" {
+  grep -q "source/product-constitution-guide.md" "$SCRIPT_DIR/references/product-constitution.md"
+  grep -q "operational reference overrides source-guide path examples" "$SCRIPT_DIR/references/product-constitution.md"
+  grep -q "Check whether \`grill-with-docs\` is installed" "$SCRIPT_DIR/references/product-constitution.md"
+}
