@@ -1,6 +1,6 @@
 ---
 name: product-development
-description: "Use when the user asks to create a feature, write a PRD or TRD, create or maintain product vision, run a vision grill, add user stories, write scenarios, create acceptance criteria, plan implementation, initialize product docs, set up product documentation, or work anywhere in the product development lifecycle from project setup through implementation planning."
+description: "Use when the user asks to create a feature, write a PRD or TRD, add user stories, write scenarios, create acceptance criteria, plan implementation, initialize product docs, set up product documentation, create, approve, amend, or validate a Product Constitution, run the Constitution Grill, create or maintain Product Vision, run a Vision Grill, or work anywhere in the product development lifecycle from project setup through implementation planning."
 ---
 
 # Product Development Lifecycle
@@ -16,7 +16,7 @@ Foundation Stage
   ├─ Product Constitution approval
   ├─ Product Vision workflow (Vision Grill)
   ├─ additional product-anchor workflows (planned extension point)
-  └─ Foundation Gate: approved constitution + approved, versioned vision before first PRD
+  └─ Foundation Gate: approved, versioned constitution + approved, versioned vision before first PRD
   ↓
 Discovery and Design
   ↓  [human approves design]
@@ -54,14 +54,14 @@ Foundation Stage does not block brainstorming or design exploration. Foundation 
 
 **Process:** Establish product-anchor docs in this hierarchy:
 
-1. Product Constitution approval: approved `docs/product/constitution.md`. Constitution-grill is future work and is not implemented by this skill revision.
-2. Product Vision workflow: run the Vision Grill. Consult `references/product-vision.md` for `grill-with-docs` dependency behavior, context/ADR coordination, and vision versioning.
+1. Product Constitution workflow: create, ratify, or amend approved, versioned `docs/product/constitution.md`. Consult `references/product-constitution.md` for `grill-with-docs` dependency behavior, Constitution Grill workflow, versioning, amendment behavior, and constitution alignment checks.
+2. Product Vision workflow: run the Vision Grill after Constitution approval. Consult `references/product-vision.md` for `grill-with-docs` dependency behavior, context/ADR coordination, and vision versioning.
 3. Additional product-anchor workflows: planned extension point for product-anchor documents when approved.
-4. Foundation Gate: complete only when `docs/product/constitution.md` is approved and approved, versioned `docs/product/vision.md` exists.
+4. Foundation Gate: complete only when approved, versioned `docs/product/constitution.md` and approved, versioned `docs/product/vision.md` exist.
 
-**Output:** Approved `docs/product/constitution.md`; approved, versioned `docs/product/vision.md`; optional `CONTEXT-MAP.md`, `docs/product/CONTEXT.md`, and ADRs when approved and used.
+**Output:** Approved, versioned `docs/product/constitution.md`; approved, versioned `docs/product/vision.md`; optional `CONTEXT-MAP.md`, `docs/product/CONTEXT.md`, and ADRs when approved and used.
 
-**Foundation Gate:** Do not create the first PRD until the user approves `docs/product/constitution.md` and approved, versioned `docs/product/vision.md` exists.
+**Foundation Gate:** Do not create the first PRD until the user approves `docs/product/constitution.md`, it has version metadata, and approved, versioned `docs/product/vision.md` exists.
 
 ### Discovery and Design
 
@@ -77,7 +77,7 @@ Foundation Stage does not block brainstorming or design exploration. Foundation 
 
 **Trigger:** Design document is approved.
 
-**Required inputs:** Approved design document, approved `docs/product/constitution.md`, and approved, versioned `docs/product/vision.md`. Missing foundation documents block first-PRD requirements work.
+**Required inputs:** Approved design document, approved, versioned `docs/product/constitution.md`, and approved, versioned `docs/product/vision.md`. Missing, unapproved, or unversioned foundation documents block first-PRD requirements work.
 
 **Process:** Create product and technical requirements documents. Consult `references/phase-2-requirements.md` for structure, conventions, constitution alignment, and vision alignment.
 
@@ -234,14 +234,14 @@ Not every feature starts at the beginning. Match the entry point to the current 
 | Starting point | Enter at |
 |---------------|----------|
 | No `docs/product/` directory | Project Setup |
-| Missing constitution or vision before first PRD | Foundation Stage |
+| Missing, unapproved, or unversioned constitution or vision before first PRD | Foundation Stage |
 | Vague idea, no clarity on approach | Discovery and Design |
 | Clear requirements, needs documentation | Requirements after Foundation Gate |
 | PRD exists, needs decomposition | User Stories |
 | Stories exist, needs testable criteria | BDD Scenarios |
 | Scenarios exist, needs implementation | Implementation Planning |
 
-Clear requirements may skip brainstorming only after Foundation Gate passes. If this is the first PRD and `docs/product/constitution.md` or approved, versioned `docs/product/vision.md` is missing, run Foundation Stage before Requirements.
+Clear requirements may skip brainstorming only after Foundation Gate passes. If this is the first PRD and `docs/product/constitution.md` or `docs/product/vision.md` is missing, unapproved, or unversioned, run Foundation Stage before Requirements.
 
 ## Skill Delegation
 
@@ -270,13 +270,14 @@ When updating an existing spec, append to its changelog with date, change, and r
 Detailed guidance for each workflow lives in reference files to keep context targeted. The `phase-*` filenames are legacy compatibility paths; load them by the workflow names below:
 
 - **`references/initialization.md`** — Project initialization workflow, placeholders, post-init steps
+- **`references/product-constitution.md`** — Product Constitution workflow, Foundation Gate, Constitution Grill, versioning, amendment behavior, and alignment checks
 - **`references/product-vision.md`** — Product Vision workflow, Foundation Gate, Vision Grill, versioning, and context/ADR coordination
 - **`references/phase-2-requirements.md`** — PRD and TRD structure, conventions, constitution and vision checks
 - **`references/phase-3-user-stories.md`** — Story format, acceptance criteria, sizing
 - **`references/phase-4-scenarios.md`** — Gherkin conventions, boundary rule, file placement
 - **`docs/METHODOLOGY.md`** — Specification evolution strategies, changelog conventions, supersession rules
 
-Load `references/source/vision-document-guide.md` only through `references/product-vision.md` when exact source detail is needed.
+Load `references/source/product-constitution-guide.md` only through `references/product-constitution.md` when exact source detail is needed. Load `references/source/vision-document-guide.md` only through `references/product-vision.md` when exact source detail is needed.
 
 ## Scripts
 
