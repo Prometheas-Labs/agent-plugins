@@ -43,7 +43,7 @@ Use the "Mirror Vision Flow, Plus Spec Kit Amendment Controls" approach.
 
 Add:
 
-- `skills/product-development/references/source/product-constitution-guide.md` as the source archive.
+- `skills/product-development/references/source/product-constitution-guide.md` as the source archive, preserving the attached guide substantially as-is.
 - `skills/product-development/references/product-constitution.md` as the concise operational reference.
 - Foundation Stage wiring for an active Constitution workflow.
 - Initialization, template, and requirements guidance updates.
@@ -153,16 +153,17 @@ The report should include:
 - Dependent docs, templates, references, and checks updated or pending.
 - Deferred TODOs, if any.
 
-The amendment workflow must include a propagation checklist for:
+Product constitution amendments must include a project-artifact propagation checklist. It should check the artifacts that consume the approved constitution in the user's project, not the product-development skill's own implementation files:
 
-- `SKILL.md` Foundation Stage wording.
-- `references/product-constitution.md`.
-- `references/product-vision.md` when constitutional hierarchy or gate behavior changes.
-- `references/initialization.md`.
-- `references/phase-2-requirements.md`.
-- `templates/README.md.tmpl`.
-- `templates/AGENTS.md.tmpl`.
-- generated docs expectations covered by tests.
+- current `docs/product/vision.md`, if it already exists;
+- immutable vision and constitution archives;
+- active PRDs, TRDs, user stories, scenarios, and implementation plans affected by the changed principle;
+- `docs/product/README.md` and `docs/product/AGENTS.md` if they contain project-specific foundation guidance;
+- `docs/product/CONTEXT.md` if terminology or domain language changed;
+- ADRs that recorded decisions now affected by the amendment;
+- PR templates, issue templates, review checklists, or CI checks that reference constitutional rules, if present in the project.
+
+Skill-maintenance propagation is separate. When this product-development skill's own constitution workflow changes, implementation should update `SKILL.md`, references, templates, and tests. Normal amendments to a user's `docs/product/constitution.md` must not mutate the installed skill docs.
 
 ## Foundation Gate Behavior
 
@@ -170,7 +171,7 @@ Brainstorming and design exploration are allowed before Foundation Gate passes.
 
 The first feature PRD is blocked until:
 
-- `docs/product/constitution.md` exists and is approved.
+- `docs/product/constitution.md` exists, is approved, and has version metadata.
 - `docs/product/vision.md` exists, is approved, and has version metadata.
 
 Later PRDs must:
@@ -185,8 +186,10 @@ Later PRDs must:
 
 Every PRD should validate against the actual approved `docs/product/constitution.md`:
 
-- Each constitutional principle or standard relevant to the feature gets a PASS/RISK/FAIL entry.
-- Any RISK or FAIL requires mitigation, amendment discussion, or decision not to proceed.
+- Each current constitutional principle or standard gets a PASS/RISK/FAIL/N/A entry.
+- N/A requires a short justification.
+- RISK requires mitigation, amendment discussion, or decision not to proceed.
+- FAIL against the constitution blocks the PRD until explicit constitution amendment, supersession approval, or decision not to proceed. FAIL is not mitigated inside the PRD.
 - If no approved constitution exists and this is the first PRD, stop for Foundation Gate.
 - If the constitution exists but lacks approval/version metadata, treat it as not passing Foundation Gate and ask the user how to ratify or migrate it.
 
@@ -204,7 +207,7 @@ Artifact boundaries:
 
 The Constitution workflow must not silently write `CONTEXT-MAP.md`, `docs/product/CONTEXT.md`, or ADRs during the interview. Those side-effect docs require user approval unless the user explicitly asks for inline updates.
 
-Before presenting a constitution for approval, reconcile terminology and decisions across constitution, vision, context, and ADRs. If they conflict, ask the user to choose.
+Before presenting a constitution for approval, reconcile terminology and decisions across constitution, existing vision if present, context, and ADRs. If they conflict, ask the user to choose. In greenfield projects where vision does not exist yet, the later Vision workflow must reconcile against the approved constitution.
 
 ## Files Likely Changed During Implementation
 
@@ -240,6 +243,7 @@ Static checks:
 - `SKILL.md` references `references/product-constitution.md`.
 - `references/product-constitution.md` references `source/product-constitution-guide.md`.
 - `references/source/product-constitution-guide.md` exists.
+- `references/source/product-constitution-guide.md` preserves the attached guide substantially as-is; headings and major sections from the source are still present and not condensed into a summary.
 - No stale language says the Constitution Grill remains future work.
 - `references/phase-2-requirements.md` no longer presents hard-coded five principles as normative.
 - Foundation Gate wording stays consistent across `SKILL.md`, initialization reference, generated README, generated AGENTS, and requirements reference.
