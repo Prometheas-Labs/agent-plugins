@@ -5,10 +5,12 @@ This file keeps its `phase-2-requirements.md` name as a legacy compatibility pat
 ## Inputs
 
 - Approved design document from Discovery and Design
-- `docs/product/constitution.md` — approved governance principles. Required before the first PRD.
-- `docs/product/vision.md` — approved, versioned product north star. Required before the first PRD.
+- `docs/product/constitution.md` - approved governance principles with version metadata. Required before the first PRD.
+- `docs/product/vision.md` - approved, versioned product north star. Required before the first PRD.
 
-If either foundation document is missing, unapproved, or the vision is not versioned, stop Requirements and complete the Foundation Gate first. Clear requirements do not bypass this gate for the first PRD.
+If this is the first PRD and either foundation document is missing, unapproved, or unversioned, stop and run Foundation Stage before drafting requirements.
+
+Later PRDs must still load the approved, versioned constitution and approved, versioned vision for alignment checks.
 
 If the PRD would change strategic direction, stop and supersede the vision before writing the PRD.
 
@@ -33,23 +35,29 @@ The Product Requirements Document describes **what** and **why**.
 5. **Requirements** — functional (FR-*) and non-functional (NFR-*) in table format with priority (Must/Should/Could)
 6. **Privacy Model** — what data is collected, what is never collected, consent model
 7. **Success Metrics** — measurable criteria with pass/fail or target values
-8. **Constitution Alignment** — table checking each of the five constitutional principles (see below)
-9. **Vision Alignment** — explicit check that target users, value proposition, platform principles, and relevant surface vision match `docs/product/vision.md`
+8. **Constitution Alignment** — table checking every current constitutional principle or standard with PASS/RISK/FAIL/N/A
+9. **Vision Alignment** — explicit check that target users, value proposition, platform principles, and relevant surface vision match approved `docs/product/vision.md`
 10. **Open Questions** — unresolved decisions to address during implementation
 
 ### Constitution alignment check
 
-Every PRD must include a table validating against all five constitutional principles:
+Every PRD must validate against the actual approved `docs/product/constitution.md`.
 
-| Principle | Status | Notes |
-|-----------|--------|-------|
-| I. Safety Is Non-Negotiable | PASS/RISK/FAIL | ... |
-| II. Privacy By Default, Minimal Data Always | PASS/RISK/FAIL | ... |
-| III. Local-First Core, Account-Optional Network Features | PASS/RISK/FAIL | ... |
-| IV. Sharing and Discovery Without Lock-In | PASS/RISK/FAIL | ... |
-| V. One Domain Model, Many Surfaces | PASS/RISK/FAIL | ... |
+Use this table shape:
 
-Any RISK or FAIL status must include a mitigation plan or a decision to not proceed.
+| Principle or Standard | Status | Notes |
+|-----------------------|--------|-------|
+| [Current constitution item] | PASS/RISK/FAIL/N/A | Evidence, mitigation, or N/A justification |
+
+Rules:
+
+- Evaluate every current constitutional principle or standard.
+- Use N/A only when the item truly does not apply; include a short justification.
+- RISK requires mitigation, amendment discussion, or decision not to proceed.
+- FAIL against the constitution blocks the PRD until explicit constitution amendment, supersession approval, or decision not to proceed.
+- Do not mitigate a constitutional FAIL inside the PRD.
+- If `docs/product/constitution.md` is missing and this is the first PRD, stop for Foundation Gate.
+- If `docs/product/constitution.md` exists but lacks approval or version metadata, ask the user whether to ratify or migrate it before proceeding.
 
 ## TRD Structure
 
@@ -79,8 +87,8 @@ The Technical Requirements Document describes **how**, architecturally.
 ## Quality Criteria
 
 A PRD is ready for User Stories when:
-- All constitutional principles are PASS (or RISK with documented mitigation)
-- Vision alignment is explicit: target users, value proposition, platform principles, and relevant surface vision are consistent with `docs/product/vision.md`
+- Every current constitutional principle or standard is PASS or N/A with justification; RISK has resolved mitigation or an approved amendment path; FAIL is not present
+- Vision alignment is explicit: target users, value proposition, platform principles, and relevant surface vision are consistent with approved `docs/product/vision.md`
 - User stories have clear acceptance criteria
 - Functional requirements are prioritized
 - Privacy model is explicit about what is and isn't collected
