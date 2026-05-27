@@ -20,10 +20,12 @@ Use this reference when:
 
 First feature PRD work is blocked until both foundation documents exist and are approved:
 
-- `docs/product/constitution.md` — approved product governance principles.
+- `docs/product/constitution.md` — approved product governance principles with version metadata.
 - `docs/product/vision.md` — approved, versioned product north star.
 
 Do not create the first feature PRD while either document is missing, unapproved, or unversioned. Clear requirements may skip brainstorming only after Foundation Gate passes.
+
+Run the Vision workflow after Product Constitution approval. The vision must reconcile against the approved constitution and cannot weaken constitutional principles.
 
 ## Preferred dependency: grill-with-docs
 

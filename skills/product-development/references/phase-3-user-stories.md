@@ -6,6 +6,8 @@ This file keeps its `phase-3-user-stories.md` name as a legacy compatibility pat
 
 - Approved PRD at `docs/product/features/{feature}/PRD.md`
 - TRD at `docs/product/features/{feature}/TRD.md` (for technical feasibility context)
+- Approved, versioned product constitution at `docs/product/constitution.md`
+- Approved, versioned product vision at `docs/product/vision.md`
 
 ## Output Location
 
@@ -72,6 +74,12 @@ Stories should be small enough to implement in a single focused session. If a st
 
 Every story references one or more PRD requirements by ID (FR-1, NFR-2, etc.). Every functional requirement in the PRD should be covered by at least one story.
 
+Stories also preserve foundation alignment:
+
+- Constitutional constraints from the PRD/TRD remain visible in acceptance criteria or notes.
+- User intent, personas, and benefits stay aligned with the approved vision.
+- If a story would weaken a constitutional principle or conflict with the approved vision, stop and resolve the foundation artifact before writing scenarios.
+
 ## Platform-Level Artifacts
 
 User stories describe **user intent**, not surface-specific interactions. A story like "As a practitioner, I want my breathwork errors reported automatically" applies to every surface. The surface-specific details (how errors manifest on mobile vs TV) are captured in BDD Scenarios.
@@ -97,3 +105,4 @@ Stories are ready for BDD Scenarios when:
 - Acceptance criteria are testable and specific
 - Stories are small enough to implement individually
 - Personas match those defined in the PRD
+- Constitutional constraints and approved vision intent are preserved

@@ -12,7 +12,7 @@ Project Setup  →  Foundation Stage  →  Discovery and Design  →  Requiremen
                   Foundation Gate          Design Approval       PRD/TRD Approval  Story Approval  Scenario Approval
 ```
 
-Foundation Stage contains Product Constitution approval and the Product Vision workflow. Foundation Gate blocks the first PRD until constitution is approved and vision is approved and versioned. Discovery and Design can still happen before the gate passes. Each approval point pauses for your review before the agent proceeds.
+Foundation Stage contains Product Constitution approval and the Product Vision workflow. Foundation Gate blocks the first PRD until constitution is approved and versioned, and vision is approved and versioned. Discovery and Design can still happen before the gate passes. Each approval point pauses for your review before the agent proceeds.
 
 ## Getting started
 
@@ -106,7 +106,7 @@ You can:
 | Workflow | Artifact | Location |
 |----------|----------|----------|
 | Project Setup | Documentation structure | `docs/product/README.md`, `docs/product/AGENTS.md` |
-| Foundation Stage | Constitution | `docs/product/constitution.md` |
+| Foundation Stage | Constitution | `docs/product/constitution.md`, `docs/product/constitutions/constitution-vX.Y.Z.md` |
 | Foundation Stage | Product vision | `docs/product/vision.md`, `docs/product/visions/vision-vX.Y.Z.md` |
 | Discovery and Design | Design document | `docs/plans/YYYY-MM-DD-<topic>-design.md` |
 | Requirements | PRD | `docs/product/features/{feature}/PRD.md` |
@@ -191,9 +191,11 @@ product-development/
 │   └── METHODOLOGY.md                     ← specification evolution strategies
 ├── references/
 │   ├── initialization.md                  ← project initialization workflow
+│   ├── product-constitution.md            ← Product Constitution workflow and Foundation Gate
 │   ├── product-vision.md                  ← Product Vision workflow and Foundation Gate
 │   ├── source/
-│   │   └── vision-document-guide.md       ← archived source guide
+│   │   ├── product-constitution-guide.md  ← archived constitution source guide
+│   │   └── vision-document-guide.md       ← archived vision source guide
 │   ├── phase-2-requirements.md            ← Requirements workflow; legacy compatibility path
 │   ├── phase-3-user-stories.md            ← User Stories workflow; legacy compatibility path
 │   └── phase-4-scenarios.md               ← BDD Scenarios workflow; legacy compatibility path

@@ -233,6 +233,6 @@ fi
 echo ""
 echo "Done. Next steps:"
 echo "  1. Review docs/product/README.md and docs/product/AGENTS.md"
-echo "  2. Create and approve docs/product/constitution.md"
+echo "  2. Run the Product Constitution workflow to create approved, versioned docs/product/constitution.md"
 echo "  3. Run the Product Vision workflow to create approved, versioned docs/product/vision.md"
 echo "  4. Start the first PRD only after the Foundation Gate passes"
