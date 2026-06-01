@@ -1,0 +1,12 @@
+{
+  "name": "prometheas-product-development",
+  "owner": {
+    "name": "Prometheas Labs"
+  },
+  "plugins": [
+    {
+      "name": "product-development",
+      "source": "."
+    }
+  ]
+}

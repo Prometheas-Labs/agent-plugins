@@ -272,7 +272,9 @@ manifest_paths() {
   printf '%s\n' \
     "$REPO_ROOT/plugin.json" \
     "$REPO_ROOT/.claude-plugin/plugin.json" \
+    "$REPO_ROOT/.claude-plugin/marketplace.json" \
     "$REPO_ROOT/.codex-plugin/plugin.json" \
+    "$REPO_ROOT/.github/plugin/marketplace.json" \
     "$REPO_ROOT/gemini-extension.json" \
     "$REPO_ROOT/package.json"
 }
@@ -543,10 +545,17 @@ NODE
   assert_file_contains "$REPO_ROOT/README.md" '### Plain Agent Skill'
   assert_file_contains "$REPO_ROOT/README.md" 'git clone https://github.com/Prometheas-Labs/agent-skill-product-development.git plugins/product-development'
   assert_file_contains "$REPO_ROOT/README.md" '### Codex'
+  assert_file_contains "$REPO_ROOT/README.md" 'codex plugin marketplace add https://github.com/Prometheas-Labs/agent-skill-product-development.git --ref main'
+  assert_file_contains "$REPO_ROOT/README.md" 'codex plugin add product-development@prometheas-product-development'
   assert_file_contains "$REPO_ROOT/README.md" 'codex plugin marketplace add "$PROJECT_ROOT"'
   assert_file_contains "$REPO_ROOT/README.md" '### Claude Code'
+  assert_file_contains "$REPO_ROOT/README.md" 'claude plugin marketplace add --scope user https://github.com/Prometheas-Labs/agent-skill-product-development.git#main'
+  assert_file_contains "$REPO_ROOT/README.md" 'claude plugin install product-development@prometheas-product-development'
   assert_file_contains "$REPO_ROOT/README.md" 'claude plugin install --scope project product-development@local-product-development'
   assert_file_contains "$REPO_ROOT/README.md" '### GitHub Copilot CLI'
+  assert_file_contains "$REPO_ROOT/README.md" 'copilot plugin marketplace add Prometheas-Labs/agent-skill-product-development'
+  assert_file_contains "$REPO_ROOT/README.md" 'copilot plugin install product-development@prometheas-product-development'
+  assert_file_contains "$REPO_ROOT/README.md" 'copilot plugin install Prometheas-Labs/agent-skill-product-development'
   assert_file_contains "$REPO_ROOT/README.md" 'copilot plugin install product-development@local-product-development'
   assert_file_contains "$REPO_ROOT/README.md" 'Local marketplace install smoke tests have passed for Codex, Claude Code, and'
   assert_file_contains "$REPO_ROOT/README.md" 'they do not prove runtime'

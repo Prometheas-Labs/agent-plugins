@@ -1,0 +1,17 @@
+{
+  "name": "prometheas-product-development",
+  "description": "Product development lifecycle workflows for agentic coding harnesses.",
+  "owner": {
+    "name": "Prometheas Labs"
+  },
+  "plugins": [
+    {
+      "name": "product-development",
+      "source": {
+        "source": "url",
+        "url": "https://github.com/Prometheas-Labs/agent-skill-product-development.git",
+        "ref": "main"
+      }
+    }
+  ]
+}

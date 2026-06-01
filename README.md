@@ -267,11 +267,15 @@ It lands in `.agents/skills/` and works with any compatible agent harness.
 For development or local testing with Claude Code, the skill can also live at
 `.claude/skills/product-development/` in your project.
 
-### Plugin Marketplaces From A Local Checkout
+### Harness-Specific Plugin Installs
 
-The Codex, Claude Code, and GitHub Copilot CLI examples below install this
-package from a project-local marketplace. Start from the project where you want
-the plugin available:
+Codex, Claude Code, and GitHub Copilot CLI can install this package from the
+GitHub repository once the repository is public. Local checkout instructions are
+included as a fallback for development, private forks, or pinned internal
+mirrors.
+
+For local checkout installs, start from the project where you want the plugin
+available:
 
 ```bash
 cd /path/to/your/project
@@ -286,7 +290,15 @@ project root.
 
 ### Codex
 
-Create `.agents/plugins/marketplace.json`:
+Register this repository as a marketplace, then install the plugin:
+
+```bash
+codex plugin marketplace add https://github.com/Prometheas-Labs/agent-skill-product-development.git --ref main
+codex plugin add product-development@prometheas-product-development
+```
+
+If you need to install from a local checkout instead, create
+`.agents/plugins/marketplace.json` in your project:
 
 ```json
 {
@@ -303,7 +315,7 @@ Create `.agents/plugins/marketplace.json`:
 }
 ```
 
-Then register the project root and install the plugin:
+Then register the project root and install from that local marketplace:
 
 ```bash
 codex plugin marketplace add "$PROJECT_ROOT"
@@ -312,7 +324,15 @@ codex plugin add product-development@local-product-development
 
 ### Claude Code
 
-Create `.claude-plugin/marketplace.json`:
+Register this repository as a marketplace, then install the plugin:
+
+```bash
+claude plugin marketplace add --scope user https://github.com/Prometheas-Labs/agent-skill-product-development.git#main
+claude plugin install product-development@prometheas-product-development
+```
+
+If you need to install from a local checkout instead, create
+`.claude-plugin/marketplace.json` in your project:
 
 ```json
 {
@@ -329,7 +349,7 @@ Create `.claude-plugin/marketplace.json`:
 }
 ```
 
-Then validate, register, and install:
+Then validate, register, and install from that local marketplace:
 
 ```bash
 claude plugin validate "$PROJECT_ROOT"
@@ -339,7 +359,20 @@ claude plugin install --scope project product-development@local-product-developm
 
 ### GitHub Copilot CLI
 
-Create `.github/plugin/marketplace.json`:
+Register this repository as a marketplace, then install the plugin:
+
+```bash
+copilot plugin marketplace add Prometheas-Labs/agent-skill-product-development
+copilot plugin install product-development@prometheas-product-development
+```
+
+Copilot CLI also supports direct repository installs with
+`copilot plugin install Prometheas-Labs/agent-skill-product-development`, but
+the CLI currently warns that direct plugin installs are deprecated. Prefer the
+marketplace commands above for public setup instructions.
+
+If you need to install from a local checkout instead, create
+`.github/plugin/marketplace.json` in your project:
 
 ```json
 {
@@ -356,7 +389,7 @@ Create `.github/plugin/marketplace.json`:
 }
 ```
 
-Then register and install:
+Then register and install from that local marketplace:
 
 ```bash
 copilot plugin marketplace add "$PROJECT_ROOT"
