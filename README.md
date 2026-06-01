@@ -27,6 +27,23 @@ Foundation Stage contains Product Constitution approval and the Product Vision w
 
 ## Getting started
 
+### Development environment
+
+This repository includes a pinned Nix dev shell for local validation. The shell
+uses a fixed Nixpkgs commit and provides `python313`, `bats`, and `node`.
+`python313` gives the tests stdlib `tomllib` support without adding a PyPI TOML
+parser dependency.
+
+```bash
+direnv allow
+```
+
+Without direnv, enter the same environment directly:
+
+```bash
+nix develop
+```
+
 ### New project — initialize first
 
 If your project doesn't have a `docs/product/` directory yet, initialize it:

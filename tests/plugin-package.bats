@@ -418,7 +418,16 @@ assert_toml_parses() {
 
   python3 - "$file" <<'PY'
 import sys
-import tomllib
+
+try:
+    import tomllib
+except ModuleNotFoundError:
+    print(
+        "Python 3.11+ is required for TOML validation because stdlib tomllib is unavailable. "
+        "Run `direnv allow` or `nix develop` to use the pinned dev shell.",
+        file=sys.stderr,
+    )
+    raise SystemExit(2)
 
 with open(sys.argv[1], "rb") as handle:
     tomllib.load(handle)
