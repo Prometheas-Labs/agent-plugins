@@ -108,6 +108,31 @@ assert_file_contains() {
   }
 }
 
+assert_file_matches() {
+  local file="$1"
+  local pattern="$2"
+
+  grep -Eq "$pattern" "$file" || {
+    echo "missing expected pattern in $file: $pattern" >&2
+    return 1
+  }
+}
+
+assert_shared_agent_contract() {
+  local file="$1"
+
+  assert_file_matches "$file" '^---$'
+  assert_file_matches "$file" '^name: [a-z][a-z0-9-]*$'
+  assert_file_matches "$file" '^description: .+$'
+  assert_file_contains "$file" 'skills/product-development/SKILL.md'
+  grep -Eq 'skills/product-development/|canonical methodology' "$file" || {
+    echo "agent wrapper does not reference canonical skill tree or methodology: $file" >&2
+    return 1
+  }
+  assert_file_contains "$file" 'Bound your job'
+  assert_file_contains "$file" 'Do not make edits by default.'
+}
+
 assert_compatibility_matrix_contract() {
   local file="$1"
 
@@ -238,6 +263,14 @@ manifest_paths() {
     "$REPO_ROOT/.codex-plugin/plugin.json" \
     "$REPO_ROOT/gemini-extension.json" \
     "$REPO_ROOT/package.json"
+}
+
+shared_agent_paths() {
+  printf '%s\n' \
+    "$REPO_ROOT/agents/shared/product-researcher.md" \
+    "$REPO_ROOT/agents/shared/spec-reviewer.md" \
+    "$REPO_ROOT/agents/shared/plan-reviewer.md" \
+    "$REPO_ROOT/agents/shared/implementation-auditor.md"
 }
 
 assert_manifest_declared_paths_exist() {
@@ -440,7 +473,9 @@ NODE
 
 @test "compatibility matrix documents the V1 harness contract" {
   assert_compatibility_matrix_contract "$REPO_ROOT/docs/compatibility/harness-matrix.md"
-  assert_file_contains "$REPO_ROOT/docs/compatibility/harness-matrix.md" 'V1 does not add `agents/` or `commands/` directories.'
+  assert_file_contains "$REPO_ROOT/docs/compatibility/harness-matrix.md" 'V1 does not add a `commands/` directory.'
+  assert_file_contains "$REPO_ROOT/docs/compatibility/harness-matrix.md" 'V1 includes shared agent wrappers under `agents/shared/`.'
+  assert_file_contains "$REPO_ROOT/docs/compatibility/harness-matrix.md" 'Harness-specific agent support remains adapter- and validation-tiered.'
 }
 
 @test "hook compatibility document defers runtime hooks" {
@@ -476,9 +511,20 @@ NODE
   rm -rf "$temp_dir"
 }
 
-@test "V1 does not ship command or agent adapters yet" {
+@test "V1 does not ship command adapters yet" {
   [ ! -d "$REPO_ROOT/commands" ]
-  [ ! -d "$REPO_ROOT/agents" ]
+}
+
+@test "shared agent wrappers exist" {
+  while IFS= read -r file; do
+    assert_file_exists "$file"
+  done < <(shared_agent_paths)
+}
+
+@test "shared agent wrappers route to canonical methodology and findings-only jobs" {
+  while IFS= read -r file; do
+    assert_shared_agent_contract "$file"
+  done < <(shared_agent_paths)
 }
 
 @test "package metadata rejects npm lifecycle scripts" {

@@ -4,9 +4,9 @@ V1 keeps `skills/product-development/` as the canonical package surface. Plugin
 manifests route supported harnesses to that skill tree and do not duplicate the
 methodology.
 
-V1 does not add `agents/` or `commands/` directories. Agent and command support
-is documented as adapter-only until those wrappers exist and pass harness
-validation.
+V1 does not add a `commands/` directory. V1 includes shared agent wrappers under `agents/shared/`.
+Harness-specific agent support remains adapter- and validation-tiered. Each
+harness load path still requires proof before a runtime support claim.
 
 ## Support Tiers
 
