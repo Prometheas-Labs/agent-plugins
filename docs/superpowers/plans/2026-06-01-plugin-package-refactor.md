@@ -35,6 +35,8 @@ Keep commits bite-sized and logically cohesive:
 
 Do not squash these during implementation. Each commit should pass the relevant targeted tests before moving on.
 
+The first commit should not be a red test-only commit. Task 1 writes the validation tests; Task 2 adds the minimal files needed to make those tests pass; then both are committed together as `test: add plugin package validation`. Later tasks add richer manifests, docs, agents, commands, and README updates in their own commits.
+
 ## Validation Commands
 
 Use these commands throughout:
@@ -116,11 +118,11 @@ bats tests/plugin-package.bats
 
 Expected: FAIL because plugin package files do not exist yet.
 
-- [ ] Do not commit this failing test-only state unless the project convention explicitly permits red commits. Carry the test into Task 2 and commit once the first manifest/docs slice passes.
+- [ ] Do not commit this failing test-only state. Carry the test into Task 2 and commit once the minimal manifest/docs slice passes.
 
-## Task 2: Add Core Plugin Manifests
+## Task 2: Add Minimal Plugin Manifests To Pass Validation
 
-**Goal:** Add root-level manifests that declare the canonical package without moving skill content.
+**Goal:** Add the minimal manifest and compatibility-doc files needed to make Task 1 validation pass without adding full adapter behavior.
 
 **Files:**
 
@@ -129,6 +131,8 @@ Expected: FAIL because plugin package files do not exist yet.
 - Create: `.codex-plugin/plugin.json`
 - Create: `gemini-extension.json`
 - Create: `package.json`
+- Create: `docs/compatibility/harness-matrix.md`
+- Create: `docs/compatibility/hooks.md`
 - Modify: `tests/plugin-package.bats`
 
 ### Steps
@@ -215,6 +219,26 @@ Do not add npm dependencies.
 
 If the repository license is not MIT, use the actual existing license or omit the field until confirmed.
 
+- [ ] Add minimal `docs/compatibility/harness-matrix.md`.
+
+It only needs enough content to satisfy the first validation slice:
+
+```markdown
+# Harness Compatibility Matrix
+
+V1 uses support tiers. A harness is only marked supported after local validation.
+```
+
+- [ ] Add minimal `docs/compatibility/hooks.md`.
+
+It must state that runtime hooks are deferred and no hook config ships in V1:
+
+```markdown
+# Hook Compatibility
+
+Runtime hooks are intentionally deferred for V1. The package must not ship `hooks.json`, `hooks/hooks.json`, hook scripts, or manifest hook declarations until a separate hook design and security review are approved.
+```
+
 - [ ] Update `tests/plugin-package.bats` to validate the exact fields that were added.
 
 - [ ] Run:
@@ -229,23 +253,28 @@ Expected: PASS.
 - [ ] Commit:
 
 ```bash
-git add plugin.json .claude-plugin/plugin.json .codex-plugin/plugin.json gemini-extension.json package.json tests/plugin-package.bats
-git commit -m "feat: add plugin package manifests"
+git add plugin.json .claude-plugin/plugin.json .codex-plugin/plugin.json gemini-extension.json package.json docs/compatibility/harness-matrix.md docs/compatibility/hooks.md tests/plugin-package.bats
+git commit -m "test: add plugin package validation"
 ```
 
-## Task 3: Add Compatibility Documentation
+## Task 3: Expand Compatibility Documentation And Manifests
 
-**Goal:** Document support tiers, install/load expectations, marketplace locations, and hook deferral.
+**Goal:** Expand the minimal docs and manifests into the full V1 compatibility contract.
 
 **Files:**
 
-- Create: `docs/compatibility/harness-matrix.md`
-- Create: `docs/compatibility/hooks.md`
+- Modify: `docs/compatibility/harness-matrix.md`
+- Modify: `docs/compatibility/hooks.md`
+- Modify: `plugin.json`
+- Modify: `.claude-plugin/plugin.json`
+- Modify: `.codex-plugin/plugin.json`
+- Modify: `gemini-extension.json`
+- Modify: `package.json`
 - Modify: `tests/plugin-package.bats`
 
 ### Steps
 
-- [ ] Add `docs/compatibility/harness-matrix.md`.
+- [ ] Expand `docs/compatibility/harness-matrix.md`.
 
 Include a table with:
 
@@ -265,7 +294,7 @@ Use support tiers:
 - `documented adapter only`: docs explain future work; no runtime claim
 - `smoke-test-required`: likely support, but target is too unstable to claim without live test
 
-- [ ] Add `docs/compatibility/hooks.md`.
+- [ ] Expand `docs/compatibility/hooks.md`.
 
 State:
 
@@ -274,7 +303,9 @@ State:
 - no `hooks.json`, `hooks/hooks.json`, hook scripts, or manifest hook declarations are allowed
 - future hooks require separate design, security review, and per-harness schema validation
 
-- [ ] Update tests to assert these docs exist and mention hook deferral.
+- [ ] Expand manifests with only fields that are supported by the current target docs and validated by local tests.
+
+- [ ] Update tests to assert docs and manifests match the expanded compatibility contract.
 
 - [ ] Run:
 
@@ -288,8 +319,8 @@ Expected: PASS.
 - [ ] Commit:
 
 ```bash
-git add docs/compatibility/harness-matrix.md docs/compatibility/hooks.md tests/plugin-package.bats
-git commit -m "docs: add plugin compatibility guidance"
+git add docs/compatibility/harness-matrix.md docs/compatibility/hooks.md plugin.json .claude-plugin/plugin.json .codex-plugin/plugin.json gemini-extension.json package.json tests/plugin-package.bats
+git commit -m "feat: add plugin package manifests"
 ```
 
 ## Task 4: Add Shared Agent Wrappers
