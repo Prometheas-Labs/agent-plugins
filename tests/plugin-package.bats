@@ -506,6 +506,23 @@ NODE
   assert_file_exists "$REPO_ROOT/docs/compatibility/hooks.md"
 }
 
+@test "README documents skill and plugin package usage" {
+  assert_file_contains "$REPO_ROOT/README.md" "This repository remains installable as a plain Agent Skill."
+  assert_file_contains "$REPO_ROOT/README.md" "It also contains"
+  assert_file_contains "$REPO_ROOT/README.md" "plugin-package manifests"
+  assert_file_contains "$REPO_ROOT/README.md" "shared command"
+  assert_file_contains "$REPO_ROOT/README.md" "metadata-only manifests are documented"
+  ! grep -Fq "manifests, commands, and agents route" "$REPO_ROOT/README.md"
+  assert_file_contains "$REPO_ROOT/README.md" 'Support levels for each harness are documented in'
+  assert_file_contains "$REPO_ROOT/README.md" 'docs/compatibility/harness-matrix.md'
+  assert_file_contains "$REPO_ROOT/README.md" "Runtime hooks are intentionally deferred"
+  assert_file_contains "$REPO_ROOT/README.md" "Metadata-only manifests are documented in the compatibility matrix"
+  assert_file_contains "$REPO_ROOT/README.md" "not treated as proven runtime routing"
+  assert_file_contains "$REPO_ROOT/README.md" 'Manifests that declare component paths route back to `skills/product-development/`'
+  assert_file_contains "$REPO_ROOT/README.md" 'bats skills/product-development/tests/init.bats'
+  assert_file_contains "$REPO_ROOT/README.md" 'bats tests/plugin-package.bats'
+}
+
 @test "compatibility matrix documents the V1 harness contract" {
   assert_compatibility_matrix_contract "$REPO_ROOT/docs/compatibility/harness-matrix.md"
   assert_file_contains "$REPO_ROOT/docs/compatibility/harness-matrix.md" 'V1 includes shared Markdown command wrappers under `commands/shared/`'

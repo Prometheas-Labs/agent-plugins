@@ -2,6 +2,17 @@
 
 A skill that guides AI coding agents through a structured product development lifecycle, from project setup through implementation planning.
 
+This repository remains installable as a plain Agent Skill. It also contains
+plugin-package manifests for harnesses that can load packaged skills. The
+canonical methodology lives in `skills/product-development/`; shared command
+and agent wrappers route there, while metadata-only manifests are documented in
+the compatibility matrix. Adapters do not own separate lifecycle rules.
+
+Support levels for each harness are documented in
+`docs/compatibility/harness-matrix.md`. Runtime hooks are intentionally deferred
+for V1; no hook configuration, hook scripts, or manifest hook declarations ship
+with this package.
+
 ## What it does
 
 This skill orchestrates the creation of product artifacts in a deliberate sequence, with human review gates between each workflow:
@@ -78,6 +89,18 @@ The script has BATS test coverage:
 
 ```bash
 bats tests/init.bats
+```
+
+From the repository root, run the same init script coverage with:
+
+```bash
+bats skills/product-development/tests/init.bats
+```
+
+Plugin package validation is covered separately:
+
+```bash
+bats tests/plugin-package.bats
 ```
 
 ### Start building
@@ -221,3 +244,25 @@ npx skills add product-development
 It lands in `.agents/skills/` and works with any compatible agent harness.
 
 For development or local testing with Claude Code, the skill can also live at `.claude/skills/product-development/` in your project.
+
+## Plugin package
+
+The repository also includes plugin-package manifests:
+
+- `plugin.json`
+- `.claude-plugin/plugin.json`
+- `.codex-plugin/plugin.json`
+- `gemini-extension.json`
+- `package.json`
+
+These files keep the repository package-shaped for supported harnesses.
+Manifests that declare component paths route back to `skills/product-development/`.
+Metadata-only manifests are documented in the compatibility matrix and are not treated as proven runtime routing. Shared command and agent adapters under
+`commands/shared/` and `agents/shared/` are thin entrypoints only; the skill tree
+remains the source of truth for Product Constitution, Product Vision,
+requirements, user stories, scenarios, and implementation planning methodology.
+
+See `docs/compatibility/harness-matrix.md` for support tiers and validation
+status. See `docs/compatibility/hooks.md` for the V1 hook policy: hooks are
+intentionally deferred until a separate design, security review, and
+per-harness schema validation are approved.
