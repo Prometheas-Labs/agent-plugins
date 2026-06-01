@@ -1,0 +1,28 @@
+{
+  "name": "product-development",
+  "version": "0.1.0",
+  "description": "Product development lifecycle workflows as portable agent skills.",
+  "author": {
+    "name": "Prometheas Labs"
+  },
+  "keywords": [
+    "agent-skill",
+    "product-development",
+    "codex-plugin"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Product Development",
+    "shortDescription": "Guide product development lifecycle workflows",
+    "longDescription": "Use Product Development to create and review product artifacts through the canonical product-development skill without duplicating methodology in harness adapters.",
+    "developerName": "Prometheas Labs",
+    "category": "Developer Tools",
+    "capabilities": [
+      "Interactive",
+      "Write"
+    ],
+    "defaultPrompt": [
+      "Use the product-development skill for this feature"
+    ]
+  }
+}
