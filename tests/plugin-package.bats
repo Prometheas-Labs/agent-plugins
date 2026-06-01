@@ -247,9 +247,16 @@ for (const expected of expectedRows) {
   }
 }
 
-for (const tier of ["supported", "manifest prepared", "shared wrappers", "documented adapter only", "smoke-test-required"]) {
+for (const tier of ["supported", "manifest prepared", "documented adapter only", "smoke-test-required"]) {
   if (!lines.some((line) => line.includes(`\`${tier}\``))) {
     console.error(`missing support tier definition: ${tier}`);
+    process.exit(1);
+  }
+}
+
+for (const state of ["shared wrappers"]) {
+  if (!lines.some((line) => line.includes(`\`${state}\``))) {
+    console.error(`missing capability state definition: ${state}`);
     process.exit(1);
   }
 }

@@ -13,9 +13,12 @@ proof before a runtime support claim.
 
 - `supported`: local load or validation passes for the harness.
 - `manifest prepared`: manifest exists and declared paths validate, but no runtime load was proven.
-- `shared wrappers`: thin shared Markdown wrappers exist, but harness-specific command loading was not proven.
 - `documented adapter only`: docs explain future adapter work, with no runtime support claim.
 - `smoke-test-required`: likely support, but the target is too unstable to claim without a live test.
+
+## Capability States
+
+- `shared wrappers`: thin shared Markdown wrappers exist, but harness-specific command or agent loading was not proven.
 
 ## V1 Contract
 
