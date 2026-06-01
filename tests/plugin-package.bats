@@ -172,7 +172,7 @@ const expectedRows = [
     "V1 support tier": "supported",
     "manifest file": "skills/product-development/SKILL.md",
     "skills support": "supported",
-    "commands support": "documented adapter only",
+    "commands support": "shared wrappers",
     "agents support": "documented adapter only",
     "validation command": "bats skills/product-development/tests/init.bats",
   },
@@ -181,7 +181,7 @@ const expectedRows = [
     "V1 support tier": "manifest prepared",
     "manifest file": ".claude-plugin/plugin.json",
     "skills support": "manifest prepared",
-    "commands support": "documented adapter only",
+    "commands support": "shared wrappers",
     "agents support": "documented adapter only",
     "validation command": "bats tests/plugin-package.bats",
   },
@@ -190,7 +190,7 @@ const expectedRows = [
     "V1 support tier": "manifest prepared",
     "manifest file": ".codex-plugin/plugin.json",
     "skills support": "manifest prepared",
-    "commands support": "documented adapter only",
+    "commands support": "shared wrappers",
     "agents support": "documented adapter only",
     "validation command": "bats tests/plugin-package.bats",
   },
@@ -199,7 +199,7 @@ const expectedRows = [
     "V1 support tier": "manifest prepared",
     "manifest file": "plugin.json",
     "skills support": "manifest prepared",
-    "commands support": "documented adapter only",
+    "commands support": "shared wrappers",
     "agents support": "documented adapter only",
     "validation command": "bats tests/plugin-package.bats",
   },
@@ -217,7 +217,7 @@ const expectedRows = [
     "V1 support tier": "manifest prepared",
     "manifest file": "package.json",
     "skills support": "manifest prepared",
-    "commands support": "documented adapter only",
+    "commands support": "shared wrappers",
     "agents support": "documented adapter only",
     "validation command": "bats tests/plugin-package.bats",
   },
@@ -247,7 +247,7 @@ for (const expected of expectedRows) {
   }
 }
 
-for (const tier of ["supported", "manifest prepared", "documented adapter only", "smoke-test-required"]) {
+for (const tier of ["supported", "manifest prepared", "shared wrappers", "documented adapter only", "smoke-test-required"]) {
   if (!lines.some((line) => line.includes(`\`${tier}\``))) {
     console.error(`missing support tier definition: ${tier}`);
     process.exit(1);
@@ -271,6 +271,19 @@ shared_agent_paths() {
     "$REPO_ROOT/agents/shared/spec-reviewer.md" \
     "$REPO_ROOT/agents/shared/plan-reviewer.md" \
     "$REPO_ROOT/agents/shared/implementation-auditor.md"
+}
+
+shared_command_paths() {
+  printf '%s\n' \
+    "$REPO_ROOT/commands/shared/init-product-docs.md" \
+    "$REPO_ROOT/commands/shared/create-constitution.md" \
+    "$REPO_ROOT/commands/shared/create-vision.md" \
+    "$REPO_ROOT/commands/shared/write-prd.md"
+}
+
+gemini_command_paths() {
+  [ -d "$REPO_ROOT/commands/gemini" ] || return 0
+  find "$REPO_ROOT/commands/gemini" -type f -name '*.toml'
 }
 
 assert_manifest_declared_paths_exist() {
@@ -383,6 +396,28 @@ assert_adapter_files_are_thin() {
   done < <(find "$directory" -type f)
 }
 
+assert_shared_command_contract() {
+  local file="$1"
+
+  assert_file_contains "$file" 'skills/product-development/SKILL.md'
+  grep -Eq 'Use the product-development skill|canonical methodology|canonical skill' "$file" || {
+    echo "command wrapper does not route to the canonical skill: $file" >&2
+    return 1
+  }
+}
+
+assert_toml_parses() {
+  local file="$1"
+
+  python3 - "$file" <<'PY'
+import sys
+import tomllib
+
+with open(sys.argv[1], "rb") as handle:
+    tomllib.load(handle)
+PY
+}
+
 assert_runtime_hooks_absent() {
   local root="$1"
 
@@ -473,9 +508,10 @@ NODE
 
 @test "compatibility matrix documents the V1 harness contract" {
   assert_compatibility_matrix_contract "$REPO_ROOT/docs/compatibility/harness-matrix.md"
-  assert_file_contains "$REPO_ROOT/docs/compatibility/harness-matrix.md" 'V1 does not add a `commands/` directory.'
-  assert_file_contains "$REPO_ROOT/docs/compatibility/harness-matrix.md" 'V1 includes shared agent wrappers under `agents/shared/`.'
-  assert_file_contains "$REPO_ROOT/docs/compatibility/harness-matrix.md" 'Harness-specific agent support remains adapter- and validation-tiered.'
+  assert_file_contains "$REPO_ROOT/docs/compatibility/harness-matrix.md" 'V1 includes shared Markdown command wrappers under `commands/shared/`'
+  assert_file_contains "$REPO_ROOT/docs/compatibility/harness-matrix.md" 'agent wrappers under `agents/shared/`'
+  assert_file_contains "$REPO_ROOT/docs/compatibility/harness-matrix.md" 'Harness-specific command and agent support'
+  assert_file_contains "$REPO_ROOT/docs/compatibility/harness-matrix.md" 'no context file, TOML commands'
 }
 
 @test "hook compatibility document defers runtime hooks" {
@@ -511,8 +547,23 @@ NODE
   rm -rf "$temp_dir"
 }
 
-@test "V1 does not ship command adapters yet" {
-  [ ! -d "$REPO_ROOT/commands" ]
+@test "shared command wrappers exist" {
+  while IFS= read -r file; do
+    assert_file_exists "$file"
+  done < <(shared_command_paths)
+}
+
+@test "shared command wrappers route to canonical methodology" {
+  while IFS= read -r file; do
+    assert_shared_command_contract "$file"
+  done < <(shared_command_paths)
+}
+
+@test "Gemini TOML command wrappers parse if present" {
+  while IFS= read -r file; do
+    [ -n "$file" ] || continue
+    assert_toml_parses "$file"
+  done < <(gemini_command_paths)
 }
 
 @test "shared agent wrappers exist" {
