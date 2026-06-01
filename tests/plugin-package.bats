@@ -527,40 +527,49 @@ NODE
 @test "required compatibility docs exist" {
   assert_file_exists "$REPO_ROOT/docs/compatibility/harness-matrix.md"
   assert_file_exists "$REPO_ROOT/docs/compatibility/hooks.md"
+  assert_file_exists "$REPO_ROOT/docs/development.md"
 }
 
 @test "README documents skill and plugin package usage" {
-  assert_file_contains "$REPO_ROOT/README.md" "This repository remains installable as a plain Agent Skill."
-  assert_file_contains "$REPO_ROOT/README.md" "It also contains"
-  assert_file_contains "$REPO_ROOT/README.md" "plugin-package manifests"
+  assert_file_contains "$REPO_ROOT/README.md" "# Product Development Plugin"
+  assert_file_contains "$REPO_ROOT/README.md" "Plugin installation is the"
+  assert_file_contains "$REPO_ROOT/README.md" "preferred path for Codex, Claude Code, and GitHub Copilot CLI"
+  assert_file_contains "$REPO_ROOT/README.md" "<summary>Codex</summary>"
+  assert_file_contains "$REPO_ROOT/README.md" "<summary>Claude Code</summary>"
+  assert_file_contains "$REPO_ROOT/README.md" "<summary>GitHub Copilot CLI</summary>"
+  assert_file_contains "$REPO_ROOT/README.md" "<summary>Plain Agent Skill</summary>"
   assert_file_contains "$REPO_ROOT/README.md" "shared command"
-  assert_file_contains "$REPO_ROOT/README.md" "metadata-only manifests are documented"
   ! grep -Fq "manifests, commands, and agents route" "$REPO_ROOT/README.md"
-  assert_file_contains "$REPO_ROOT/README.md" 'Support levels for each harness are documented in'
   assert_file_contains "$REPO_ROOT/README.md" 'docs/compatibility/harness-matrix.md'
+  assert_file_contains "$REPO_ROOT/README.md" 'docs/development.md'
   assert_file_contains "$REPO_ROOT/README.md" "Runtime hooks are intentionally deferred"
-  assert_file_contains "$REPO_ROOT/README.md" "Metadata-only manifests are documented in the compatibility matrix"
-  assert_file_contains "$REPO_ROOT/README.md" "not treated as proven runtime routing"
-  assert_file_contains "$REPO_ROOT/README.md" 'Manifests that declare component paths route back to `skills/product-development/`'
-  assert_file_contains "$REPO_ROOT/README.md" '### Plain Agent Skill'
-  assert_file_contains "$REPO_ROOT/README.md" 'git clone https://github.com/Prometheas-Labs/agent-skill-product-development.git plugins/product-development'
-  assert_file_contains "$REPO_ROOT/README.md" '### Codex'
+  assert_file_contains "$REPO_ROOT/README.md" "Metadata-only manifests are documented in the"
+  assert_file_contains "$REPO_ROOT/README.md" "compatibility matrix"
+  assert_file_contains "$REPO_ROOT/README.md" 'Manifests that declare component paths route back to'
+  assert_file_contains "$REPO_ROOT/README.md" '`skills/product-development/`'
   assert_file_contains "$REPO_ROOT/README.md" 'codex plugin marketplace add https://github.com/Prometheas-Labs/agent-skill-product-development.git --ref main'
   assert_file_contains "$REPO_ROOT/README.md" 'codex plugin add product-development@prometheas-product-development'
-  assert_file_contains "$REPO_ROOT/README.md" 'codex plugin marketplace add "$PROJECT_ROOT"'
-  assert_file_contains "$REPO_ROOT/README.md" '### Claude Code'
   assert_file_contains "$REPO_ROOT/README.md" 'claude plugin marketplace add --scope user https://github.com/Prometheas-Labs/agent-skill-product-development.git#main'
   assert_file_contains "$REPO_ROOT/README.md" 'claude plugin install product-development@prometheas-product-development'
-  assert_file_contains "$REPO_ROOT/README.md" 'claude plugin install --scope project product-development@local-product-development'
-  assert_file_contains "$REPO_ROOT/README.md" '### GitHub Copilot CLI'
   assert_file_contains "$REPO_ROOT/README.md" 'copilot plugin marketplace add Prometheas-Labs/agent-skill-product-development'
   assert_file_contains "$REPO_ROOT/README.md" 'copilot plugin install product-development@prometheas-product-development'
   assert_file_contains "$REPO_ROOT/README.md" 'copilot plugin install Prometheas-Labs/agent-skill-product-development'
-  assert_file_contains "$REPO_ROOT/README.md" 'copilot plugin install product-development@local-product-development'
+  assert_file_contains "$REPO_ROOT/README.md" 'npx skills add product-development'
   assert_file_contains "$REPO_ROOT/README.md" 'Local marketplace install smoke tests have passed for Codex, Claude Code, and'
   assert_file_contains "$REPO_ROOT/README.md" 'they do not prove runtime'
-  assert_file_contains "$REPO_ROOT/README.md" 'bats skills/product-development/tests/init.bats'
-  assert_file_contains "$REPO_ROOT/README.md" 'bats tests/plugin-package.bats'
+  ! grep -Fq 'git clone https://github.com/Prometheas-Labs/agent-skill-product-development.git plugins/product-development' "$REPO_ROOT/README.md"
+  ! grep -Fq 'codex plugin marketplace add "$PROJECT_ROOT"' "$REPO_ROOT/README.md"
+}
+
+@test "development docs cover local checkout and validation workflows" {
+  assert_file_contains "$REPO_ROOT/docs/development.md" '# Development'
+  assert_file_contains "$REPO_ROOT/docs/development.md" '## Installing From A Local Checkout'
+  assert_file_contains "$REPO_ROOT/docs/development.md" 'git clone https://github.com/Prometheas-Labs/agent-skill-product-development.git plugins/product-development'
+  assert_file_contains "$REPO_ROOT/docs/development.md" 'codex plugin marketplace add "$PROJECT_ROOT"'
+  assert_file_contains "$REPO_ROOT/docs/development.md" 'claude plugin install --scope project product-development@local-product-development'
+  assert_file_contains "$REPO_ROOT/docs/development.md" 'copilot plugin install product-development@local-product-development'
+  assert_file_contains "$REPO_ROOT/docs/development.md" 'nix develop -c bats tests/plugin-package.bats'
+  assert_file_contains "$REPO_ROOT/docs/development.md" 'nix develop -c bats skills/product-development/tests/init.bats'
 }
 
 @test "compatibility matrix documents the V1 harness contract" {
