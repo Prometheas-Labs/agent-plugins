@@ -178,30 +178,30 @@ const expectedRows = [
   },
   {
     harness: "Claude Code",
-    "V1 support tier": "manifest prepared",
+    "V1 support tier": "supported",
     "manifest file": ".claude-plugin/plugin.json",
-    "skills support": "manifest prepared",
+    "skills support": "install validated",
     "commands support": "shared wrappers",
     "agents support": "documented adapter only",
-    "validation command": "bats tests/plugin-package.bats",
+    "validation command": "bats tests/plugin-package.bats + Claude project marketplace smoke test",
   },
   {
     harness: "Codex",
-    "V1 support tier": "manifest prepared",
+    "V1 support tier": "supported",
     "manifest file": ".codex-plugin/plugin.json",
-    "skills support": "manifest prepared",
+    "skills support": "install validated",
     "commands support": "shared wrappers",
     "agents support": "documented adapter only",
-    "validation command": "bats tests/plugin-package.bats",
+    "validation command": "bats tests/plugin-package.bats + Codex local marketplace smoke test",
   },
   {
     harness: "GitHub Copilot CLI",
-    "V1 support tier": "manifest prepared",
+    "V1 support tier": "supported",
     "manifest file": "plugin.json",
-    "skills support": "manifest prepared",
+    "skills support": "install validated",
     "commands support": "shared wrappers",
     "agents support": "documented adapter only",
-    "validation command": "bats tests/plugin-package.bats",
+    "validation command": "bats tests/plugin-package.bats + Copilot local marketplace smoke test",
   },
   {
     harness: "Gemini/Antigravity",
@@ -259,6 +259,11 @@ for (const state of ["shared wrappers"]) {
     console.error(`missing capability state definition: ${state}`);
     process.exit(1);
   }
+}
+
+if (!lines.some((line) => line.includes("Local Marketplace Layouts"))) {
+  console.error("missing local marketplace layouts section");
+  process.exit(1);
 }
 NODE
 }
@@ -535,6 +540,8 @@ NODE
   assert_file_contains "$REPO_ROOT/README.md" "Metadata-only manifests are documented in the compatibility matrix"
   assert_file_contains "$REPO_ROOT/README.md" "not treated as proven runtime routing"
   assert_file_contains "$REPO_ROOT/README.md" 'Manifests that declare component paths route back to `skills/product-development/`'
+  assert_file_contains "$REPO_ROOT/README.md" 'Local marketplace install smoke tests have passed for Codex, Claude Code, and'
+  assert_file_contains "$REPO_ROOT/README.md" 'they do not prove runtime'
   assert_file_contains "$REPO_ROOT/README.md" 'bats skills/product-development/tests/init.bats'
   assert_file_contains "$REPO_ROOT/README.md" 'bats tests/plugin-package.bats'
 }
@@ -545,6 +552,8 @@ NODE
   assert_file_contains "$REPO_ROOT/docs/compatibility/harness-matrix.md" 'agent wrappers under `agents/shared/`'
   assert_file_contains "$REPO_ROOT/docs/compatibility/harness-matrix.md" 'Harness-specific command and agent support'
   assert_file_contains "$REPO_ROOT/docs/compatibility/harness-matrix.md" 'no context file, TOML commands'
+  assert_file_contains "$REPO_ROOT/docs/compatibility/harness-matrix.md" 'Codex local marketplace smoke test'
+  assert_file_contains "$REPO_ROOT/docs/compatibility/harness-matrix.md" '.github/plugin/marketplace.json'
 }
 
 @test "hook compatibility document defers runtime hooks" {

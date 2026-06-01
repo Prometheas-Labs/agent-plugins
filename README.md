@@ -279,7 +279,12 @@ Metadata-only manifests are documented in the compatibility matrix and are not t
 remains the source of truth for Product Constitution, Product Vision,
 requirements, user stories, scenarios, and implementation planning methodology.
 
-See `docs/compatibility/harness-matrix.md` for support tiers and validation
-status. See `docs/compatibility/hooks.md` for the V1 hook policy: hooks are
-intentionally deferred until a separate design, security review, and
-per-harness schema validation are approved.
+Local marketplace install smoke tests have passed for Codex, Claude Code, and
+GitHub Copilot CLI at the skill-package level. Those tests prove the package can
+be registered and installed through those harnesses; they do not prove runtime
+loading for shared command wrappers, shared agent wrappers, or hooks.
+
+See `docs/compatibility/harness-matrix.md` for support tiers, local marketplace
+layouts, and validation status. See `docs/compatibility/hooks.md` for the V1
+hook policy: hooks are intentionally deferred until a separate design, security
+review, and per-harness schema validation are approved.
