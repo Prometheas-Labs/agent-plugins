@@ -2,7 +2,10 @@
   "name": "product-development",
   "version": "0.1.0",
   "description": "Product development lifecycle workflows as portable agent skills.",
+  "author": {
+    "name": "Prometheas Labs"
+  },
   "skills": [
-    "skills/product-development"
+    "./skills/product-development"
   ]
 }

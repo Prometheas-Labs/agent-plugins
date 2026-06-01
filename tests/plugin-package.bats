@@ -7,6 +7,7 @@ REPO_ROOT="$(cd "$(dirname "$BATS_TEST_FILENAME")/.." && pwd)"
 COMMAND_LINE_LIMIT=40
 AGENT_LINE_LIMIT=80
 EXPECTED_DESCRIPTION="Product development lifecycle workflows as portable agent skills."
+EXPECTED_AUTHOR_NAME="Prometheas Labs"
 
 assert_file_exists() {
   [ -f "$1" ] || {
@@ -95,6 +96,139 @@ assert_json_object_keys_equals() {
       process.exit(1);
     }
   ' "$file" "$expression" "$@"
+}
+
+assert_file_contains() {
+  local file="$1"
+  local expected="$2"
+
+  grep -Fq "$expected" "$file" || {
+    echo "missing expected text in $file: $expected" >&2
+    return 1
+  }
+}
+
+assert_compatibility_matrix_contract() {
+  local file="$1"
+
+  node - "$file" <<'NODE'
+const fs = require("fs");
+
+const file = process.argv[2];
+const lines = fs.readFileSync(file, "utf8").split(/\r?\n/);
+const tableLines = lines.filter((line) => /^\|.*\|$/.test(line.trim()));
+const parse = (line) => line.trim().slice(1, -1).split("|").map((cell) => cell.trim());
+const header = tableLines.length > 0 ? parse(tableLines[0]) : [];
+const expectedHeader = [
+  "harness",
+  "V1 support tier",
+  "manifest file",
+  "skills support",
+  "commands support",
+  "agents support",
+  "validation command",
+  "notes",
+];
+
+if (JSON.stringify(header) !== JSON.stringify(expectedHeader)) {
+  console.error(`compatibility matrix header mismatch: ${JSON.stringify(header)}`);
+  process.exit(1);
+}
+
+const rows = tableLines
+  .slice(2)
+  .map(parse)
+  .filter((row) => row.length === expectedHeader.length)
+  .map((row) => Object.fromEntries(expectedHeader.map((key, index) => [key, row[index]])));
+
+const expectedRows = [
+  {
+    harness: "Plain Agent Skill",
+    "V1 support tier": "supported",
+    "manifest file": "skills/product-development/SKILL.md",
+    "skills support": "supported",
+    "commands support": "documented adapter only",
+    "agents support": "documented adapter only",
+    "validation command": "bats skills/product-development/tests/init.bats",
+  },
+  {
+    harness: "Claude Code",
+    "V1 support tier": "manifest prepared",
+    "manifest file": ".claude-plugin/plugin.json",
+    "skills support": "manifest prepared",
+    "commands support": "documented adapter only",
+    "agents support": "documented adapter only",
+    "validation command": "bats tests/plugin-package.bats",
+  },
+  {
+    harness: "Codex",
+    "V1 support tier": "manifest prepared",
+    "manifest file": ".codex-plugin/plugin.json",
+    "skills support": "manifest prepared",
+    "commands support": "documented adapter only",
+    "agents support": "documented adapter only",
+    "validation command": "bats tests/plugin-package.bats",
+  },
+  {
+    harness: "GitHub Copilot CLI",
+    "V1 support tier": "manifest prepared",
+    "manifest file": "plugin.json",
+    "skills support": "manifest prepared",
+    "commands support": "documented adapter only",
+    "agents support": "documented adapter only",
+    "validation command": "bats tests/plugin-package.bats",
+  },
+  {
+    harness: "Gemini/Antigravity",
+    "V1 support tier": "manifest prepared",
+    "manifest file": "gemini-extension.json",
+    "skills support": "manifest prepared",
+    "commands support": "documented adapter only",
+    "agents support": "documented adapter only",
+    "validation command": "bats tests/plugin-package.bats",
+  },
+  {
+    harness: "Pi",
+    "V1 support tier": "manifest prepared",
+    "manifest file": "package.json",
+    "skills support": "manifest prepared",
+    "commands support": "documented adapter only",
+    "agents support": "documented adapter only",
+    "validation command": "bats tests/plugin-package.bats",
+  },
+  {
+    harness: "OMP",
+    "V1 support tier": "smoke-test-required",
+    "manifest file": ".claude-plugin/plugin.json / package.json",
+    "skills support": "smoke-test-required",
+    "commands support": "smoke-test-required",
+    "agents support": "smoke-test-required",
+    "validation command": "manual OMP install/link smoke test",
+  },
+];
+
+for (const expected of expectedRows) {
+  const actual = rows.find((row) => row.harness === expected.harness);
+  if (!actual) {
+    console.error(`missing compatibility matrix row: ${expected.harness}`);
+    process.exit(1);
+  }
+
+  for (const [key, value] of Object.entries(expected)) {
+    if (actual[key] !== value) {
+      console.error(`${expected.harness} ${key} expected ${value}, got ${actual[key]}`);
+      process.exit(1);
+    }
+  }
+}
+
+for (const tier of ["supported", "manifest prepared", "documented adapter only", "smoke-test-required"]) {
+  if (!lines.some((line) => line.includes(`\`${tier}\``))) {
+    console.error(`missing support tier definition: ${tier}`);
+    process.exit(1);
+  }
+}
+NODE
 }
 
 manifest_paths() {
@@ -304,6 +438,22 @@ NODE
   assert_file_exists "$REPO_ROOT/docs/compatibility/hooks.md"
 }
 
+@test "compatibility matrix documents the V1 harness contract" {
+  assert_compatibility_matrix_contract "$REPO_ROOT/docs/compatibility/harness-matrix.md"
+  assert_file_contains "$REPO_ROOT/docs/compatibility/harness-matrix.md" 'V1 does not add `agents/` or `commands/` directories.'
+}
+
+@test "hook compatibility document defers runtime hooks" {
+  assert_file_contains "$REPO_ROOT/docs/compatibility/hooks.md" "Runtime hooks are deferred for V1."
+  assert_file_contains "$REPO_ROOT/docs/compatibility/hooks.md" 'no `hooks.json`'
+  assert_file_contains "$REPO_ROOT/docs/compatibility/hooks.md" 'no `hooks/hooks.json`'
+  assert_file_contains "$REPO_ROOT/docs/compatibility/hooks.md" "no hook scripts"
+  assert_file_contains "$REPO_ROOT/docs/compatibility/hooks.md" "no manifest hook declarations"
+  assert_file_contains "$REPO_ROOT/docs/compatibility/hooks.md" "separate design"
+  assert_file_contains "$REPO_ROOT/docs/compatibility/hooks.md" "security review"
+  assert_file_contains "$REPO_ROOT/docs/compatibility/hooks.md" "per-harness schema"
+}
+
 @test "canonical product-development skill layout remains in place" {
   assert_file_exists "$REPO_ROOT/skills/product-development/SKILL.md"
   assert_dir_exists "$REPO_ROOT/skills/product-development/references"
@@ -324,6 +474,11 @@ NODE
   [ "$status" -ne 0 ]
 
   rm -rf "$temp_dir"
+}
+
+@test "V1 does not ship command or agent adapters yet" {
+  [ ! -d "$REPO_ROOT/commands" ]
+  [ ! -d "$REPO_ROOT/agents" ]
 }
 
 @test "package metadata rejects npm lifecycle scripts" {
@@ -410,18 +565,23 @@ NODE
   rm -rf "$temp_dir"
 }
 
-@test "minimal manifests point to the canonical product-development skill" {
-  assert_json_object_keys_equals "$REPO_ROOT/plugin.json" "." "name" "version" "description" "skills"
+@test "manifests point to the canonical product-development skill without adapters or hooks" {
+  assert_json_object_keys_equals "$REPO_ROOT/plugin.json" "." "name" "version" "description" "author" "keywords" "skills"
+  assert_json_object_keys_equals "$REPO_ROOT/plugin.json" "author" "name"
   assert_json_field_equals "$REPO_ROOT/plugin.json" "name" "product-development"
   assert_json_field_equals "$REPO_ROOT/plugin.json" "version" "0.1.0"
   assert_json_field_equals "$REPO_ROOT/plugin.json" "description" "$EXPECTED_DESCRIPTION"
+  assert_json_field_equals "$REPO_ROOT/plugin.json" "author.name" "$EXPECTED_AUTHOR_NAME"
+  assert_json_array_equals "$REPO_ROOT/plugin.json" "keywords" "agent-skill" "product-development" "copilot-cli-plugin"
   assert_json_array_equals "$REPO_ROOT/plugin.json" "skills" "skills/product-development"
 
-  assert_json_object_keys_equals "$REPO_ROOT/.claude-plugin/plugin.json" "." "name" "version" "description" "skills"
+  assert_json_object_keys_equals "$REPO_ROOT/.claude-plugin/plugin.json" "." "name" "version" "description" "author" "skills"
+  assert_json_object_keys_equals "$REPO_ROOT/.claude-plugin/plugin.json" "author" "name"
   assert_json_field_equals "$REPO_ROOT/.claude-plugin/plugin.json" "name" "product-development"
   assert_json_field_equals "$REPO_ROOT/.claude-plugin/plugin.json" "version" "0.1.0"
   assert_json_field_equals "$REPO_ROOT/.claude-plugin/plugin.json" "description" "$EXPECTED_DESCRIPTION"
-  assert_json_array_equals "$REPO_ROOT/.claude-plugin/plugin.json" "skills" "skills/product-development"
+  assert_json_field_equals "$REPO_ROOT/.claude-plugin/plugin.json" "author.name" "$EXPECTED_AUTHOR_NAME"
+  assert_json_array_equals "$REPO_ROOT/.claude-plugin/plugin.json" "skills" "./skills/product-development"
 
   assert_json_object_keys_equals "$REPO_ROOT/.codex-plugin/plugin.json" "." "name" "version" "description" "author" "keywords" "skills" "interface"
   assert_json_object_keys_equals "$REPO_ROOT/.codex-plugin/plugin.json" "author" "name"
