@@ -252,7 +252,11 @@ Reference files are loaded by the agent only when it enters the corresponding wo
 
 ## Installation
 
-This skill is designed to be installed via [skills.sh](https://skills.sh):
+Choose the path that matches your harness.
+
+### Plain Agent Skill
+
+Install the canonical skill via [skills.sh](https://skills.sh):
 
 ```bash
 npx skills add product-development
@@ -260,7 +264,110 @@ npx skills add product-development
 
 It lands in `.agents/skills/` and works with any compatible agent harness.
 
-For development or local testing with Claude Code, the skill can also live at `.claude/skills/product-development/` in your project.
+For development or local testing with Claude Code, the skill can also live at
+`.claude/skills/product-development/` in your project.
+
+### Plugin Marketplaces From A Local Checkout
+
+The Codex, Claude Code, and GitHub Copilot CLI examples below install this
+package from a project-local marketplace. Start from the project where you want
+the plugin available:
+
+```bash
+cd /path/to/your/project
+mkdir -p plugins
+git clone https://github.com/Prometheas-Labs/agent-skill-product-development.git plugins/product-development
+export PROJECT_ROOT="$PWD"
+```
+
+If you vendor or submodule dependencies differently, keep the same final layout:
+the plugin package should live at `plugins/product-development/` relative to the
+project root.
+
+### Codex
+
+Create `.agents/plugins/marketplace.json`:
+
+```json
+{
+  "name": "local-product-development",
+  "plugins": [
+    {
+      "name": "product-development",
+      "source": {
+        "source": "local",
+        "path": "./plugins/product-development"
+      }
+    }
+  ]
+}
+```
+
+Then register the project root and install the plugin:
+
+```bash
+codex plugin marketplace add "$PROJECT_ROOT"
+codex plugin add product-development@local-product-development
+```
+
+### Claude Code
+
+Create `.claude-plugin/marketplace.json`:
+
+```json
+{
+  "name": "local-product-development",
+  "owner": {
+    "name": "Your Team"
+  },
+  "plugins": [
+    {
+      "name": "product-development",
+      "source": "./plugins/product-development"
+    }
+  ]
+}
+```
+
+Then validate, register, and install:
+
+```bash
+claude plugin validate "$PROJECT_ROOT"
+claude plugin marketplace add --scope project "$PROJECT_ROOT"
+claude plugin install --scope project product-development@local-product-development
+```
+
+### GitHub Copilot CLI
+
+Create `.github/plugin/marketplace.json`:
+
+```json
+{
+  "name": "local-product-development",
+  "owner": {
+    "name": "Your Team"
+  },
+  "plugins": [
+    {
+      "name": "product-development",
+      "source": "./plugins/product-development"
+    }
+  ]
+}
+```
+
+Then register and install:
+
+```bash
+copilot plugin marketplace add "$PROJECT_ROOT"
+copilot plugin install product-development@local-product-development
+```
+
+### Other Harnesses
+
+Gemini/Antigravity, Pi, and OMP manifests are included so the package is ready
+for adapter-specific work. See `docs/compatibility/harness-matrix.md` before
+claiming runtime support for those harnesses.
 
 ## Plugin package
 

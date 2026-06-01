@@ -540,6 +540,14 @@ NODE
   assert_file_contains "$REPO_ROOT/README.md" "Metadata-only manifests are documented in the compatibility matrix"
   assert_file_contains "$REPO_ROOT/README.md" "not treated as proven runtime routing"
   assert_file_contains "$REPO_ROOT/README.md" 'Manifests that declare component paths route back to `skills/product-development/`'
+  assert_file_contains "$REPO_ROOT/README.md" '### Plain Agent Skill'
+  assert_file_contains "$REPO_ROOT/README.md" 'git clone https://github.com/Prometheas-Labs/agent-skill-product-development.git plugins/product-development'
+  assert_file_contains "$REPO_ROOT/README.md" '### Codex'
+  assert_file_contains "$REPO_ROOT/README.md" 'codex plugin marketplace add "$PROJECT_ROOT"'
+  assert_file_contains "$REPO_ROOT/README.md" '### Claude Code'
+  assert_file_contains "$REPO_ROOT/README.md" 'claude plugin install --scope project product-development@local-product-development'
+  assert_file_contains "$REPO_ROOT/README.md" '### GitHub Copilot CLI'
+  assert_file_contains "$REPO_ROOT/README.md" 'copilot plugin install product-development@local-product-development'
   assert_file_contains "$REPO_ROOT/README.md" 'Local marketplace install smoke tests have passed for Codex, Claude Code, and'
   assert_file_contains "$REPO_ROOT/README.md" 'they do not prove runtime'
   assert_file_contains "$REPO_ROOT/README.md" 'bats skills/product-development/tests/init.bats'
