@@ -1,9 +1,10 @@
 {
-  "name": "agent-skill-product-development",
+  "name": "agent-plugin-product-development",
   "version": "0.1.0",
   "description": "Product development lifecycle workflows as portable agent skills.",
   "private": false,
   "keywords": [
+    "agent-plugin",
     "agent-skill",
     "product-development",
     "pi-package"

@@ -1,150 +1,156 @@
-# Product Development Lifecycle Skill
+# Product Development Plugin
 
-A skill that guides AI coding agents through a structured product development lifecycle, from project setup through implementation planning.
+A plugin package for AI coding agents that guides product work through a
+structured lifecycle, from project setup through implementation planning.
 
-This repository remains installable as a plain Agent Skill. It also contains
-plugin-package manifests for harnesses that can load packaged skills. The
-canonical methodology lives in `skills/product-development/`; shared command
-and agent wrappers route there, while metadata-only manifests are documented in
-the compatibility matrix. Adapters do not own separate lifecycle rules.
+The canonical methodology lives in `skills/product-development/`. Plugin
+manifests, command wrappers, and agent wrappers route to that skill tree rather
+than duplicating lifecycle rules. Runtime hooks are intentionally deferred for
+V1; no hook configuration, hook scripts, or manifest hook declarations ship with
+this package.
 
-Support levels for each harness are documented in
-`docs/compatibility/harness-matrix.md`. Runtime hooks are intentionally deferred
-for V1; no hook configuration, hook scripts, or manifest hook declarations ship
-with this package.
+For detailed harness compatibility, see
+`docs/compatibility/harness-matrix.md`. For development setup and local checkout
+installs, see `docs/development.md`.
 
-## What it does
+## Getting Started
 
-This skill orchestrates the creation of product artifacts in a deliberate sequence, with human review gates between each workflow:
+Install this package through your agent harness. Plugin installation is the
+preferred path for Codex, Claude Code, and GitHub Copilot CLI. Plain Agent Skill
+installation via `skills.sh` remains available as a secondary compatibility
+path.
 
+| Harness | Recommended install path | Notes |
+| --- | --- | --- |
+| Codex | Repository marketplace | Uses repository marketplace metadata. |
+| Claude Code | Repository marketplace | Uses the `.claude-plugin/marketplace.json` marketplace metadata. |
+| GitHub Copilot CLI | Repository marketplace | Uses `.github/plugin/marketplace.json`; direct repository installs work but are deprecated by the CLI. |
+| Plain Agent Skill | `skills.sh` | Installs only the canonical skill, not plugin marketplace metadata. |
+
+<details>
+<summary>Codex</summary>
+
+Register this repository as a marketplace, then install the plugin:
+
+```bash
+codex plugin marketplace add https://github.com/Prometheas-Labs/agent-plugin-product-development.git --ref main
+codex plugin add product-development@prometheas-product-development
 ```
-Project Setup  →  Foundation Stage  →  Discovery and Design  →  Requirements  →  User Stories  →  BDD Scenarios  →  Implementation Planning
-                         ↓                       ↓                    ↓                ↓                ↓
+
+For private forks, pinned mirrors, or development from a local checkout, see
+`docs/development.md#installing-from-a-local-checkout`.
+
+</details>
+
+<details>
+<summary>Claude Code</summary>
+
+Register this repository as a marketplace, then install the plugin:
+
+```bash
+claude plugin marketplace add --scope user https://github.com/Prometheas-Labs/agent-plugin-product-development.git#main
+claude plugin install product-development@prometheas-product-development
+```
+
+For private forks, pinned mirrors, or development from a local checkout, see
+`docs/development.md#installing-from-a-local-checkout`.
+
+</details>
+
+<details>
+<summary>GitHub Copilot CLI</summary>
+
+Register this repository as a marketplace, then install the plugin:
+
+```bash
+copilot plugin marketplace add Prometheas-Labs/agent-plugin-product-development
+copilot plugin install product-development@prometheas-product-development
+```
+
+Copilot CLI also supports direct repository installs:
+
+```bash
+copilot plugin install Prometheas-Labs/agent-plugin-product-development
+```
+
+The CLI currently warns that direct plugin installs are deprecated. Prefer the
+marketplace commands above for public setup instructions.
+
+For private forks, pinned mirrors, or development from a local checkout, see
+`docs/development.md#installing-from-a-local-checkout`.
+
+</details>
+
+<details>
+<summary>Plain Agent Skill</summary>
+
+Install the canonical skill via [skills.sh](https://skills.sh):
+
+```bash
+npx skills add product-development
+```
+
+It lands in `.agents/skills/` and works with compatible skill-based harnesses.
+This path does not install plugin marketplace metadata, shared command wrappers,
+or shared agent wrappers.
+
+</details>
+
+Gemini/Antigravity, Pi, and OMP manifests are included so the package is ready
+for adapter-specific work. See `docs/compatibility/harness-matrix.md` before
+claiming runtime support for those harnesses.
+
+## What It Does
+
+This plugin guides agents through product artifacts in a deliberate sequence,
+with human review gates between each workflow:
+
+```text
+Project Setup  ->  Foundation Stage  ->  Discovery and Design  ->  Requirements  ->  User Stories  ->  BDD Scenarios  ->  Implementation Planning
+                         |                       |                    |                |                |
                   Foundation Gate          Design Approval       PRD/TRD Approval  Story Approval  Scenario Approval
 ```
 
-Foundation Stage contains Product Constitution approval and the Product Vision workflow. Foundation Gate blocks the first PRD until constitution is approved and versioned, and vision is approved and versioned. Discovery and Design can still happen before the gate passes. Each approval point pauses for your review before the agent proceeds.
+Foundation Stage contains Product Constitution approval and the Product Vision
+workflow. Foundation Gate blocks the first PRD until constitution is approved
+and versioned, and vision is approved and versioned. Discovery and Design can
+still happen before the gate passes. Each approval point pauses for review
+before the agent proceeds.
 
-## Getting started
+## Start A Product Workflow
 
-### Development environment
+After installing the plugin, ask your agent to initialize product docs in the
+project you want to work on:
 
-This repository includes a pinned Nix dev shell for local validation. The shell
-uses a fixed Nixpkgs commit and provides `python313`, `bats`, and `node`.
-`python313` gives the tests stdlib `tomllib` support without adding a PyPI TOML
-parser dependency.
-
-```bash
-direnv allow
+```text
+Initialize product documentation for this project
 ```
 
-Without direnv, enter the same environment directly:
+The script scaffolds `docs/product/` with a README, agent guidance, and feature
+directory. It auto-detects your project name and app surfaces, then asks for
+domain-specific examples to customize the boundary rule documentation. Use
+`--dry-run` from a local checkout to preview what would be created without
+writing files; see `docs/development.md#initialization-script`.
 
-```bash
-nix develop
-```
+After initialization, tell your agent what you want to build. The skill
+activates on phrases like "create a feature", "write a PRD", "write user
+stories", or "plan a feature".
 
-### New project — initialize first
+## Workflow Behavior
 
-If your project doesn't have a `docs/product/` directory yet, initialize it:
+During a workflow, the agent will either collaborate in the main conversation or
+delegate heavier drafting work to a sub-agent and return the draft for review.
 
-```bash
-# Run the init script directly
-./scripts/init.sh /path/to/your/project
+At each gate, you can:
 
-# Or ask your agent
-> "Initialize product documentation for this project"
-```
+- **Approve**: the agent proceeds to the next workflow.
+- **Request changes**: the agent iterates on the current artifact.
+- **Reject**: the agent stops and discusses the concern.
 
-The script scaffolds `docs/product/` with a README, agent guidance, and feature directory. It auto-detects your project name and app surfaces, then asks for a couple of domain-specific examples to customize the boundary rule documentation.
-
-Use `--dry-run` to preview what would be created without writing files.
-
-### What init does
-
-The script scaffolds `docs/product/` from templates:
-
-| Generated file | Contents |
-|----------------|----------|
-| `docs/product/README.md` | Three-tier documentation hierarchy, artifact flow diagram, boundary rule for scenario placement, directory structure reference |
-| `docs/product/AGENTS.md` | Agent guidance for organizing product docs, feature workflow checklist, specification evolution conventions |
-| `docs/product/features/` | Empty directory ready for the first feature |
-
-Files that already exist are never overwritten.
-
-### Auto-detection
-
-The script inspects your project before prompting:
-
-| Value | Detection | Fallback |
-|-------|-----------|----------|
-| Project name | `name` field from `package.json` | Directory name |
-| Surfaces | Subdirectories under `apps/` | `mobile` |
-| Existing features | Subdirectories under `docs/product/features/` | (omitted from output) |
-
-Surface names are humanized in documentation prose (`mobile` → "a phone", `tv` → "a TV", `web` → "a browser").
-
-### Script options
-
-```
-./scripts/init.sh <project-root> [options]
-
-Options:
-  --project-name NAME                  Project name for headings
-  --surfaces "mobile,web,tv"           Comma-separated app surfaces
-  --platform-scenario-example TEXT     Example platform-level scenario
-  --surface-scenario-example TEXT      Example surface-specific scenario
-  --non-interactive                    Use defaults without prompting
-  --dry-run                            Preview without writing files
-```
-
-When run without options, the script prompts interactively for any values it can't auto-detect. The two values that genuinely need human input are the **scenario examples** — they appear in the boundary rule section and should reflect your project's domain.
-
-### Running tests
-
-The script has BATS test coverage:
-
-```bash
-bats tests/init.bats
-```
-
-From the repository root, run the same init script coverage with:
-
-```bash
-bats skills/product-development/tests/init.bats
-```
-
-Plugin package validation is covered separately:
-
-```bash
-bats tests/plugin-package.bats
-```
-
-### Start building
-
-Tell your agent what you want to build. The skill activates on phrases like "create a feature", "write a PRD", "plan a feature", etc.
-
-You don't need to start at the beginning. If you already have a PRD, say "write user stories for the analytics feature" and the agent enters the User Stories workflow.
-
-### During a workflow
-
-The agent will either:
-- **Collaborate with you** in the main conversation (for smaller features or when you want to shape the artifact interactively)
-- **Delegate to a sub-agent** that writes a draft, then present it to you for review (for larger features, to keep the conversation focused)
-
-### At each gate
-
-The agent pauses and presents the artifacts for your review. If you've configured automated review passes (see Configuration), those run first and findings are included.
-
-You can:
-- **Approve** — the agent proceeds to the next workflow
-- **Request changes** — the agent iterates on the current workflow
-- **Reject** — the agent stops and discusses the concern
-
-## Artifacts produced
+## Artifacts Produced
 
 | Workflow | Artifact | Location |
-|----------|----------|----------|
+| --- | --- | --- |
 | Project Setup | Documentation structure | `docs/product/README.md`, `docs/product/AGENTS.md` |
 | Foundation Stage | Constitution | `docs/product/constitution.md`, `docs/product/constitutions/constitution-vX.Y.Z.md` |
 | Foundation Stage | Product vision | `docs/product/vision.md`, `docs/product/visions/vision-vX.Y.Z.md` |
@@ -156,22 +162,24 @@ You can:
 | BDD Scenarios | Surface scenarios | `apps/{surface}/docs/features/{feature}/scenarios/*.feature` |
 | Implementation Planning | Implementation plan | `docs/plans/YYYY-MM-DD-<topic>.md` |
 
-Platform-level artifacts describe what the product does regardless of which app surface (mobile, web, TV) delivers it. Surface-specific artifacts capture behaviors tied to a particular interaction model (touch gestures, remote control, etc.).
+Platform-level artifacts describe what the product does regardless of which app
+surface delivers it. Surface-specific artifacts capture behavior tied to a
+particular interaction model, such as touch gestures, browser interaction, or
+remote control.
 
 ## Configuration
 
-Configuration is optional. Without it, the skill runs with human-only gates and no automated review passes.
+Configuration is optional. Without it, the skill runs with human-only gates and
+no automated review passes.
 
-### Config locations
+Config locations:
 
-- **User-level:** `~/.config/prometheas-product-development-skill/`
-- **Project-level:** `$PROJECT_ROOT/.config/prometheas-product-development-skill/`
+- User-level: `~/.config/prometheas-product-development-skill/`
+- Project-level: `$PROJECT_ROOT/.config/prometheas-product-development-skill/`
 
-Project-level settings override user-level.
+Project-level settings override user-level settings.
 
-### settings.toml
-
-Controls what automated review passes run at each gate:
+Example `settings.toml`:
 
 ```toml
 [review_gates.requirements]
@@ -184,22 +192,20 @@ reviews = ["traceability-audit"]
 reviews = ["traceability-audit", "coderabbit:review"]
 
 [workflows]
-use_subagents = true      # Prefer sub-agents for heavy writing workflows
-prd_before_trd = true     # Require PRD approval before TRD is written
+use_subagents = true
+prd_before_trd = true
 ```
 
-#### Available review types
+Available review types:
 
 | Review | What it checks |
-|--------|---------------|
+| --- | --- |
 | `constitution-check` | PRD/TRD alignment with project governance principles |
 | `traceability-audit` | Every requirement is covered by a story; every story by a scenario |
 | `coderabbit:review` | General document quality via CodeRabbit |
 | Any skill name | Runs the named skill as a review pass |
 
-### AGENTS.md
-
-Natural language instructions that review agents receive as context. Use this for project-specific guidance:
+Project-specific `AGENTS.md` guidance can add review context:
 
 ```markdown
 ## Review Context
@@ -210,221 +216,46 @@ Our default stance is zero tracking unless explicitly justified.
 All TRDs must follow the vendor-agnostic facade pattern.
 ```
 
-## Specification evolution
+## Specification Evolution
 
-Product specs are living artifacts — they evolve over time. The methodology (`docs/METHODOLOGY.md`) defines how each artifact type evolves:
+Product specs are living artifacts:
 
-- **PRDs and TRDs** are updated in place with a changelog at the bottom recording date, change, and rationale
-- **User stories** progress through a lifecycle (Draft → Ready → In Progress → Done → Archived) and may be moved to `stories/archive/` when the directory gets noisy
-- **BDD scenarios** are living and self-verifying — when behavior changes, scenarios update and the test suite validates the spec matches reality
-- **Governance docs** (constitution, vision) are never edited after approval; a new version supersedes the old one
+- PRDs and TRDs are updated in place with a changelog recording date, change,
+  and rationale.
+- User stories progress through a lifecycle from Draft to Ready to In Progress
+  to Done to Archived.
+- BDD scenarios are living and self-verifying; when behavior changes, scenarios
+  update and the test suite validates the spec.
+- Governance docs such as constitution and vision are never edited after
+  approval; a new version supersedes the old one.
 
-When incremental updates are insufficient (e.g., a major pivot or rearchitecture), supersede with a new document instead of editing beyond recognition.
+When incremental updates are insufficient, supersede with a new document instead
+of editing beyond recognition.
 
-## Skill files
+## Package Contents
 
-```
-product-development/
-├── README.md                              ← this file (for humans)
-├── SKILL.md                               ← agent instructions (loaded by the harness)
-├── docs/
-│   └── METHODOLOGY.md                     ← specification evolution strategies
-├── references/
-│   ├── initialization.md                  ← project initialization workflow
-│   ├── product-constitution.md            ← Product Constitution workflow and Foundation Gate
-│   ├── product-vision.md                  ← Product Vision workflow and Foundation Gate
-│   ├── source/
-│   │   ├── product-constitution-guide.md  ← archived constitution source guide
-│   │   └── vision-document-guide.md       ← archived vision source guide
-│   ├── phase-2-requirements.md            ← Requirements workflow; legacy compatibility path
-│   ├── phase-3-user-stories.md            ← User Stories workflow; legacy compatibility path
-│   └── phase-4-scenarios.md               ← BDD Scenarios workflow; legacy compatibility path
-├── scripts/
-│   └── init.sh                            ← project initialization script
-├── templates/
-│   ├── README.md.tmpl                     ← documentation hierarchy template
-│   └── AGENTS.md.tmpl                     ← agent guidance template
-└── tests/
-    └── init.bats                          ← BATS tests for init.sh
-```
-
-Reference files are loaded by the agent only when it enters the corresponding workflow, keeping context focused. The `phase-*` filenames remain for compatibility.
-
-## Installation
-
-Choose the path that matches your harness.
-
-### Plain Agent Skill
-
-Install the canonical skill via [skills.sh](https://skills.sh):
-
-```bash
-npx skills add product-development
-```
-
-It lands in `.agents/skills/` and works with any compatible agent harness.
-
-For development or local testing with Claude Code, the skill can also live at
-`.claude/skills/product-development/` in your project.
-
-### Harness-Specific Plugin Installs
-
-Codex, Claude Code, and GitHub Copilot CLI can install this package from the
-GitHub repository once the repository is public. Local checkout instructions are
-included as a fallback for development, private forks, or pinned internal
-mirrors.
-
-For local checkout installs, start from the project where you want the plugin
-available:
-
-```bash
-cd /path/to/your/project
-mkdir -p plugins
-git clone https://github.com/Prometheas-Labs/agent-skill-product-development.git plugins/product-development
-export PROJECT_ROOT="$PWD"
-```
-
-If you vendor or submodule dependencies differently, keep the same final layout:
-the plugin package should live at `plugins/product-development/` relative to the
-project root.
-
-### Codex
-
-Register this repository as a marketplace, then install the plugin:
-
-```bash
-codex plugin marketplace add https://github.com/Prometheas-Labs/agent-skill-product-development.git --ref main
-codex plugin add product-development@prometheas-product-development
-```
-
-If you need to install from a local checkout instead, create
-`.agents/plugins/marketplace.json` in your project:
-
-```json
-{
-  "name": "local-product-development",
-  "plugins": [
-    {
-      "name": "product-development",
-      "source": {
-        "source": "local",
-        "path": "./plugins/product-development"
-      }
-    }
-  ]
-}
-```
-
-Then register the project root and install from that local marketplace:
-
-```bash
-codex plugin marketplace add "$PROJECT_ROOT"
-codex plugin add product-development@local-product-development
-```
-
-### Claude Code
-
-Register this repository as a marketplace, then install the plugin:
-
-```bash
-claude plugin marketplace add --scope user https://github.com/Prometheas-Labs/agent-skill-product-development.git#main
-claude plugin install product-development@prometheas-product-development
-```
-
-If you need to install from a local checkout instead, create
-`.claude-plugin/marketplace.json` in your project:
-
-```json
-{
-  "name": "local-product-development",
-  "owner": {
-    "name": "Your Team"
-  },
-  "plugins": [
-    {
-      "name": "product-development",
-      "source": "./plugins/product-development"
-    }
-  ]
-}
-```
-
-Then validate, register, and install from that local marketplace:
-
-```bash
-claude plugin validate "$PROJECT_ROOT"
-claude plugin marketplace add --scope project "$PROJECT_ROOT"
-claude plugin install --scope project product-development@local-product-development
-```
-
-### GitHub Copilot CLI
-
-Register this repository as a marketplace, then install the plugin:
-
-```bash
-copilot plugin marketplace add Prometheas-Labs/agent-skill-product-development
-copilot plugin install product-development@prometheas-product-development
-```
-
-Copilot CLI also supports direct repository installs with
-`copilot plugin install Prometheas-Labs/agent-skill-product-development`, but
-the CLI currently warns that direct plugin installs are deprecated. Prefer the
-marketplace commands above for public setup instructions.
-
-If you need to install from a local checkout instead, create
-`.github/plugin/marketplace.json` in your project:
-
-```json
-{
-  "name": "local-product-development",
-  "owner": {
-    "name": "Your Team"
-  },
-  "plugins": [
-    {
-      "name": "product-development",
-      "source": "./plugins/product-development"
-    }
-  ]
-}
-```
-
-Then register and install from that local marketplace:
-
-```bash
-copilot plugin marketplace add "$PROJECT_ROOT"
-copilot plugin install product-development@local-product-development
-```
-
-### Other Harnesses
-
-Gemini/Antigravity, Pi, and OMP manifests are included so the package is ready
-for adapter-specific work. See `docs/compatibility/harness-matrix.md` before
-claiming runtime support for those harnesses.
-
-## Plugin package
-
-The repository also includes plugin-package manifests:
+The repository includes plugin-package manifests:
 
 - `plugin.json`
 - `.claude-plugin/plugin.json`
+- `.claude-plugin/marketplace.json`
 - `.codex-plugin/plugin.json`
+- `.github/plugin/marketplace.json`
 - `gemini-extension.json`
 - `package.json`
 
-These files keep the repository package-shaped for supported harnesses.
-Manifests that declare component paths route back to `skills/product-development/`.
-Metadata-only manifests are documented in the compatibility matrix and are not treated as proven runtime routing. Shared command and agent adapters under
-`commands/shared/` and `agents/shared/` are thin entrypoints only; the skill tree
-remains the source of truth for Product Constitution, Product Vision,
-requirements, user stories, scenarios, and implementation planning methodology.
+Manifests that declare component paths route back to
+`skills/product-development/`. Metadata-only manifests are documented in the
+compatibility matrix and are not treated as proven runtime routing. Shared
+command and agent adapters under `commands/shared/` and `agents/shared/` are
+thin entrypoints only; the skill tree remains the source of truth.
 
 Local marketplace install smoke tests have passed for Codex, Claude Code, and
 GitHub Copilot CLI at the skill-package level. Those tests prove the package can
 be registered and installed through those harnesses; they do not prove runtime
 loading for shared command wrappers, shared agent wrappers, or hooks.
 
-See `docs/compatibility/harness-matrix.md` for support tiers, local marketplace
-layouts, and validation status. See `docs/compatibility/hooks.md` for the V1
-hook policy: hooks are intentionally deferred until a separate design, security
-review, and per-harness schema validation are approved.
+## Developing This Plugin
+
+Development setup, local checkout installation, test commands, and repository
+structure are documented in `docs/development.md`.
