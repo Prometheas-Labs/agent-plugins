@@ -9,7 +9,7 @@
       "name": "product-development",
       "source": {
         "source": "url",
-        "url": "https://github.com/Prometheas-Labs/agent-skill-product-development.git",
+        "url": "https://github.com/Prometheas-Labs/agent-plugin-product-development.git",
         "ref": "main"
       }
     }

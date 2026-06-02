@@ -33,7 +33,7 @@ path.
 Register this repository as a marketplace, then install the plugin:
 
 ```bash
-codex plugin marketplace add https://github.com/Prometheas-Labs/agent-skill-product-development.git --ref main
+codex plugin marketplace add https://github.com/Prometheas-Labs/agent-plugin-product-development.git --ref main
 codex plugin add product-development@prometheas-product-development
 ```
 
@@ -48,7 +48,7 @@ For private forks, pinned mirrors, or development from a local checkout, see
 Register this repository as a marketplace, then install the plugin:
 
 ```bash
-claude plugin marketplace add --scope user https://github.com/Prometheas-Labs/agent-skill-product-development.git#main
+claude plugin marketplace add --scope user https://github.com/Prometheas-Labs/agent-plugin-product-development.git#main
 claude plugin install product-development@prometheas-product-development
 ```
 
@@ -63,14 +63,14 @@ For private forks, pinned mirrors, or development from a local checkout, see
 Register this repository as a marketplace, then install the plugin:
 
 ```bash
-copilot plugin marketplace add Prometheas-Labs/agent-skill-product-development
+copilot plugin marketplace add Prometheas-Labs/agent-plugin-product-development
 copilot plugin install product-development@prometheas-product-development
 ```
 
 Copilot CLI also supports direct repository installs:
 
 ```bash
-copilot plugin install Prometheas-Labs/agent-skill-product-development
+copilot plugin install Prometheas-Labs/agent-plugin-product-development
 ```
 
 The CLI currently warns that direct plugin installs are deprecated. Prefer the

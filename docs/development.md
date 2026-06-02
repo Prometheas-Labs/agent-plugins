@@ -33,7 +33,7 @@ Start from the project where you want the plugin available:
 ```bash
 cd /path/to/your/project
 mkdir -p plugins
-git clone https://github.com/Prometheas-Labs/agent-skill-product-development.git plugins/product-development
+git clone https://github.com/Prometheas-Labs/agent-plugin-product-development.git plugins/product-development
 export PROJECT_ROOT="$PWD"
 ```
 

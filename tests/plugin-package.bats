@@ -547,24 +547,24 @@ NODE
   assert_file_contains "$REPO_ROOT/README.md" "compatibility matrix"
   assert_file_contains "$REPO_ROOT/README.md" 'Manifests that declare component paths route back to'
   assert_file_contains "$REPO_ROOT/README.md" '`skills/product-development/`'
-  assert_file_contains "$REPO_ROOT/README.md" 'codex plugin marketplace add https://github.com/Prometheas-Labs/agent-skill-product-development.git --ref main'
+  assert_file_contains "$REPO_ROOT/README.md" 'codex plugin marketplace add https://github.com/Prometheas-Labs/agent-plugin-product-development.git --ref main'
   assert_file_contains "$REPO_ROOT/README.md" 'codex plugin add product-development@prometheas-product-development'
-  assert_file_contains "$REPO_ROOT/README.md" 'claude plugin marketplace add --scope user https://github.com/Prometheas-Labs/agent-skill-product-development.git#main'
+  assert_file_contains "$REPO_ROOT/README.md" 'claude plugin marketplace add --scope user https://github.com/Prometheas-Labs/agent-plugin-product-development.git#main'
   assert_file_contains "$REPO_ROOT/README.md" 'claude plugin install product-development@prometheas-product-development'
-  assert_file_contains "$REPO_ROOT/README.md" 'copilot plugin marketplace add Prometheas-Labs/agent-skill-product-development'
+  assert_file_contains "$REPO_ROOT/README.md" 'copilot plugin marketplace add Prometheas-Labs/agent-plugin-product-development'
   assert_file_contains "$REPO_ROOT/README.md" 'copilot plugin install product-development@prometheas-product-development'
-  assert_file_contains "$REPO_ROOT/README.md" 'copilot plugin install Prometheas-Labs/agent-skill-product-development'
+  assert_file_contains "$REPO_ROOT/README.md" 'copilot plugin install Prometheas-Labs/agent-plugin-product-development'
   assert_file_contains "$REPO_ROOT/README.md" 'npx skills add product-development'
   assert_file_contains "$REPO_ROOT/README.md" 'Local marketplace install smoke tests have passed for Codex, Claude Code, and'
   assert_file_contains "$REPO_ROOT/README.md" 'they do not prove runtime'
-  ! grep -Fq 'git clone https://github.com/Prometheas-Labs/agent-skill-product-development.git plugins/product-development' "$REPO_ROOT/README.md"
+  ! grep -Fq 'git clone https://github.com/Prometheas-Labs/agent-plugin-product-development.git plugins/product-development' "$REPO_ROOT/README.md"
   ! grep -Fq 'codex plugin marketplace add "$PROJECT_ROOT"' "$REPO_ROOT/README.md"
 }
 
 @test "development docs cover local checkout and validation workflows" {
   assert_file_contains "$REPO_ROOT/docs/development.md" '# Development'
   assert_file_contains "$REPO_ROOT/docs/development.md" '## Installing From A Local Checkout'
-  assert_file_contains "$REPO_ROOT/docs/development.md" 'git clone https://github.com/Prometheas-Labs/agent-skill-product-development.git plugins/product-development'
+  assert_file_contains "$REPO_ROOT/docs/development.md" 'git clone https://github.com/Prometheas-Labs/agent-plugin-product-development.git plugins/product-development'
   assert_file_contains "$REPO_ROOT/docs/development.md" 'codex plugin marketplace add "$PROJECT_ROOT"'
   assert_file_contains "$REPO_ROOT/docs/development.md" 'claude plugin install --scope project product-development@local-product-development'
   assert_file_contains "$REPO_ROOT/docs/development.md" 'copilot plugin install product-development@local-product-development'
@@ -772,11 +772,11 @@ NODE
 
   assert_json_object_keys_equals "$REPO_ROOT/package.json" "." "name" "version" "description" "private" "keywords" "pi"
   assert_json_object_keys_equals "$REPO_ROOT/package.json" "pi" "skills"
-  assert_json_field_equals "$REPO_ROOT/package.json" "name" "agent-skill-product-development"
+  assert_json_field_equals "$REPO_ROOT/package.json" "name" "agent-plugin-product-development"
   assert_json_field_equals "$REPO_ROOT/package.json" "version" "0.1.0"
   assert_json_field_equals "$REPO_ROOT/package.json" "description" "$EXPECTED_DESCRIPTION"
   assert_json_boolean_equals "$REPO_ROOT/package.json" "private" "false"
-  assert_json_array_equals "$REPO_ROOT/package.json" "keywords" "agent-skill" "product-development" "pi-package"
+  assert_json_array_equals "$REPO_ROOT/package.json" "keywords" "agent-plugin" "agent-skill" "product-development" "pi-package"
   assert_json_array_equals "$REPO_ROOT/package.json" "pi.skills" "skills/product-development"
 }
 
