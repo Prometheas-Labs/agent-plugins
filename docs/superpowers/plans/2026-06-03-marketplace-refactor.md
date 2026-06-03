@@ -167,7 +167,31 @@ Append:
   [ ! -e "$REPO_ROOT/hooks" ]
   [ ! -e "$REPO_ROOT/plugins/product-development/hooks.json" ]
   [ ! -e "$REPO_ROOT/plugins/product-development/hooks" ]
-  ! grep -R '"hooks"' "$REPO_ROOT/.agents" "$REPO_ROOT/.claude-plugin" "$REPO_ROOT/.github" "$REPO_ROOT/plugins/product-development" 2>/dev/null
+  node -e '
+const fs = require("fs");
+const files = process.argv.slice(1);
+const scan = (value, file, path = []) => {
+  if (!value || typeof value !== "object") return;
+  for (const [key, child] of Object.entries(value)) {
+    if (/hook/i.test(key)) {
+      console.error(`runtime hook key found in ${file}: ${[...path, key].join(".")}`);
+      process.exitCode = 1;
+    }
+    scan(child, file, [...path, key]);
+  }
+};
+for (const file of files) {
+  scan(JSON.parse(fs.readFileSync(file, "utf8")), file);
+}
+' \
+    "$REPO_ROOT/.agents/plugins/marketplace.json" \
+    "$REPO_ROOT/.claude-plugin/marketplace.json" \
+    "$REPO_ROOT/.github/plugin/marketplace.json" \
+    "$REPO_ROOT/plugins/product-development/plugin.json" \
+    "$REPO_ROOT/plugins/product-development/package.json" \
+    "$REPO_ROOT/plugins/product-development/gemini-extension.json" \
+    "$REPO_ROOT/plugins/product-development/.codex-plugin/plugin.json" \
+    "$REPO_ROOT/plugins/product-development/.claude-plugin/plugin.json"
 }
 ```
 
@@ -301,6 +325,7 @@ mkdir -p plugins/product-development/.codex-plugin
 mkdir -p plugins/product-development/.claude-plugin
 mkdir -p plugins/product-development/agents
 mkdir -p plugins/product-development/commands
+mkdir -p plugins/product-development/skills
 ```
 
 - [ ] **Step 2: Move plugin package files**
@@ -715,7 +740,28 @@ for (const name of lifecycle) {
 }
 
 @test "manifests do not declare runtime hooks" {
-  ! grep -R '"hooks"' "$PLUGIN_ROOT/plugin.json" "$PLUGIN_ROOT/package.json" "$PLUGIN_ROOT/.codex-plugin" "$PLUGIN_ROOT/.claude-plugin"
+  node -e '
+const fs = require("fs");
+const files = process.argv.slice(1);
+const scan = (value, file, path = []) => {
+  if (!value || typeof value !== "object") return;
+  for (const [key, child] of Object.entries(value)) {
+    if (/hook/i.test(key)) {
+      console.error(`runtime hook key found in ${file}: ${[...path, key].join(".")}`);
+      process.exitCode = 1;
+    }
+    scan(child, file, [...path, key]);
+  }
+};
+for (const file of files) {
+  scan(JSON.parse(fs.readFileSync(file, "utf8")), file);
+}
+' \
+    "$PLUGIN_ROOT/plugin.json" \
+    "$PLUGIN_ROOT/package.json" \
+    "$PLUGIN_ROOT/gemini-extension.json" \
+    "$PLUGIN_ROOT/.codex-plugin/plugin.json" \
+    "$PLUGIN_ROOT/.claude-plugin/plugin.json"
 }
 ```
 
@@ -814,10 +860,13 @@ Run:
 
 ```bash
 find . -path './.git' -prune -o -iname '*hook*' -print
-rg -n '"hooks"|hooks.json|hooks/' .
+nix develop -c bats tests/marketplace-package.bats
+nix develop -c bats plugins/product-development/tests/plugin-package.bats
 ```
 
-Expected: docs-only mentions in compatibility/spec/plan files; no hook manifest or executable hook path.
+Expected: the file-name scan returns docs-only hook references, and both Bats
+suites pass. Runtime hook JSON keys are enforced by recursive `/hook/i` manifest
+key scans inside the Bats tests, not by string grep.
 
 - [ ] **Step 4: Optionally run harness smoke tests with ephemeral homes**
 
