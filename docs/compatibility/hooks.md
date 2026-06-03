@@ -2,8 +2,12 @@
 
 Runtime hooks are deferred for V1.
 
-The package must not ship runtime hook configuration or runtime hook code in
-this release. That means:
+No lifecycle hook declarations are shipped in the marketplace root or in
+`plugins/product-development/`. Hooks remain deferred until a separate hook
+implementation issue is approved.
+
+The marketplace and plugin package must not ship runtime hook configuration or
+runtime hook code in this release. That means:
 
 - no `hooks.json`
 - no `hooks/hooks.json`
