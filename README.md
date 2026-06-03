@@ -1,13 +1,16 @@
-# Product Development Plugin
+# Prometheas Labs Agent Plugins
 
-A plugin package for AI coding agents that guides product work through a
-structured lifecycle, from project setup through implementation planning.
+This repository is the Prometheas Labs agent plugin marketplace. It currently
+contains one plugin, `product-development`, and is structured to host additional
+Prometheas Labs plugins over time.
 
-The canonical methodology lives in `skills/product-development/`. Plugin
-manifests, command wrappers, and agent wrappers route to that skill tree rather
-than duplicating lifecycle rules. Runtime hooks are intentionally deferred for
-V1; no hook configuration, hook scripts, or manifest hook declarations ship with
-this package.
+The canonical Product Development methodology lives inside
+`plugins/product-development/skills/product-development/`. Marketplace manifests
+and adapter wrappers expose the plugin; they do not duplicate methodology.
+
+Runtime hooks are intentionally deferred for V1; no hook configuration, hook
+scripts, or manifest hook declarations ship with this marketplace or plugin
+package.
 
 For detailed harness compatibility, see
 `docs/compatibility/harness-matrix.md`. For development setup and local checkout
@@ -15,26 +18,14 @@ installs, see `docs/development.md`.
 
 ## Getting Started
 
-Install this package through your agent harness. Plugin installation is the
-preferred path for Codex, Claude Code, and GitHub Copilot CLI. Plain Agent Skill
-installation via `skills.sh` remains available as a secondary compatibility
-path.
-
-| Harness | Recommended install path | Notes |
-| --- | --- | --- |
-| Codex | Repository marketplace | Uses repository marketplace metadata. |
-| Claude Code | Repository marketplace | Uses the `.claude-plugin/marketplace.json` marketplace metadata. |
-| GitHub Copilot CLI | Repository marketplace | Uses `.github/plugin/marketplace.json`; direct repository installs work but are deprecated by the CLI. |
-| Plain Agent Skill | `skills.sh` | Installs only the canonical skill, not plugin marketplace metadata. |
+Register the marketplace, then install `product-development`.
 
 <details>
 <summary>Codex</summary>
 
-Register this repository as a marketplace, then install the plugin:
-
 ```bash
-codex plugin marketplace add https://github.com/Prometheas-Labs/agent-plugin-product-development.git --ref main
-codex plugin add product-development@prometheas-product-development
+codex plugin marketplace add Prometheas-Labs/agent-plugins --ref main
+codex plugin add product-development@prometheas-labs
 ```
 
 For private forks, pinned mirrors, or development from a local checkout, see
@@ -45,11 +36,9 @@ For private forks, pinned mirrors, or development from a local checkout, see
 <details>
 <summary>Claude Code</summary>
 
-Register this repository as a marketplace, then install the plugin:
-
 ```bash
-claude plugin marketplace add --scope user https://github.com/Prometheas-Labs/agent-plugin-product-development.git#main
-claude plugin install product-development@prometheas-product-development
+claude plugin marketplace add --scope user Prometheas-Labs/agent-plugins@main
+claude plugin install product-development@prometheas-labs
 ```
 
 For private forks, pinned mirrors, or development from a local checkout, see
@@ -60,21 +49,10 @@ For private forks, pinned mirrors, or development from a local checkout, see
 <details>
 <summary>GitHub Copilot CLI</summary>
 
-Register this repository as a marketplace, then install the plugin:
-
 ```bash
-copilot plugin marketplace add Prometheas-Labs/agent-plugin-product-development
-copilot plugin install product-development@prometheas-product-development
+copilot plugin marketplace add Prometheas-Labs/agent-plugins
+copilot plugin install product-development@prometheas-labs
 ```
-
-Copilot CLI also supports direct repository installs:
-
-```bash
-copilot plugin install Prometheas-Labs/agent-plugin-product-development
-```
-
-The CLI currently warns that direct plugin installs are deprecated. Prefer the
-marketplace commands above for public setup instructions.
 
 For private forks, pinned mirrors, or development from a local checkout, see
 `docs/development.md#installing-from-a-local-checkout`.
@@ -96,9 +74,12 @@ or shared agent wrappers.
 
 </details>
 
-Gemini/Antigravity, Pi, and OMP manifests are included so the package is ready
-for adapter-specific work. See `docs/compatibility/harness-matrix.md` before
-claiming runtime support for those harnesses.
+Plain Agent Skill installation via `skills.sh` remains available as a secondary
+compatibility path for the canonical skill only; it does not install marketplace
+metadata or adapter wrappers. Gemini/Antigravity, Pi, and OMP manifests are
+included so the package is ready for adapter-specific work. See
+`docs/compatibility/harness-matrix.md` before claiming runtime support for those
+harnesses.
 
 ## What It Does
 
@@ -232,23 +213,22 @@ Product specs are living artifacts:
 When incremental updates are insufficient, supersede with a new document instead
 of editing beyond recognition.
 
-## Package Contents
+## Marketplace Contents
 
-The repository includes plugin-package manifests:
+This marketplace currently contains one plugin.
 
-- `plugin.json`
-- `.claude-plugin/plugin.json`
-- `.claude-plugin/marketplace.json`
-- `.codex-plugin/plugin.json`
-- `.github/plugin/marketplace.json`
-- `gemini-extension.json`
-- `package.json`
+- `.agents/plugins/marketplace.json` - Codex marketplace metadata.
+- `.claude-plugin/marketplace.json` - Claude Code marketplace metadata.
+- `.github/plugin/marketplace.json` - GitHub Copilot CLI marketplace metadata.
+- `plugins/product-development/` - Product Development plugin package.
 
+The `product-development` plugin package contains its own plugin manifests,
+shared command wrappers, shared agent wrappers, and canonical skill tree.
 Manifests that declare component paths route back to
-`skills/product-development/`. Metadata-only manifests are documented in the
-compatibility matrix and are not treated as proven runtime routing. Shared
-command and agent adapters under `commands/shared/` and `agents/shared/` are
-thin entrypoints only; the skill tree remains the source of truth.
+`plugins/product-development/skills/product-development/`. Metadata-only
+manifests are documented in the compatibility matrix and are not treated as
+proven runtime routing. Shared command and agent adapters are thin entrypoints
+only; the skill tree remains the source of truth.
 
 Local marketplace install smoke tests have passed for Codex, Claude Code, and
 GitHub Copilot CLI at the skill-package level. Those tests prove the package can

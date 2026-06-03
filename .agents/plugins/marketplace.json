@@ -7,7 +7,10 @@
   "plugins": [
     {
       "name": "product-development",
-      "source": "./plugins/product-development"
+      "source": {
+        "source": "local",
+        "path": "./plugins/product-development"
+      }
     }
   ]
 }

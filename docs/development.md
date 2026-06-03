@@ -1,8 +1,8 @@
 # Development
 
-This document covers local development and local checkout installation for the
-Product Development plugin package. The public README is focused on plugin
-consumers.
+This document covers marketplace maintenance at the repository root and plugin
+package development under `plugins/product-development/`. The public README is
+focused on plugin consumers.
 
 ## Development Environment
 
@@ -23,101 +23,55 @@ Without direnv:
 nix develop
 ```
 
+## Marketplace Maintenance
+
+Root marketplace files identify the Prometheas Labs marketplace and expose
+plugin packages. They should stay metadata-only:
+
+- `.agents/plugins/marketplace.json`
+- `.claude-plugin/marketplace.json`
+- `.github/plugin/marketplace.json`
+- `tests/marketplace-package.bats`
+
+Do not duplicate Product Development methodology in marketplace metadata or
+root docs. Methodology belongs in
+`plugins/product-development/skills/product-development/`.
+
+## Plugin Package Development
+
+The Product Development plugin package lives under
+`plugins/product-development/`. Plugin manifests, command wrappers, agent
+wrappers, the canonical skill tree, and plugin package tests are developed from
+that directory.
+
+When plugin behavior changes, update the canonical skill tree first. Shared
+command and agent wrappers should remain thin routing entrypoints.
+
 ## Installing From A Local Checkout
 
-Use local checkout installs for development, private forks, pinned internal
-mirrors, or testing changes before publishing them.
-
-Start from the project where you want the plugin available:
-
-```bash
-cd /path/to/your/project
-mkdir -p plugins
-git clone https://github.com/Prometheas-Labs/agent-plugin-product-development.git plugins/product-development
-export PROJECT_ROOT="$PWD"
-```
-
-If you vendor or submodule dependencies differently, keep the same final layout:
-the plugin package should live at `plugins/product-development/` relative to the
-project root.
+Use local checkout installs for development. Register the checkout root as the
+marketplace, then install `product-development@prometheas-labs`.
 
 ### Codex
 
-Create `.agents/plugins/marketplace.json` in your project:
-
-```json
-{
-  "name": "local-product-development",
-  "plugins": [
-    {
-      "name": "product-development",
-      "source": {
-        "source": "local",
-        "path": "./plugins/product-development"
-      }
-    }
-  ]
-}
-```
-
-Then register the project root and install from that local marketplace:
-
 ```bash
-codex plugin marketplace add "$PROJECT_ROOT"
-codex plugin add product-development@local-product-development
+codex plugin marketplace add "$PWD"
+codex plugin add product-development@prometheas-labs
 ```
 
 ### Claude Code
 
-Create `.claude-plugin/marketplace.json` in your project:
-
-```json
-{
-  "name": "local-product-development",
-  "owner": {
-    "name": "Your Team"
-  },
-  "plugins": [
-    {
-      "name": "product-development",
-      "source": "./plugins/product-development"
-    }
-  ]
-}
-```
-
-Then validate, register, and install from that local marketplace:
-
 ```bash
-claude plugin validate "$PROJECT_ROOT"
-claude plugin marketplace add --scope project "$PROJECT_ROOT"
-claude plugin install --scope project product-development@local-product-development
+claude plugin validate "$PWD"
+claude plugin marketplace add --scope project "$PWD"
+claude plugin install --scope project product-development@prometheas-labs
 ```
 
 ### GitHub Copilot CLI
 
-Create `.github/plugin/marketplace.json` in your project:
-
-```json
-{
-  "name": "local-product-development",
-  "owner": {
-    "name": "Your Team"
-  },
-  "plugins": [
-    {
-      "name": "product-development",
-      "source": "./plugins/product-development"
-    }
-  ]
-}
-```
-
-Then register and install from that local marketplace:
-
 ```bash
-copilot plugin marketplace add "$PROJECT_ROOT"
-copilot plugin install product-development@local-product-development
+copilot plugin marketplace add "$PWD"
+copilot plugin install product-development@prometheas-labs
 ```
 
 ## Initialization Script
@@ -146,7 +100,7 @@ Surface names are humanized in documentation prose, such as `mobile` becoming
 Script options:
 
 ```text
-./skills/product-development/scripts/init.sh <project-root> [options]
+./plugins/product-development/skills/product-development/scripts/init.sh <project-root> [options]
 
 Options:
   --project-name NAME                  Project name for headings
@@ -163,52 +117,34 @@ should reflect the target project's domain.
 
 ## Running Tests
 
-Run plugin package validation:
-
 ```bash
-nix develop -c bats tests/plugin-package.bats
-```
-
-Run init script coverage:
-
-```bash
-nix develop -c bats skills/product-development/tests/init.bats
-```
-
-Check whitespace:
-
-```bash
+nix develop -c bats tests/marketplace-package.bats
+nix develop -c bats plugins/product-development/tests/plugin-package.bats
+nix develop -c bats plugins/product-development/skills/product-development/tests/init.bats
 git diff --check
 ```
 
 ## Repository Structure
 
 ```text
-product-development/
-├── README.md                              <- public consumer documentation
-├── plugin.json                            <- GitHub Copilot CLI plugin manifest
-├── .claude-plugin/
-│   ├── plugin.json                        <- Claude-compatible plugin manifest
-│   └── marketplace.json                   <- repository marketplace metadata
-├── .codex-plugin/
-│   └── plugin.json                        <- Codex plugin manifest
-├── .github/plugin/
-│   └── marketplace.json                   <- Copilot marketplace metadata
-├── gemini-extension.json                  <- Gemini/Antigravity metadata
-├── package.json                           <- Pi/npm metadata
-├── agents/shared/                         <- thin shared agent wrappers
-├── commands/shared/                       <- thin shared command wrappers
+agent-plugins/
+├── README.md
+├── .agents/plugins/marketplace.json
+├── .claude-plugin/marketplace.json
+├── .github/plugin/marketplace.json
 ├── docs/
-│   ├── compatibility/                     <- harness support and hook policy
-│   └── development.md                     <- this file
-├── skills/product-development/
-│   ├── SKILL.md                           <- canonical agent instructions
-│   ├── docs/METHODOLOGY.md                <- specification evolution strategies
-│   ├── references/                        <- workflow reference material
-│   ├── scripts/init.sh                    <- project initialization script
-│   ├── templates/                         <- generated product-doc templates
-│   └── tests/init.bats                    <- init script tests
-└── tests/plugin-package.bats              <- package and adapter validation
+├── tests/marketplace-package.bats
+└── plugins/
+    └── product-development/
+        ├── plugin.json
+        ├── package.json
+        ├── gemini-extension.json
+        ├── .codex-plugin/plugin.json
+        ├── .claude-plugin/plugin.json
+        ├── agents/shared/
+        ├── commands/shared/
+        ├── skills/product-development/
+        └── tests/plugin-package.bats
 ```
 
 Reference files are loaded by the agent only when it enters the corresponding
