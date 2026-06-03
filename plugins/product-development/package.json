@@ -1,5 +1,5 @@
 {
-  "name": "agent-plugin-product-development",
+  "name": "product-development",
   "version": "0.1.0",
   "description": "Product development lifecycle workflows as portable agent skills.",
   "private": false,

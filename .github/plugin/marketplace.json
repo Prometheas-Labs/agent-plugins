@@ -1,12 +1,12 @@
 {
-  "name": "prometheas-product-development",
+  "name": "prometheas-labs",
   "owner": {
     "name": "Prometheas Labs"
   },
   "plugins": [
     {
       "name": "product-development",
-      "source": "."
+      "source": "./plugins/product-development"
     }
   ]
 }
