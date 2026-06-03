@@ -44,6 +44,11 @@ These layouts validate marketplace registration and skill installation only;
 they do not validate automatic project-local discovery or runtime execution of
 command, agent, or hook surfaces.
 
+Validation notes distinguish marketplace registration, plugin installation, and
+runtime component loading. Current smoke tests validate marketplace
+registration and plugin installation only unless this document explicitly says
+otherwise.
+
 | harness | marketplace manifest | plugin directory | source path form | notes |
 | --- | --- | --- | --- | --- |
 | Codex | `.agents/plugins/marketplace.json` | `plugins/product-development/` | `{"source":"local","path":"./plugins/product-development"}` | Pass the checkout root to `codex plugin marketplace add`; the source path resolves from that root. |
