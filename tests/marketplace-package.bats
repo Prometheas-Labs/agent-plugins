@@ -43,6 +43,51 @@ if (typeof value === "string") {
 ' "$file" "$expression"
 }
 
+runtime_metadata_paths() {
+  printf '%s\n' \
+    "$REPO_ROOT/.agents/plugins/marketplace.json" \
+    "$REPO_ROOT/.claude-plugin/marketplace.json" \
+    "$REPO_ROOT/.github/plugin/marketplace.json" \
+    "$REPO_ROOT/plugins/product-development/plugin.json" \
+    "$REPO_ROOT/plugins/product-development/package.json" \
+    "$REPO_ROOT/plugins/product-development/.codex-plugin/plugin.json" \
+    "$REPO_ROOT/plugins/product-development/.claude-plugin/plugin.json"
+}
+
+assert_no_manifest_hook_declarations() {
+  node - "$@" <<'NODE'
+const fs = require("fs");
+
+let valid = true;
+
+function scan(value, file, path = []) {
+  if (!value || typeof value !== "object") {
+    return;
+  }
+
+  if (Array.isArray(value)) {
+    value.forEach((item, index) => scan(item, file, [...path, `[${index}]`]));
+    return;
+  }
+
+  for (const [key, nestedValue] of Object.entries(value)) {
+    const nextPath = [...path, key];
+    if (/hook/i.test(key)) {
+      console.error(`manifest declares hook-like key in ${file}: ${nextPath.join(".")}`);
+      valid = false;
+    }
+    scan(nestedValue, file, nextPath);
+  }
+}
+
+for (const file of process.argv.slice(2)) {
+  scan(JSON.parse(fs.readFileSync(file, "utf8")), file);
+}
+
+process.exit(valid ? 0 : 1);
+NODE
+}
+
 @test "root marketplace manifests exist and plugin manifests do not" {
   assert_file_exists "$REPO_ROOT/.agents/plugins/marketplace.json"
   assert_file_exists "$REPO_ROOT/.claude-plugin/marketplace.json"
@@ -96,5 +141,12 @@ if (typeof value === "string") {
   [ ! -e "$REPO_ROOT/hooks" ]
   [ ! -e "$REPO_ROOT/plugins/product-development/hooks.json" ]
   [ ! -e "$REPO_ROOT/plugins/product-development/hooks" ]
-  ! grep -R '"hooks"' "$REPO_ROOT/.agents" "$REPO_ROOT/.claude-plugin" "$REPO_ROOT/.github" "$REPO_ROOT/plugins/product-development" 2>/dev/null
+
+  local files=()
+  while IFS= read -r file; do
+    assert_file_exists "$file"
+    files+=("$file")
+  done < <(runtime_metadata_paths)
+
+  assert_no_manifest_hook_declarations "${files[@]}"
 }
