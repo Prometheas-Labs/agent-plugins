@@ -183,9 +183,9 @@ Workflow for approving PRD, TRD, stories, and scenarios.
 
 Expected behavior:
 
-- update artifact lifecycle status
-- append changelog entries when requirements, architecture, acceptance criteria, or approval status change
 - run configured or targeted validation checks
+- update artifact lifecycle status only after validation succeeds
+- append changelog entries when requirements, architecture, acceptance criteria, or approval status change
 - report clean state and next lifecycle gate
 - preserve implementation, code, migration, and test gates until explicitly approved
 
