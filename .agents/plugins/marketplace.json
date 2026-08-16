@@ -11,6 +11,13 @@
         "source": "local",
         "path": "./plugins/product-development"
       }
+    },
+    {
+      "name": "delivery-engineering",
+      "source": {
+        "source": "local",
+        "path": "./plugins/delivery-engineering"
+      }
     }
   ]
 }
