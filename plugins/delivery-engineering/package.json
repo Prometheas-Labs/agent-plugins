@@ -1,0 +1,17 @@
+{
+  "name": "delivery-engineering",
+  "version": "0.1.0",
+  "description": "Engineering delivery workflows: turning an approved plan into merged, shipped, and coordinated work.",
+  "private": false,
+  "keywords": [
+    "agent-plugin",
+    "agent-skill",
+    "delivery-engineering",
+    "pi-package"
+  ],
+  "pi": {
+    "skills": [
+      "skills/review-gated-implementation-loop"
+    ]
+  }
+}
