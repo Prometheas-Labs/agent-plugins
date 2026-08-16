@@ -1,0 +1,28 @@
+{
+  "name": "delivery-engineering",
+  "version": "0.1.0",
+  "description": "Engineering delivery workflows: turning an approved plan into merged, shipped, and coordinated work.",
+  "author": {
+    "name": "Prometheas Labs"
+  },
+  "keywords": [
+    "agent-skill",
+    "delivery-engineering",
+    "codex-plugin"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Delivery Engineering",
+    "shortDescription": "Execute an approved plan through review-gated delivery to merge",
+    "longDescription": "Use Delivery Engineering to turn an approved implementation plan into merged, shipped, and coordinated work. It hosts the review-gated-implementation-loop skill: plan and execute a large or high-risk change with an independent reviewer gating each step.",
+    "developerName": "Prometheas Labs",
+    "category": "Developer Tools",
+    "capabilities": [
+      "Interactive",
+      "Write"
+    ],
+    "defaultPrompt": [
+      "Use the review-gated-implementation-loop skill for this change"
+    ]
+  }
+}
