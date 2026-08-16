@@ -8,6 +8,10 @@
     {
       "name": "product-development",
       "source": "./plugins/product-development"
+    },
+    {
+      "name": "delivery-engineering",
+      "source": "./plugins/delivery-engineering"
     }
   ]
 }

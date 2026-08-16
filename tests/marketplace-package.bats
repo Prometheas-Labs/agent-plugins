@@ -51,7 +51,11 @@ runtime_metadata_paths() {
     "$REPO_ROOT/plugins/product-development/plugin.json" \
     "$REPO_ROOT/plugins/product-development/package.json" \
     "$REPO_ROOT/plugins/product-development/.codex-plugin/plugin.json" \
-    "$REPO_ROOT/plugins/product-development/.claude-plugin/plugin.json"
+    "$REPO_ROOT/plugins/product-development/.claude-plugin/plugin.json" \
+    "$REPO_ROOT/plugins/delivery-engineering/plugin.json" \
+    "$REPO_ROOT/plugins/delivery-engineering/package.json" \
+    "$REPO_ROOT/plugins/delivery-engineering/.codex-plugin/plugin.json" \
+    "$REPO_ROOT/plugins/delivery-engineering/.claude-plugin/plugin.json"
 }
 
 assert_no_manifest_hook_declarations() {
@@ -115,11 +119,20 @@ NODE
   assert_file_contains "$REPO_ROOT/.github/plugin/marketplace.json" '"source": "./plugins/product-development"'
 }
 
+@test "root marketplace manifests expose delivery-engineering from plugins/delivery-engineering" {
+  assert_file_contains "$REPO_ROOT/.agents/plugins/marketplace.json" '"name": "delivery-engineering"'
+  assert_file_contains "$REPO_ROOT/.agents/plugins/marketplace.json" '"path": "./plugins/delivery-engineering"'
+  assert_file_contains "$REPO_ROOT/.claude-plugin/marketplace.json" '"name": "delivery-engineering"'
+  assert_file_contains "$REPO_ROOT/.claude-plugin/marketplace.json" '"source": "./plugins/delivery-engineering"'
+  assert_file_contains "$REPO_ROOT/.github/plugin/marketplace.json" '"name": "delivery-engineering"'
+  assert_file_contains "$REPO_ROOT/.github/plugin/marketplace.json" '"source": "./plugins/delivery-engineering"'
+}
+
 @test "root README documents marketplace install commands" {
   assert_file_contains "$REPO_ROOT/README.md" "# Prometheas Labs Agent Plugins"
   assert_file_contains "$REPO_ROOT/README.md" "Prometheas-Labs/agent-plugins"
   assert_file_contains "$REPO_ROOT/README.md" "product-development@prometheas-labs"
-  assert_file_contains "$REPO_ROOT/README.md" "currently contains one plugin"
+  assert_file_contains "$REPO_ROOT/README.md" "delivery-engineering@prometheas-labs"
   ! grep -Fq "product-development@prometheas-product-development" "$REPO_ROOT/README.md"
 }
 
@@ -141,6 +154,8 @@ NODE
   [ ! -e "$REPO_ROOT/hooks" ]
   [ ! -e "$REPO_ROOT/plugins/product-development/hooks.json" ]
   [ ! -e "$REPO_ROOT/plugins/product-development/hooks" ]
+  [ ! -e "$REPO_ROOT/plugins/delivery-engineering/hooks.json" ]
+  [ ! -e "$REPO_ROOT/plugins/delivery-engineering/hooks" ]
 
   local files=()
   while IFS= read -r file; do
