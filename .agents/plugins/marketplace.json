@@ -18,6 +18,13 @@
         "source": "local",
         "path": "./plugins/branch-guard"
       }
+    },
+    {
+      "name": "delivery-engineering",
+      "source": {
+        "source": "local",
+        "path": "./plugins/delivery-engineering"
+      }
     }
   ]
 }

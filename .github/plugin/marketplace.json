@@ -11,6 +11,10 @@
     {
       "name": "branch-guard",
       "source": "./plugins/branch-guard"
+    },
+    {
+      "name": "delivery-engineering",
+      "source": "./plugins/delivery-engineering"
     }
   ]
 }
