@@ -57,3 +57,49 @@ teardown() {
     *) echo "unexpected: $output" >&2; return 1 ;;
   esac
 }
+
+@test "Copilot adapter produces no output on a feature branch" {
+  git -C "$TMP_REPO" checkout -q -b feature
+  payload="{\"toolName\":\"create\",\"toolArgs\":{},\"cwd\":\"$TMP_REPO\"}"
+  output="$(echo "$payload" | sh "$PLUGIN_ROOT/scripts/adapter-copilot.sh")"
+  [ -z "$output" ]
+}
+
+@test "each adapter passes silently for a non-mutating tool on the protected branch" {
+  payload="{\"tool_name\":\"Read\",\"tool_input\":{},\"cwd\":\"$TMP_REPO\"}"
+  output="$(echo "$payload" | sh "$PLUGIN_ROOT/scripts/adapter-claude.sh")"
+  [ -z "$output" ]
+
+  run bash -c "echo '$payload' | sh '$PLUGIN_ROOT/scripts/adapter-codex.sh'"
+  [ "$status" -eq 0 ]
+  [ -z "$output" ]
+
+  copilot_payload="{\"toolName\":\"view\",\"toolArgs\":{},\"cwd\":\"$TMP_REPO\"}"
+  output="$(echo "$copilot_payload" | sh "$PLUGIN_ROOT/scripts/adapter-copilot.sh")"
+  [ -z "$output" ]
+}
+
+@test "each adapter handles malformed (non-JSON) stdin without crashing, and exits successfully" {
+  run bash -c "echo 'not json at all' | sh '$PLUGIN_ROOT/scripts/adapter-claude.sh'"
+  [ "$status" -eq 0 ]
+  [ -z "$output" ]
+
+  run bash -c "echo 'not json at all' | sh '$PLUGIN_ROOT/scripts/adapter-codex.sh'"
+  [ "$status" -eq 0 ]
+  [ -z "$output" ]
+
+  run bash -c "echo 'not json at all' | sh '$PLUGIN_ROOT/scripts/adapter-copilot.sh'"
+  [ "$status" -eq 0 ]
+  [ -z "$output" ]
+}
+
+@test "each adapter handles empty stdin without crashing" {
+  run bash -c "printf '' | sh '$PLUGIN_ROOT/scripts/adapter-claude.sh'"
+  [ "$status" -eq 0 ]
+
+  run bash -c "printf '' | sh '$PLUGIN_ROOT/scripts/adapter-codex.sh'"
+  [ "$status" -eq 0 ]
+
+  run bash -c "printf '' | sh '$PLUGIN_ROOT/scripts/adapter-copilot.sh'"
+  [ "$status" -eq 0 ]
+}

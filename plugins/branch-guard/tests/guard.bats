@@ -17,6 +17,10 @@ decide() {
   sh "$PLUGIN_ROOT/tests/decide-helper.sh" "$1" "$2"
 }
 
+call() {
+  sh "$PLUGIN_ROOT/tests/call-helper.sh" "$@"
+}
+
 @test "asks on the protected branch for a mutating tool" {
   result="$(decide "$TMP_REPO" "Write")"
   case "$result" in
@@ -73,6 +77,55 @@ EOF
     ask:*) ;;
     *) echo "unexpected: $result" >&2; return 1 ;;
   esac
+}
+
+@test "bg_json_field extracts a simple string field from compact JSON" {
+  result="$(call bg_json_field '{"tool_name":"Write","cwd":"/tmp/x"}' "tool_name")"
+  [ "$result" = "Write" ]
+}
+
+@test "bg_json_field extracts cwd without being confused by an earlier field" {
+  result="$(call bg_json_field '{"tool_name":"Write","tool_input":{"file_path":"/a/b"},"cwd":"/tmp/x"}' "cwd")"
+  [ "$result" = "/tmp/x" ]
+}
+
+@test "bg_json_field returns empty for a missing field" {
+  result="$(call bg_json_field '{"tool_name":"Write"}' "cwd")"
+  [ -z "$result" ]
+}
+
+@test "bg_is_mutating_tool recognizes known mutating tool names" {
+  run sh "$PLUGIN_ROOT/tests/call-helper.sh" bg_is_mutating_tool "Write"
+  [ "$status" -eq 0 ]
+  run sh "$PLUGIN_ROOT/tests/call-helper.sh" bg_is_mutating_tool "bash"
+  [ "$status" -eq 0 ]
+}
+
+@test "bg_is_mutating_tool rejects a read-only tool name" {
+  run sh "$PLUGIN_ROOT/tests/call-helper.sh" bg_is_mutating_tool "Read"
+  [ "$status" -ne 0 ]
+}
+
+@test "bg_branch_is_protected matches an exact name" {
+  run sh "$PLUGIN_ROOT/tests/call-helper.sh" bg_branch_is_protected "main" "main"
+  [ "$status" -eq 0 ]
+}
+
+@test "bg_branch_is_protected matches a wildcard pattern" {
+  run sh "$PLUGIN_ROOT/tests/call-helper.sh" bg_branch_is_protected "hotfix/urgent" "hotfix/*"
+  [ "$status" -eq 0 ]
+}
+
+@test "bg_branch_is_protected does not match an unrelated branch" {
+  run sh "$PLUGIN_ROOT/tests/call-helper.sh" bg_branch_is_protected "feature" "main"
+  [ "$status" -ne 0 ]
+}
+
+@test "bg_branch_is_protected checks multiple newline-separated patterns" {
+  patterns="main
+release"
+  run sh "$PLUGIN_ROOT/tests/call-helper.sh" bg_branch_is_protected "release" "$patterns"
+  [ "$status" -eq 0 ]
 }
 
 @test "the override file entirely replaces the default branch guess" {
