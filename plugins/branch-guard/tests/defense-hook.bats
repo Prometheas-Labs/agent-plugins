@@ -124,6 +124,20 @@ EOF
   [ "$status" -ne 0 ]
 }
 
+@test "main is blocked at the pre-commit layer even when the detected default branch is something else" {
+  bare_remote="$(mktemp -d)"
+  git init -q --bare -b trunk "$bare_remote"
+  git -C "$TMP_REPO" remote add origin "$bare_remote"
+  git -C "$TMP_REPO" checkout -q -b trunk
+  git -C "$TMP_REPO" push -q origin trunk
+  git -C "$TMP_REPO" remote set-head origin trunk
+  git -C "$TMP_REPO" checkout -q main
+  sh "$PLUGIN_ROOT/scripts/install-defense-hook.sh" "$TMP_REPO"
+  run git -C "$TMP_REPO" -c user.email=t@example.com -c user.name=t -c commit.gpgsign=false commit -q --allow-empty -m "direct on main despite trunk being the detected default"
+  [ "$status" -ne 0 ]
+  rm -rf "$bare_remote"
+}
+
 @test "master, production, develop, and development are protected by default at the pre-commit layer too" {
   sh "$PLUGIN_ROOT/scripts/install-defense-hook.sh" "$TMP_REPO"
   for name in master production develop development; do

@@ -22,7 +22,12 @@ branch="$(git symbolic-ref --quiet --short HEAD || true)"
 ref="$(git symbolic-ref --quiet --short refs/remotes/origin/HEAD 2>/dev/null || true)"
 default_branch="${ref#origin/}"
 [ -z "$default_branch" ] && default_branch="main"
+# "main" is always included, not just as the fallback above: if the
+# detected default is something else (say "trunk"), a "main" branch
+# left over or kept around for other reasons should still be
+# protected.
 patterns="$default_branch
+main
 master
 production
 develop

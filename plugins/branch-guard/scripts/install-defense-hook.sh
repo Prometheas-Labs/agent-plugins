@@ -28,7 +28,12 @@ if [ -e "$hook_path" ] || [ -L "$hook_path" ]; then
   exit 0
 fi
 
-tmp="$hook_path.branch-guard.tmp.$$"
-cp "$guard_script" "$tmp"
+# mktemp reserves the file atomically at an unpredictable name, so a
+# concurrent process can't pre-create a symlink at this exact path and
+# have `cp`/the write below follow it outside the hooks directory --
+# the predictable "$hook_path.branch-guard.tmp.$$" name this used
+# before did not have that property.
+tmp="$(mktemp "$hook_path.branch-guard.XXXXXX")"
+cat "$guard_script" > "$tmp"
 chmod +x "$tmp"
 mv "$tmp" "$hook_path"

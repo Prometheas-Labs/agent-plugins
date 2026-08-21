@@ -68,7 +68,11 @@ bg_default_branch() {
 bg_protected_branches() {
   repo_root="$1"
   bg_default_branch "$repo_root"
-  printf '%s\n' "master" "production" "develop" "development"
+  # "main" is always included, not just as bg_default_branch's
+  # fallback: if the repo's detected default is something else (say
+  # "trunk"), a "main" branch left over from before that switch, or
+  # kept around for other reasons, should still be protected.
+  printf '%s\n' "main" "master" "production" "develop" "development"
   override_file="$repo_root/.config/branch-guard/protected-branches"
   if [ -f "$override_file" ]; then
     # Strip trailing "# comment" text (not just whole-line comments)

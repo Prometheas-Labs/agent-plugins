@@ -181,6 +181,22 @@ EOF
   esac
 }
 
+@test "main is protected even when the repo's detected default branch is something else" {
+  bare_remote="$(mktemp -d)"
+  git init -q --bare -b trunk "$bare_remote"
+  git -C "$TMP_REPO" remote add origin "$bare_remote"
+  git -C "$TMP_REPO" checkout -q -b trunk
+  git -C "$TMP_REPO" push -q origin trunk
+  git -C "$TMP_REPO" remote set-head origin trunk
+  git -C "$TMP_REPO" checkout -q main
+  result="$(decide "$TMP_REPO" "Write")"
+  case "$result" in
+    ask:*) ;;
+    *) echo "unexpected: $result" >&2; return 1 ;;
+  esac
+  rm -rf "$bare_remote"
+}
+
 @test "apply_patch (Codex's canonical mutating tool_name) is treated as mutating" {
   result="$(decide "$TMP_REPO" "apply_patch")"
   case "$result" in
