@@ -238,11 +238,12 @@ manifests are documented in the compatibility matrix and are not treated as
 proven runtime routing. Shared command and agent adapters are thin entrypoints
 only; the skill tree remains the source of truth.
 
-The `branch-guard` plugin package (see `plugins/branch-guard/README.md`) nudges
-agents away from directly editing a repository's protected branch, through the
-harness's own permission prompt. It is an MVP-scoped best-practices nudge, not
-a security boundary, implemented in POSIX `sh` with no runtime dependency
-beyond `git`.
+The `branch-guard` plugin package (see `plugins/branch-guard/README.md`)
+directs agents away from directly editing a repository's protected branch:
+Claude Code and Copilot CLI show the harness's own approval prompt, while
+Codex adds a model-visible reminder and lets the action proceed. It is an
+MVP-scoped best-practices nudge, not a security boundary, implemented in
+POSIX `sh` with no runtime dependency beyond `git`.
 
 Local marketplace install smoke tests have passed for Codex, Claude Code, and
 GitHub Copilot CLI at the skill-package level. Those tests prove the package can
