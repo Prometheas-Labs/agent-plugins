@@ -8,6 +8,10 @@
     {
       "name": "product-development",
       "source": "./plugins/product-development"
+    },
+    {
+      "name": "branch-guard",
+      "source": "./plugins/branch-guard"
     }
   ]
 }

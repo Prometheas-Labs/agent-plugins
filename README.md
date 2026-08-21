@@ -1,16 +1,16 @@
 # Prometheas Labs Agent Plugins
 
 This repository is the Prometheas Labs agent plugin marketplace. It currently
-contains one plugin, `product-development`, and is structured to host additional
-Prometheas Labs plugins over time.
+contains two plugins, `product-development` and `branch-guard`, and is
+structured to host additional Prometheas Labs plugins over time.
 
 The canonical Product Development methodology lives inside
 `plugins/product-development/skills/product-development/`. Marketplace manifests
 and adapter wrappers expose the plugin; they do not duplicate methodology.
 
-Runtime hooks are intentionally deferred for V1; no hook configuration, hook
-scripts, or manifest hook declarations ship with this marketplace or plugin
-package.
+`branch-guard` is the marketplace's first hook-bearing plugin; see
+`docs/compatibility/hooks.md` for the policy governing hook-bearing plugins.
+`product-development` remains hook-free.
 
 For detailed harness compatibility, see
 `docs/compatibility/harness-matrix.md`. For development setup and local checkout
@@ -18,7 +18,8 @@ installs, see `docs/development.md`.
 
 ## Getting Started
 
-Register the marketplace, then install `product-development`.
+Register the marketplace, then install `product-development` and/or
+`branch-guard`.
 
 <details>
 <summary>Codex</summary>
@@ -26,6 +27,7 @@ Register the marketplace, then install `product-development`.
 ```bash
 codex plugin marketplace add Prometheas-Labs/agent-plugins --ref main
 codex plugin add product-development@prometheas-labs
+codex plugin add branch-guard@prometheas-labs
 ```
 
 For private forks, pinned mirrors, or development from a local checkout, see
@@ -39,6 +41,7 @@ For private forks, pinned mirrors, or development from a local checkout, see
 ```bash
 claude plugin marketplace add --scope user Prometheas-Labs/agent-plugins@main
 claude plugin install product-development@prometheas-labs
+claude plugin install branch-guard@prometheas-labs
 ```
 
 For private forks, pinned mirrors, or development from a local checkout, see
@@ -52,7 +55,11 @@ For private forks, pinned mirrors, or development from a local checkout, see
 ```bash
 copilot plugin marketplace add Prometheas-Labs/agent-plugins
 copilot plugin install product-development@prometheas-labs
+copilot plugin install branch-guard@prometheas-labs
 ```
+
+`branch-guard`'s hooks require an extra manual step for Copilot CLI; see
+`plugins/branch-guard/README.md`.
 
 For private forks, pinned mirrors, or development from a local checkout, see
 `docs/development.md#installing-from-a-local-checkout`.
@@ -215,12 +222,13 @@ of editing beyond recognition.
 
 ## Marketplace Contents
 
-This marketplace currently contains one plugin.
+This marketplace currently contains two plugins.
 
 - `.agents/plugins/marketplace.json` - Codex marketplace metadata.
 - `.claude-plugin/marketplace.json` - Claude Code marketplace metadata.
 - `.github/plugin/marketplace.json` - GitHub Copilot CLI marketplace metadata.
 - `plugins/product-development/` - Product Development plugin package.
+- `plugins/branch-guard/` - branch-guard plugin package.
 
 The `product-development` plugin package contains its own plugin manifests,
 shared command wrappers, shared agent wrappers, and canonical skill tree.
@@ -229,6 +237,12 @@ Manifests that declare component paths route back to
 manifests are documented in the compatibility matrix and are not treated as
 proven runtime routing. Shared command and agent adapters are thin entrypoints
 only; the skill tree remains the source of truth.
+
+The `branch-guard` plugin package (see `plugins/branch-guard/README.md`) nudges
+agents away from directly editing a repository's protected branch, through the
+harness's own permission prompt. It is an MVP-scoped best-practices nudge, not
+a security boundary, implemented in POSIX `sh` with no runtime dependency
+beyond `git`.
 
 Local marketplace install smoke tests have passed for Codex, Claude Code, and
 GitHub Copilot CLI at the skill-package level. Those tests prove the package can
