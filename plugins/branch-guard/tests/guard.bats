@@ -128,12 +128,63 @@ release"
   [ "$status" -eq 0 ]
 }
 
-@test "the override file entirely replaces the default branch guess" {
+@test "the override file adds to the built-in protected list, not replaces it" {
   mkdir -p "$TMP_REPO/.config/branch-guard"
   cat > "$TMP_REPO/.config/branch-guard/protected-branches" <<'EOF'
 release
 EOF
-  # still on "main", but the override file doesn't list it
+  # still on "main", which the override file doesn't mention, but "main"
+  # is always in the built-in list regardless of the override file's
+  # content.
   result="$(decide "$TMP_REPO" "Write")"
-  [ "$result" = "pass" ]
+  case "$result" in
+    ask:*) ;;
+    *) echo "unexpected: $result" >&2; return 1 ;;
+  esac
+}
+
+@test "a comment-only override file still protects the built-in defaults" {
+  mkdir -p "$TMP_REPO/.config/branch-guard"
+  cat > "$TMP_REPO/.config/branch-guard/protected-branches" <<'EOF'
+# nothing here yet
+EOF
+  result="$(decide "$TMP_REPO" "Write")"
+  case "$result" in
+    ask:*) ;;
+    *) echo "unexpected: $result" >&2; return 1 ;;
+  esac
+}
+
+@test "master, production, develop, and development are protected by default" {
+  for name in master production develop development; do
+    git -C "$TMP_REPO" checkout -q -b "$name"
+    result="$(decide "$TMP_REPO" "Write")"
+    case "$result" in
+      ask:*) ;;
+      *) echo "unexpected for $name: $result" >&2; return 1 ;;
+    esac
+    git -C "$TMP_REPO" checkout -q main
+    git -C "$TMP_REPO" branch -q -D "$name"
+  done
+}
+
+@test "an override file line with a trailing comment is still honored, not silently dropped" {
+  mkdir -p "$TMP_REPO/.config/branch-guard"
+  cat > "$TMP_REPO/.config/branch-guard/protected-branches" <<'EOF'
+release  # kept in sync with the release process
+EOF
+  git -C "$TMP_REPO" checkout -q -b release
+  result="$(decide "$TMP_REPO" "Write")"
+  case "$result" in
+    ask:*) ;;
+    *) echo "unexpected: $result" >&2; return 1 ;;
+  esac
+}
+
+@test "apply_patch (Codex's canonical mutating tool_name) is treated as mutating" {
+  result="$(decide "$TMP_REPO" "apply_patch")"
+  case "$result" in
+    ask:*) ;;
+    *) echo "unexpected: $result" >&2; return 1 ;;
+  esac
 }

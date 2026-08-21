@@ -29,24 +29,35 @@ teardown() {
   [ -z "$output" ]
 }
 
-@test "Codex adapter exits 2 with a stderr reason on the protected branch, never mentions allow" {
+@test "Codex adapter adds a reminder via additionalContext on the protected branch, exits 0, never sets permissionDecision" {
   payload="{\"tool_name\":\"Write\",\"tool_input\":{},\"cwd\":\"$TMP_REPO\"}"
   run bash -c "echo '$payload' | sh '$PLUGIN_ROOT/scripts/adapter-codex.sh'"
-  [ "$status" -eq 2 ]
+  [ "$status" -eq 0 ]
   case "$output" in
-    *"branch-guard"*) ;;
+    *'"additionalContext"'*"branch-guard"*) ;;
     *) echo "unexpected: $output" >&2; return 1 ;;
   esac
   case "$output" in
-    *"allow"*) echo "adapter must never mention allow" >&2; return 1 ;;
+    *"permissionDecision"*) echo "adapter must never set permissionDecision" >&2; return 1 ;;
   esac
 }
 
-@test "Codex adapter exits 0 on a feature branch" {
+@test "Codex adapter recognizes apply_patch as a mutating tool" {
+  payload="{\"tool_name\":\"apply_patch\",\"tool_input\":{},\"cwd\":\"$TMP_REPO\"}"
+  run bash -c "echo '$payload' | sh '$PLUGIN_ROOT/scripts/adapter-codex.sh'"
+  [ "$status" -eq 0 ]
+  case "$output" in
+    *'"additionalContext"'*) ;;
+    *) echo "unexpected: $output" >&2; return 1 ;;
+  esac
+}
+
+@test "Codex adapter produces no output on a feature branch" {
   git -C "$TMP_REPO" checkout -q -b feature
   payload="{\"tool_name\":\"Write\",\"tool_input\":{},\"cwd\":\"$TMP_REPO\"}"
   run bash -c "echo '$payload' | sh '$PLUGIN_ROOT/scripts/adapter-codex.sh'"
   [ "$status" -eq 0 ]
+  [ -z "$output" ]
 }
 
 @test "Copilot adapter asks using camelCase fields on the protected branch" {

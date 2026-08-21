@@ -1,12 +1,13 @@
 #!/bin/sh
 # usage: install-defense-hook.sh <repo-path>
 #
-# Installs (or non-destructively extends) the target repo's
-# `pre-commit` hook with branch-guard's backstop check. If a
-# pre-commit hook already exists and is executable, it is preserved
-# under a new name and chained via `exec` after the guard passes, so
-# it still runs exactly as before regardless of what language it's
-# written in.
+# Installs branch-guard's pre-commit backstop, but only into an empty
+# slot: if the target repo already has a pre-commit hook (ours or
+# someone else's), this script does not touch it. Overwriting or
+# chaining onto an existing hook risks breaking it or silently
+# changing its behavior; the repo may well already have its own
+# branch-protection check. Instead it points the user at the guard
+# script so they can wire it in themselves if they want it.
 set -eu
 
 repo_path="${1:?usage: install-defense-hook.sh <repo-path>}"
@@ -14,34 +15,20 @@ script_dir="$(cd "$(dirname "$0")" && pwd)"
 
 hooks_dir="$(git -C "$repo_path" rev-parse --path-format=absolute --git-path hooks)"
 mkdir -p "$hooks_dir"
-
-guard_path="$hooks_dir/branch-guard-pre-commit.sh"
 hook_path="$hooks_dir/pre-commit"
-original_path="$hooks_dir/pre-commit.branch-guard-original"
-
-cp "$script_dir/pre-commit-guard.sh" "$guard_path"
-chmod +x "$guard_path"
+guard_script="$script_dir/pre-commit-guard.sh"
 
 if [ -e "$hook_path" ] || [ -L "$hook_path" ]; then
-  if [ -L "$hook_path" ]; then
-    echo "branch-guard: refusing to install over a symlinked pre-commit hook at $hook_path" >&2
-    exit 1
-  fi
-  if grep -q "branch-guard: managed dispatcher" "$hook_path" 2>/dev/null; then
+  if grep -q "branch-guard: managed pre-commit hook" "$hook_path" 2>/dev/null; then
+    echo "branch-guard: pre-commit hook already installed at $hook_path" >&2
     exit 0
   fi
-  if [ -x "$hook_path" ]; then
-    cp "$hook_path" "$original_path"
-    chmod +x "$original_path"
-  fi
+  echo "branch-guard: a pre-commit hook already exists at $hook_path -- leaving it in place." >&2
+  echo "branch-guard: to add protected-branch enforcement, call $guard_script from it, or fold its logic in directly." >&2
+  exit 0
 fi
 
-{
-  echo '#!/bin/sh'
-  echo '# branch-guard: managed dispatcher, do not edit by hand.'
-  printf '"%s" "$@" || exit 1\n' "$guard_path"
-  if [ -x "$original_path" ]; then
-    printf 'exec "%s" "$@"\n' "$original_path"
-  fi
-} > "$hook_path"
-chmod +x "$hook_path"
+tmp="$hook_path.branch-guard.tmp.$$"
+cp "$guard_script" "$tmp"
+chmod +x "$tmp"
+mv "$tmp" "$hook_path"

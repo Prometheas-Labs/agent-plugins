@@ -1,7 +1,7 @@
 {
   "name": "branch-guard",
   "version": "0.1.0",
-  "description": "Nudges agents away from directly editing a repository's protected branch, through the harness's own permission prompt.",
+  "description": "Reminds agents when they're directly editing a repository's protected branch.",
   "author": {
     "name": "Prometheas Labs"
   },

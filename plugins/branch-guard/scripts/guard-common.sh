@@ -12,18 +12,34 @@
 
 # Extracts a single string field's value from compact single-line JSON.
 # Only handles simple "key":"value" string fields, which is all this
-# plugin's hook payloads need.
+# plugin's hook payloads need. Uses awk rather than `grep -o`, which
+# POSIX doesn't specify; if some grep lacks -o, bg_json_field would
+# silently return empty and every action would be misclassified as
+# non-mutating.
 bg_json_field() {
   json="$1"
   key="$2"
-  printf '%s' "$json" | grep -o "\"$key\"[[:space:]]*:[[:space:]]*\"[^\"]*\"" | head -n 1 | sed -E 's/^"'"$key"'"[[:space:]]*:[[:space:]]*"//; s/"$//'
+  printf '%s' "$json" | awk -v key="$key" '
+    {
+      prefix = "\"" key "\"[[:space:]]*:[[:space:]]*\""
+      if (match($0, prefix)) {
+        value = substr($0, RSTART + RLENGTH)
+        sub(/".*$/, "", value)
+        print value
+        exit
+      }
+    }
+  '
 }
 
 # Returns 0 (true) if the given tool name is one this plugin treats as
-# a mutating action worth checking.
+# a mutating action worth checking. Includes apply_patch: that's
+# Codex's canonical tool_name for file mutations (Write/Edit are
+# matcher aliases Codex also accepts, but the hook payload's tool_name
+# is apply_patch), so omitting it would silently miss real Codex edits.
 bg_is_mutating_tool() {
   case "$1" in
-    Write | Edit | NotebookEdit | MultiEdit | Bash | create | edit | bash | powershell)
+    Write | Edit | NotebookEdit | MultiEdit | Bash | apply_patch | create | edit | bash | powershell)
       return 0
       ;;
     *)
@@ -43,15 +59,24 @@ bg_default_branch() {
   fi
 }
 
-# Prints the list of protected branch names/patterns, one per line.
+# Prints the list of protected branch names/patterns, one per line:
+# the repo's detected default branch, a handful of other conventional
+# names, and anything an optional override file adds on top. The
+# built-in names are always present (not replaced by the override
+# file), so an override file that's empty, comment-only, or missing
+# never results in "nothing is protected."
 bg_protected_branches() {
   repo_root="$1"
+  bg_default_branch "$repo_root"
+  printf '%s\n' "master" "production" "develop" "development"
   override_file="$repo_root/.config/branch-guard/protected-branches"
   if [ -f "$override_file" ]; then
-    grep -v '^[[:space:]]*#' "$override_file" | grep -v '^[[:space:]]*$'
-    return 0
+    # Strip trailing "# comment" text (not just whole-line comments)
+    # before dropping blank lines, so "release  # note" is honored as
+    # "release" rather than kept as a literal, never-matching pattern.
+    sed 's/#.*$//' "$override_file" | sed 's/[[:space:]]*$//' | grep -v '^[[:space:]]*$'
   fi
-  bg_default_branch "$repo_root"
+  return 0
 }
 
 # Returns 0 if $1 (branch name) matches any pattern in $2 (newline list).
@@ -103,7 +128,7 @@ bg_decide() {
 
   patterns="$(bg_protected_branches "$repo_root")"
   if bg_branch_is_protected "$branch" "$patterns"; then
-    printf 'ask:branch-guard: %s is a protected branch. Approve this action in your harness'"'"'s own permission prompt, or switch to a feature branch.\n' "$branch"
+    printf 'ask:branch-guard: %s is a protected branch. Consider switching to a feature branch, or confirm this change is intentional before continuing.\n' "$branch"
   else
     printf 'pass\n'
   fi
