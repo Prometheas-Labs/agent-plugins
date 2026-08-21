@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "hooks": {
+    "preToolUse": [
+      {
+        "type": "command",
+        "bash": "sh \"PLUGIN_INSTALL_PATH/scripts/adapter-copilot.sh\"",
+        "timeoutSec": 10
+      }
+    ]
+  }
+}

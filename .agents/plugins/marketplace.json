@@ -11,6 +11,13 @@
         "source": "local",
         "path": "./plugins/product-development"
       }
+    },
+    {
+      "name": "branch-guard",
+      "source": {
+        "source": "local",
+        "path": "./plugins/branch-guard"
+      }
     }
   ]
 }

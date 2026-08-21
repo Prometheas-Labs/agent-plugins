@@ -1,0 +1,15 @@
+{
+  "name": "branch-guard",
+  "version": "0.1.0",
+  "description": "Reminds agents when they're directly editing a repository's protected branch.",
+  "author": {
+    "name": "Prometheas Labs"
+  },
+  "keywords": [
+    "agent-hook",
+    "git-best-practices",
+    "codex-plugin"
+  ],
+  "skills": "./skills/",
+  "hooks": "./.codex-plugin/hooks.json"
+}

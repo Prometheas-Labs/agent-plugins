@@ -1,0 +1,17 @@
+{
+  "description": "Asks for approval before mutating actions on a repository's protected branch, through Claude Code's own permission prompt.",
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Write|Edit|NotebookEdit|MultiEdit|Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "sh \"$CLAUDE_PLUGIN_ROOT/scripts/adapter-claude.sh\"",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  }
+}

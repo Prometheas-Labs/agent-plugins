@@ -1,0 +1,16 @@
+{
+  "name": "branch-guard",
+  "version": "0.1.0",
+  "description": "Nudges agents away from directly editing a repository's protected branch, through the harness's own permission prompt.",
+  "author": {
+    "name": "Prometheas Labs"
+  },
+  "keywords": [
+    "agent-hook",
+    "git-best-practices",
+    "copilot-cli-plugin"
+  ],
+  "skills": [
+    "skills/branch-guard"
+  ]
+}

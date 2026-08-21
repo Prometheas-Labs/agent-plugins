@@ -1,0 +1,116 @@
+#!/usr/bin/env bats
+
+PLUGIN_ROOT="$(cd "$(dirname "$BATS_TEST_FILENAME")/.." && pwd)"
+
+setup() {
+  TMP_REPO="$(mktemp -d)"
+  TMP_REPO="$(cd "$TMP_REPO" && pwd -P)"
+  git -C "$TMP_REPO" init -q -b main
+  git -C "$TMP_REPO" -c user.email=t@example.com -c user.name=t -c commit.gpgsign=false commit -q --allow-empty -m init
+}
+
+teardown() {
+  rm -rf "$TMP_REPO"
+}
+
+@test "Claude adapter asks (stdout JSON) on the protected branch" {
+  payload="{\"tool_name\":\"Write\",\"tool_input\":{\"file_path\":\"$TMP_REPO/f.txt\"},\"cwd\":\"$TMP_REPO\"}"
+  output="$(echo "$payload" | sh "$PLUGIN_ROOT/scripts/adapter-claude.sh")"
+  case "$output" in
+    *'"permissionDecision":"ask"'*) ;;
+    *) echo "unexpected: $output" >&2; return 1 ;;
+  esac
+}
+
+@test "Claude adapter produces no output on a feature branch" {
+  git -C "$TMP_REPO" checkout -q -b feature
+  payload="{\"tool_name\":\"Write\",\"tool_input\":{},\"cwd\":\"$TMP_REPO\"}"
+  output="$(echo "$payload" | sh "$PLUGIN_ROOT/scripts/adapter-claude.sh")"
+  [ -z "$output" ]
+}
+
+@test "Codex adapter adds a reminder via additionalContext on the protected branch, exits 0, never sets permissionDecision" {
+  payload="{\"tool_name\":\"Write\",\"tool_input\":{},\"cwd\":\"$TMP_REPO\"}"
+  run bash -c "echo '$payload' | sh '$PLUGIN_ROOT/scripts/adapter-codex.sh'"
+  [ "$status" -eq 0 ]
+  case "$output" in
+    *'"additionalContext"'*"branch-guard"*) ;;
+    *) echo "unexpected: $output" >&2; return 1 ;;
+  esac
+  case "$output" in
+    *"permissionDecision"*) echo "adapter must never set permissionDecision" >&2; return 1 ;;
+  esac
+}
+
+@test "Codex adapter recognizes apply_patch as a mutating tool" {
+  payload="{\"tool_name\":\"apply_patch\",\"tool_input\":{},\"cwd\":\"$TMP_REPO\"}"
+  run bash -c "echo '$payload' | sh '$PLUGIN_ROOT/scripts/adapter-codex.sh'"
+  [ "$status" -eq 0 ]
+  case "$output" in
+    *'"additionalContext"'*) ;;
+    *) echo "unexpected: $output" >&2; return 1 ;;
+  esac
+}
+
+@test "Codex adapter produces no output on a feature branch" {
+  git -C "$TMP_REPO" checkout -q -b feature
+  payload="{\"tool_name\":\"Write\",\"tool_input\":{},\"cwd\":\"$TMP_REPO\"}"
+  run bash -c "echo '$payload' | sh '$PLUGIN_ROOT/scripts/adapter-codex.sh'"
+  [ "$status" -eq 0 ]
+  [ -z "$output" ]
+}
+
+@test "Copilot adapter asks using camelCase fields on the protected branch" {
+  payload="{\"toolName\":\"create\",\"toolArgs\":{},\"cwd\":\"$TMP_REPO\"}"
+  output="$(echo "$payload" | sh "$PLUGIN_ROOT/scripts/adapter-copilot.sh")"
+  case "$output" in
+    *'"permissionDecision":"ask"'*) ;;
+    *) echo "unexpected: $output" >&2; return 1 ;;
+  esac
+}
+
+@test "Copilot adapter produces no output on a feature branch" {
+  git -C "$TMP_REPO" checkout -q -b feature
+  payload="{\"toolName\":\"create\",\"toolArgs\":{},\"cwd\":\"$TMP_REPO\"}"
+  output="$(echo "$payload" | sh "$PLUGIN_ROOT/scripts/adapter-copilot.sh")"
+  [ -z "$output" ]
+}
+
+@test "each adapter passes silently for a non-mutating tool on the protected branch" {
+  payload="{\"tool_name\":\"Read\",\"tool_input\":{},\"cwd\":\"$TMP_REPO\"}"
+  output="$(echo "$payload" | sh "$PLUGIN_ROOT/scripts/adapter-claude.sh")"
+  [ -z "$output" ]
+
+  run bash -c "echo '$payload' | sh '$PLUGIN_ROOT/scripts/adapter-codex.sh'"
+  [ "$status" -eq 0 ]
+  [ -z "$output" ]
+
+  copilot_payload="{\"toolName\":\"view\",\"toolArgs\":{},\"cwd\":\"$TMP_REPO\"}"
+  output="$(echo "$copilot_payload" | sh "$PLUGIN_ROOT/scripts/adapter-copilot.sh")"
+  [ -z "$output" ]
+}
+
+@test "each adapter handles malformed (non-JSON) stdin without crashing, and exits successfully" {
+  run bash -c "echo 'not json at all' | sh '$PLUGIN_ROOT/scripts/adapter-claude.sh'"
+  [ "$status" -eq 0 ]
+  [ -z "$output" ]
+
+  run bash -c "echo 'not json at all' | sh '$PLUGIN_ROOT/scripts/adapter-codex.sh'"
+  [ "$status" -eq 0 ]
+  [ -z "$output" ]
+
+  run bash -c "echo 'not json at all' | sh '$PLUGIN_ROOT/scripts/adapter-copilot.sh'"
+  [ "$status" -eq 0 ]
+  [ -z "$output" ]
+}
+
+@test "each adapter handles empty stdin without crashing" {
+  run bash -c "printf '' | sh '$PLUGIN_ROOT/scripts/adapter-claude.sh'"
+  [ "$status" -eq 0 ]
+
+  run bash -c "printf '' | sh '$PLUGIN_ROOT/scripts/adapter-codex.sh'"
+  [ "$status" -eq 0 ]
+
+  run bash -c "printf '' | sh '$PLUGIN_ROOT/scripts/adapter-copilot.sh'"
+  [ "$status" -eq 0 ]
+}

@@ -38,6 +38,23 @@ requires proof before a runtime support claim.
 | Pi | manifest prepared | `plugins/product-development/package.json` | manifest prepared | shared wrappers | documented adapter only | `bats plugins/product-development/tests/plugin-package.bats` | `pi.skills` points to the canonical skill directory; shared command wrappers exist outside package metadata and no npm lifecycle scripts are allowed. |
 | OMP | smoke-test-required | `plugins/product-development/.claude-plugin/plugin.json` / `plugins/product-development/package.json` | smoke-test-required | smoke-test-required | smoke-test-required | manual OMP install/link smoke test | OMP compatibility remains provisional until a live install/link smoke test proves current runtime behavior. |
 
+## branch-guard
+
+`branch-guard` (`plugins/branch-guard/`) ships hook wiring for three
+harnesses, implemented as POSIX `sh` scripts. It is an MVP-scoped
+best-practices nudge, not a security boundary. Each row starts at
+`smoke-test-required` and moves to `supported` only once a live smoke test
+proves the hook is discovered, trusted, and fires against the currently
+installed CLI version.
+
+| harness | V1 support tier | manifest file | notes |
+| --- | --- | --- | --- |
+| Claude Code | smoke-test-required | `plugins/branch-guard/.claude-plugin/plugin.json` + `plugins/branch-guard/hooks/hooks.json` | `PreToolUse` hook, matcher on a short mutating-tool list. |
+| Codex | smoke-test-required | `plugins/branch-guard/.codex-plugin/plugin.json` + `plugins/branch-guard/.codex-plugin/hooks.json` | Uses `$PLUGIN_ROOT` and an explicit `hooks` manifest field, since Codex also auto-discovers `hooks/hooks.json` (the same relative path Claude Code uses) and reads `$CLAUDE_PLUGIN_ROOT` for compatibility. Codex's `PreToolUse` does not yet implement an `ask` decision, so this adapter never sets `permissionDecision`; on a protected branch it adds a model-visible reminder via `additionalContext` and lets the action proceed, rather than blocking. |
+| GitHub Copilot CLI | smoke-test-required | `plugins/branch-guard/plugin.json` + `plugins/branch-guard/copilot-hooks/preToolUse.json` | Hook config is not marketplace-installed automatically; requires manual placement under `.github/hooks/` or `~/.copilot/hooks/`, documented in the plugin README. |
+| GitHub Copilot Cloud Agent | documented adapter only | none | No hook runtime attempted in V1. |
+| Gemini/Antigravity | documented adapter only | `plugins/branch-guard/gemini-extension.json` | Metadata only, matching this repo's existing convention for this harness. |
+
 ## Local Marketplace Layouts
 
 These layouts validate marketplace registration and skill installation only;

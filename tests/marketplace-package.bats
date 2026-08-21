@@ -119,8 +119,17 @@ NODE
   assert_file_contains "$REPO_ROOT/README.md" "# Prometheas Labs Agent Plugins"
   assert_file_contains "$REPO_ROOT/README.md" "Prometheas-Labs/agent-plugins"
   assert_file_contains "$REPO_ROOT/README.md" "product-development@prometheas-labs"
-  assert_file_contains "$REPO_ROOT/README.md" "currently contains one plugin"
+  assert_file_contains "$REPO_ROOT/README.md" "currently contains two plugins"
   ! grep -Fq "product-development@prometheas-product-development" "$REPO_ROOT/README.md"
+}
+
+@test "root marketplace manifests expose branch-guard from plugins/branch-guard" {
+  assert_file_contains "$REPO_ROOT/.agents/plugins/marketplace.json" '"name": "branch-guard"'
+  assert_file_contains "$REPO_ROOT/.agents/plugins/marketplace.json" '"path": "./plugins/branch-guard"'
+  assert_file_contains "$REPO_ROOT/.claude-plugin/marketplace.json" '"name": "branch-guard"'
+  assert_file_contains "$REPO_ROOT/.claude-plugin/marketplace.json" '"source": "./plugins/branch-guard"'
+  assert_file_contains "$REPO_ROOT/.github/plugin/marketplace.json" '"name": "branch-guard"'
+  assert_file_contains "$REPO_ROOT/.github/plugin/marketplace.json" '"source": "./plugins/branch-guard"'
 }
 
 @test "development docs describe marketplace and plugin package development" {
