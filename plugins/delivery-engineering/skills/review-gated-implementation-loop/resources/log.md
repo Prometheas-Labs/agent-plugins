@@ -15,6 +15,12 @@
   - New `autonomous-runs.md`: approval gates become ledger entries. The run
     stops at decisions that are hard to undo or that reverse an invariant or
     ADR, and it checks reversibility instead of assuming it.
+  - After review: the owner can name extra stop points for a run; the loop's
+    own steps (pushes, pull-request updates, diffs to the approved reviewer)
+    are not gated; a command-line reviewer may read the repository read-only
+    but never edits or runs builds and tests; "harm" covers wrong results,
+    broken builds, and false claims; the skill's scope lines exclude only
+    one-file fixes that leave security and contracts unchanged.
 
 ## 2026-08-15 (pass 2)
 - **Revision**: Second cross-vendor review pass.

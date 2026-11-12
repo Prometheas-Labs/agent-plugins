@@ -48,6 +48,9 @@ Treat these steps as hard to undo until you verify otherwise:
 
 If you are not sure, treat the step as irreversible.
 
+Also stop at any step that the owner named as a stop point when they handed over
+the run.
+
 Check each decision against the project's invariants and ADRs. A decision that
 requires the reversal of one is the owner's call, even when the code change is
 easy to undo.

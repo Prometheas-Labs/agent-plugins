@@ -3,7 +3,8 @@ name: review-gated-implementation-loop
 description: >-
   Use when implementation work changes security or a shared contract, spans
   multiple commits or files, or coordinates several agents or pull requests. Do
-  not use for questions, copy edits, or contained one-file fixes.
+  not use for questions, copy edits, or one-file fixes that leave security and
+  shared contracts unchanged.
 ---
 
 # Adversarial review loop
@@ -24,7 +25,8 @@ many pull requests at the same time.
 ## Do not use this skill when
 
 - The work answers a question. Run a spike instead.
-- The work is a copy edit, a config change, or a bounded one-file fix.
+- The work is a copy edit, a config change, or a bounded one-file fix that does
+  not alter security or a shared contract.
 
 ## First step, always
 

@@ -37,9 +37,10 @@ fallback, not an equal.
   "does this look correct."
 - **Forbid it from editing.** The reviewer rules on the work. It does not change
   the work.
-- **Forbid it from running tools or tests** when it is a command-line model. Tell
-  it to read and reason only. Feed the diff inline. Tool runs cause hangs and
-  waste rounds.
+- **Limit it to reading.** Feed the diff inline. A command-line reviewer can
+  also read the repository, for example to find the callers of a changed
+  function. Run it in a read-only sandbox when the tool has one. Forbid builds
+  and test runs. They cause hangs and waste rounds.
 - **Give the scope and the rulings. Do not cap findings.** The prompt can state
   the threat scope and the owner's earlier rulings. Tell the reviewer to report
   a finding in a ruled class, and to label it with that ruling. Do not tell the

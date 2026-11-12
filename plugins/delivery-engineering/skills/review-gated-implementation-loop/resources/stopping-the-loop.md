@@ -41,7 +41,7 @@ When you see this, make a judgment call. Do not chase the verdict.
 
 1. Fix the findings that are genuinely real.
 2. Record the accepted-design stance for the rest.
-3. Defer the remainder to tracked issues.
+3. Defer the remainder to tracked issues, except never-defer findings.
 4. Ship.
 
 The reviewer informs the decision. It does not own the decision.

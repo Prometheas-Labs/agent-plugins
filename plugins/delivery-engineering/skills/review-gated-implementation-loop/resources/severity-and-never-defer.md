@@ -19,7 +19,8 @@ you can name all four parts:
 - **Actor** — who causes the harm.
 - **Entry point** — where the actor's input or action enters the system.
 - **Required access** — what the actor must already have.
-- **Harm** — the concrete damage: data exposed, data lost, or access gained.
+- **Harm** — the concrete damage: data exposed or lost, access gained, a wrong
+  result, a broken build or step, or a false claim that a reader acts on.
 
 Then decide who can reach it:
 
@@ -55,7 +56,7 @@ use the higher level.
 | Finding | Action |
 |---|---|
 | **Critical or High** | Fix every such finding in this review. Re-review. Then commit. |
-| **Medium or Low** | You may log it and commit — EXCEPT the two never-defer classes below. |
+| **Medium or Low** | You may log it and commit — EXCEPT the never-defer rows below. |
 | **Any reachable security finding** | Fix now, at any level. See never-defer class 1. |
 | **Anything that blocks a named person's critical path** | Fix now, at any level. See never-defer class 2. |
 | **A false claim in docs, a comment, or a PR description** | Fix now, at any level. |
