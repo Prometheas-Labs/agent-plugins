@@ -44,8 +44,8 @@ fallback, not an equal.
 - **Approve what the reviewer can read.** A reviewer that reads the repository
   can send files outside the diff to its vendor. A sandbox limits edits, not
   disclosure. Give repository access only to a reviewer that the owner approved
-  for the repository's content. Otherwise feed the diff and the callers it
-  needs inline.
+  for the repository's content. Otherwise feed only the diff. Send callers and
+  other repository content inline only to a reviewer the owner approved for it.
 - **Give the scope and the rulings. Do not cap findings.** The prompt can state
   the threat scope and the owner's earlier rulings. Tell the reviewer to report
   a finding in a ruled class, and to label it with that ruling. Do not tell the
