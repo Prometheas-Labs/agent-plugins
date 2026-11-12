@@ -121,6 +121,7 @@ should reflect the target project's domain.
 nix develop -c bats tests/marketplace-package.bats
 nix develop -c bats plugins/product-development/tests/plugin-package.bats
 nix develop -c bats plugins/product-development/skills/product-development/tests/init.bats
+nix develop -c bats plugins/okf-bundle/tests/plugin-package.bats
 git diff --check
 ```
 
