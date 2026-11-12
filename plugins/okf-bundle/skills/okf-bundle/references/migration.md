@@ -18,6 +18,7 @@ Edit files as text so key order, quoting, and comments survive. Change only what
 4. **Replace `# Citations`.** Turn each item into a `sources` entry: the URL or path becomes `resource`, and any link text becomes `title`.
    - Already has `sources`: add to it, reusing any entry with the same `resource`.
    - Where the body cites an item, such as `[1]`, give the entry an `id`, change the citation to a `[^id]` footnote, and add its definition line.
+   - Keep any other detail, such as a page number, in the footnote definition. If the body never cites that item, report the detail instead of dropping it.
    - If an item has no URL, path, or scope you can identify, ask the user and keep only that item until they answer.
    - Delete the section once it's empty.
 

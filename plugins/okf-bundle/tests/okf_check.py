@@ -14,6 +14,9 @@ import yaml
 LINK_ENTRY = re.compile(r"^[*-] \[[^\]]+\]\([^)]+\)")
 HEADING = re.compile(r"^#{1,6} \S")
 DATE_HEADING = re.compile(r"^## (\d{4}-\d{2}-\d{2})$")
+ANY_HEADING = re.compile(r"^#+(\s|$)")
+# A list item, or an indented continuation of one.
+LIST_ENTRY = re.compile(r"^([*-] \S|\s+\S)")
 
 
 def split_frontmatter(text):
@@ -65,12 +68,14 @@ def check_log(path, problems):
                 dates.append(date.fromisoformat(match.group(1)).isoformat())
             except (AttributeError, ValueError):
                 problems.append(f"{path}: non-ISO date heading: {line}")
-        elif line.startswith("# ") and not seen_title and not dates:
+        elif HEADING.match(line) and line.startswith("# ") and not seen_title and not dates:
             seen_title = True
-        elif line.startswith("# "):
+        elif ANY_HEADING.match(line):
             problems.append(f"{path}: heading breaks the flat date groups: {line}")
-        elif not dates and line.strip():
-            problems.append(f"{path}: entry outside a date group: {line}")
+        elif not line.strip() or (dates and LIST_ENTRY.match(line)):
+            continue
+        else:
+            problems.append(f"{path}: line is not a list entry in a date group: {line}")
     if not dates:
         problems.append(f"{path}: log has no date groups")
     if dates != sorted(set(dates), reverse=True):

@@ -111,6 +111,9 @@ index omits a concept|metrics/index.md|s/^\* \[Logo Churn\].*\n//m
 heading-only index|metrics/index.md|s/^\* .*\n//mg
 impossible log date|log.md|s/2026-06-25/2026-99-99/
 heading after the date groups|log.md|s/\z/\n# Later\n\n* Undated note.\n/
+nested heading in a date group|log.md|s/^(## 2026-06-25\n)/$1\n### Undated section\n/m
+paragraph log entry|log.md|s/^\* \*\*Update\*\*: /Finance reviewed it. /m
+bare heading in a log|log.md|s/\z/\n#\n/
 CASES
 }
 

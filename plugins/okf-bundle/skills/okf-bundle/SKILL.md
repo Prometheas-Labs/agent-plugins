@@ -41,7 +41,7 @@ List every `.md` file with `find <bundle> -name '*.md'`, then read each one.
 - A concept's frontmatter has a missing or empty `type`.
 - An `index.md` has frontmatter, unless it's the root `index.md` carrying only `okf_version`.
 - An `index.md` body isn't one or more headed sections of link entries.
-- A `log.md` isn't grouped under `YYYY-MM-DD` date headings, newest first.
+- A `log.md` isn't a flat list of entries grouped under `YYYY-MM-DD` date headings, newest first.
 
 A missing `index.md` or `log.md` is never a failure.
 

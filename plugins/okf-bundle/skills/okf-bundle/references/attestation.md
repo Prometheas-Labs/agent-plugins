@@ -14,10 +14,10 @@ runtime: bigquery
 parameters:
   - { name: year, type: integer, required: true }
 executor:
-  resource: references/skills/run-on-bq.md
+  resource: /references/skills/run-on-bq.md
   receipt: [job_id, executed_sql, result]
 attester:
-  resource: references/attesters/revenue.py
+  resource: /references/attesters/revenue.py
 generated:
   by: claude-code/claude-opus-5-5
   at: 2026-06-20T22:53:05Z
