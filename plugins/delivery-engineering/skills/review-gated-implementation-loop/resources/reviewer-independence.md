@@ -40,8 +40,12 @@ fallback, not an equal.
 - **Forbid it from running tools or tests** when it is a command-line model. Tell
   it to read and reason only. Feed the diff inline. Tool runs cause hangs and
   waste rounds.
-- **Do not pre-judge findings in the prompt.** Do not write "do not flag X" or "at
-  most Low." Let the reviewer raise the finding. Then classify it.
+- **Give the scope and the rulings. Do not cap findings.** The prompt can state
+  the threat scope and the owner's earlier rulings. Tell the reviewer to report
+  a finding in a ruled class, and to label it with that ruling. Do not tell the
+  reviewer to skip an area. Do not cap the level of a finding that no ruling
+  covers. Correct: "The owner ruled on 2026-09-25 that X is optional hardening.
+  Report X, and label it hardening." Incorrect: "Do not flag X" or "at most Low."
 - **Say that a clean verdict is useful.** A reviewer told only to be thorough
   invents a finding to justify the round.
 

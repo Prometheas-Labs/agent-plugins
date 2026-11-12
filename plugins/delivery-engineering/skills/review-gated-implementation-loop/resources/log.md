@@ -1,5 +1,21 @@
 # Update Log
 
+## 2026-11-11
+- **Revision**: Aligned with the owner's current practice, and added autonomous runs.
+  - `severity-and-never-defer.md`: a reachability test (actor, entry point,
+    required access, harm) now comes before the severity scale. Findings that
+    need trusted source changes or in-process code are optional hardening.
+  - `reviewer-independence.md`: prompts may carry the threat scope and the
+    owner's rulings, but must not skip areas or cap unruled findings.
+  - `dispatcher-orchestration.md`: merges are the human's call by default, and
+    the owner can delegate them per class of pull request or per campaign.
+    Briefs quote code facts instead of paraphrasing them.
+  - `templates/ledger-schema.md`: the ledger lives somewhere durable, never in
+    an operating-system temporary directory.
+  - New `autonomous-runs.md`: approval gates become ledger entries. The run
+    stops at decisions that are hard to undo or that reverse an invariant or
+    ADR, and it checks reversibility instead of assuming it.
+
 ## 2026-08-15 (pass 2)
 - **Revision**: Second cross-vendor review pass.
   - STE: removed residual metaphors ("spine", "weight", "ships defects"), split

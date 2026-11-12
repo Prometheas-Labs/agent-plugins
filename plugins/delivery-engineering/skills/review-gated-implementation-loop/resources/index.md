@@ -14,6 +14,7 @@ point. The description in each file's frontmatter states when to load it.
 1. Classify the change → [planning-altitude](./planning-altitude.md)
 2. Run the loop for one pull request → [the-shape](./the-shape.md)
 3. Coordinate many pull requests → [dispatcher-orchestration](./dispatcher-orchestration.md)
+4. Continue without the owner → [autonomous-runs](./autonomous-runs.md)
 
 ## Concepts
 
@@ -24,6 +25,7 @@ point. The description in each file's frontmatter states when to load it.
 - [stopping-the-loop](./stopping-the-loop.md) - Load to bound the rounds and stop a review that will not converge.
 - [falsifiability](./falsifiability.md) - Load to prove a test can fail.
 - [dispatcher-orchestration](./dispatcher-orchestration.md) - Load to coordinate many pull requests and owners.
+- [autonomous-runs](./autonomous-runs.md) - Load when the owner hands over a run to continue without them.
 - [platform-adapters](./platform-adapters.md) - Load to map the abstract gates onto real tools.
 - [rationale](./rationale.md) - Load only to see the evidence behind a rule. Optional.
 - [templates/index](./templates/index.md) - Load to copy a starting artifact.

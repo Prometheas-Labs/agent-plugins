@@ -11,6 +11,33 @@ timestamp: 2026-08-15T00:00:00Z
 This file is the one place that classifies a finding. Other files link here. Do
 not restate these categories elsewhere.
 
+## Test reachability first
+
+Apply this test before you assign a level. A finding enters the scale only when
+you can name all four parts:
+
+- **Actor** — who causes the harm.
+- **Entry point** — where the actor's input or action enters the system.
+- **Required access** — what the actor must already have.
+- **Harm** — the concrete damage: data exposed, data lost, or access gained.
+
+Then decide who can reach it:
+
+- **An untrusted actor or an ordinary failure can reach it.** Untrusted actors
+  include a network peer, a server or relay operator, another user, and a
+  stolen device. Ordinary failures include a crash, a restart, and a concurrent
+  write. Classify the finding with the scale below.
+- **It needs changed trusted source code, or code that already runs inside the
+  trusted process.** Record it as optional hardening. Do not fix it in this
+  review. Do not start another round for it. Exception: when the task itself
+  covers plugin or supply-chain security, classify it with the scale.
+
+Judge reachability against the finished change, not the current commit. A path
+that a later commit in the same change connects is reachable.
+
+A reviewer's level is not evidence. Reject a false or unreachable finding with
+evidence from the source.
+
 ## The severity scale
 
 The author or the reviewer assigns one level to each finding. If they disagree,
@@ -29,13 +56,13 @@ use the higher level.
 |---|---|
 | **Critical or High** | Fix every such finding in this review. Re-review. Then commit. |
 | **Medium or Low** | You may log it and commit — EXCEPT the two never-defer classes below. |
-| **Any security finding** | Fix now, at any level. See never-defer class 1. |
+| **Any reachable security finding** | Fix now, at any level. See never-defer class 1. |
 | **Anything that blocks a named person's critical path** | Fix now, at any level. See never-defer class 2. |
 | **A false claim in docs, a comment, or a PR description** | Fix now, at any level. |
 
 ## Never-defer class 1 — security, at any level
 
-Fix these now, whatever the level says:
+Fix these now when they pass the reachability test, whatever the level says:
 
 - A credential leaks.
 - A token reaches storage, a URL, or a log.

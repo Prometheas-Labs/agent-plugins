@@ -19,6 +19,7 @@ many pull requests at the same time.
 - A change alters a shared contract (a public API, a schema, a cross-team interface).
 - An agent executes the change across several steps.
 - You coordinate several related pull requests or several agent owners.
+- The owner hands over a run to continue without them.
 
 ## Do not use this skill when
 
@@ -31,6 +32,8 @@ Classify the change before you load any other file. Read
 [planning-altitude](resources/planning-altitude.md). Its table sets the altitude
 and routes you to the next resource: [the-shape](resources/the-shape.md) for one
 pull request, or [dispatcher-orchestration](resources/dispatcher-orchestration.md)
-for many. Load each resource only at its decision point.
+for many. When the owner hands over a run, also read
+[autonomous-runs](resources/autonomous-runs.md). Load each resource only at its
+decision point.
 
 For the full resource map, load [resources/index.md](resources/index.md).
