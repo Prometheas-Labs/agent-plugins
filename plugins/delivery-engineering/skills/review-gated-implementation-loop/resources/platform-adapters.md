@@ -37,9 +37,10 @@ request when creation is authorized.
 
 These notes apply when the reviewer is a command-line model.
 
-- Feed the diff inline. Give the reviewer read-only access to the repository,
-  so it can check callers and contracts outside the diff. Use a read-only
-  sandbox when the tool has one.
+- Feed the diff inline. When the owner approved the reviewer for the
+  repository's content, give it read-only access to the repository, so it can
+  check callers and contracts outside the diff. Use a read-only sandbox when
+  the tool has one.
 - Tell the reviewer not to run tests or builds. They cause hangs.
 - Retry once on a transient failure.
 - Record which model and tier ran. See [reviewer-independence](./reviewer-independence.md).

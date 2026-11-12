@@ -34,17 +34,23 @@ Check reversibility before each outward or destructive step. Do not assume it.
 3. Verify the answer. For example, confirm that a backup or a ref exists, or
    that a revert does not force other branches to rebase.
 
+Always stop before these steps, even when you can verify a reversal:
+
+- Deploy or release.
+- Publish or send content outside the project. The loop's own steps in
+  [dispatcher-orchestration](./dispatcher-orchestration.md#intervene-rarely-escalate-one-decision)
+  are not included.
+- Merge outside a delegated merge authority.
+
 Treat these steps as hard to undo until you verify otherwise:
 
 - Delete data, branches, or records.
-- Publish or send content outside the repository.
-- Deploy or release.
 - Force-push a branch that someone else uses.
 - Migrate shared data.
-- Spend money, including paid CI minutes.
+- Start paid work that the project's normal pipeline does not run, such as a
+  manual workflow run, a paid external build, or a full-suite rerun. A push
+  that runs the project's existing CI is part of the loop.
 - Change shared infrastructure.
-- Merge outside a delegated merge authority. See
-  [dispatcher-orchestration](./dispatcher-orchestration.md#intervene-rarely-escalate-one-decision).
 
 If you are not sure, treat the step as irreversible.
 

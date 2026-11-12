@@ -63,12 +63,15 @@ When the owner hands over the run, see [autonomous-runs](./autonomous-runs.md).
   delegation never covers a step that [autonomous-runs](./autonomous-runs.md)
   says to stop at.
 - **Gate other outward and irreversible actions to the human.** These include
-  deletions, deploys, releases, and content published outside the project. Do
-  not gate the loop's own steps: reading the hosted pull request and CI, the
-  pushes and pull-request updates in [the-shape](./the-shape.md), and diffs sent
-  to the reviewer that the project approved. Prepare a ready-to-run result. Let
-  the human run it. Do not act while you wait. In an autonomous run, apply
-  [autonomous-runs](./autonomous-runs.md) instead.
+  deletions, deploys, releases, content published outside the project, and paid
+  work that the project's normal pipeline does not run. Do not gate the loop's
+  own steps: reading the hosted pull request and CI, the pushes and
+  pull-request updates in [the-shape](./the-shape.md), and the diffs and
+  repository content sent to a reviewer that the owner approved for that
+  content. Prepare a ready-to-run result. Let the human run it. Do not act
+  while you wait. In an autonomous run, apply
+  [autonomous-runs](./autonomous-runs.md) instead. Deploys and releases still
+  stop there.
 - **Defer non-blocking work into a tracked issue with an owner.** Record it in the
   pull request and the ledger. Classify it with [severity-and-never-defer](./severity-and-never-defer.md).
 
