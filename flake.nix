@@ -25,7 +25,7 @@
             packages = [
               pkgs.bats
               pkgs.nodejs
-              pkgs.python313
+              (pkgs.python313.withPackages (ps: [ ps.pyyaml ]))
             ];
           };
         }

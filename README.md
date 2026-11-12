@@ -1,8 +1,8 @@
 # Prometheas Labs Agent Plugins
 
 This repository is the Prometheas Labs agent plugin marketplace. It currently
-contains two plugins, `product-development` and `branch-guard`, and is
-structured to host additional Prometheas Labs plugins over time.
+contains three plugins, `product-development`, `branch-guard`, and `okf-bundle`,
+and is structured to host additional Prometheas Labs plugins over time.
 
 The canonical Product Development methodology lives inside
 `plugins/product-development/skills/product-development/`. Marketplace manifests
@@ -10,7 +10,7 @@ and adapter wrappers expose the plugin; they do not duplicate methodology.
 
 `branch-guard` is the marketplace's first hook-bearing plugin; see
 `docs/compatibility/hooks.md` for the policy governing hook-bearing plugins.
-`product-development` remains hook-free.
+`product-development` and `okf-bundle` are hook-free.
 
 For detailed harness compatibility, see
 `docs/compatibility/harness-matrix.md`. For development setup and local checkout
@@ -18,8 +18,8 @@ installs, see `docs/development.md`.
 
 ## Getting Started
 
-Register the marketplace, then install `product-development` and/or
-`branch-guard`.
+Register the marketplace, then install any of `product-development`,
+`branch-guard`, and `okf-bundle`.
 
 <details>
 <summary>Codex</summary>
@@ -28,6 +28,7 @@ Register the marketplace, then install `product-development` and/or
 codex plugin marketplace add Prometheas-Labs/agent-plugins --ref main
 codex plugin add product-development@prometheas-labs
 codex plugin add branch-guard@prometheas-labs
+codex plugin add okf-bundle@prometheas-labs
 ```
 
 For private forks, pinned mirrors, or development from a local checkout, see
@@ -42,6 +43,7 @@ For private forks, pinned mirrors, or development from a local checkout, see
 claude plugin marketplace add --scope user Prometheas-Labs/agent-plugins@main
 claude plugin install product-development@prometheas-labs
 claude plugin install branch-guard@prometheas-labs
+claude plugin install okf-bundle@prometheas-labs
 ```
 
 For private forks, pinned mirrors, or development from a local checkout, see
@@ -56,6 +58,7 @@ For private forks, pinned mirrors, or development from a local checkout, see
 copilot plugin marketplace add Prometheas-Labs/agent-plugins
 copilot plugin install product-development@prometheas-labs
 copilot plugin install branch-guard@prometheas-labs
+copilot plugin install okf-bundle@prometheas-labs
 ```
 
 `branch-guard`'s hooks require an extra manual step for Copilot CLI; see
@@ -222,13 +225,14 @@ of editing beyond recognition.
 
 ## Marketplace Contents
 
-This marketplace currently contains two plugins.
+This marketplace currently contains three plugins.
 
 - `.agents/plugins/marketplace.json` - Codex marketplace metadata.
 - `.claude-plugin/marketplace.json` - Claude Code marketplace metadata.
 - `.github/plugin/marketplace.json` - GitHub Copilot CLI marketplace metadata.
 - `plugins/product-development/` - Product Development plugin package.
 - `plugins/branch-guard/` - branch-guard plugin package.
+- `plugins/okf-bundle/` - okf-bundle plugin package.
 
 The `product-development` plugin package contains its own plugin manifests,
 shared command wrappers, shared agent wrappers, and canonical skill tree.
@@ -244,6 +248,10 @@ Claude Code and Copilot CLI show the harness's own approval prompt, while
 Codex adds a model-visible reminder and lets the action proceed. It is an
 MVP-scoped best-practices nudge, not a security boundary, implemented in
 POSIX `sh` with no runtime dependency beyond `git`.
+
+The `okf-bundle` plugin package (see `plugins/okf-bundle/README.md`) guides
+agents through authoring and migrating Open Knowledge Format v0.2 bundles. It is
+instructions only, with no scripts, hooks, or runtime dependencies.
 
 Local marketplace install smoke tests have passed for Codex, Claude Code, and
 GitHub Copilot CLI at the skill-package level. Those tests prove the package can

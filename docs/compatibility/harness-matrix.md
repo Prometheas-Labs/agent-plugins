@@ -55,6 +55,19 @@ installed CLI version.
 | GitHub Copilot Cloud Agent | documented adapter only | none | No hook runtime attempted in V1. |
 | Gemini/Antigravity | documented adapter only | `plugins/branch-guard/gemini-extension.json` | Metadata only, matching this repo's existing convention for this harness. |
 
+## okf-bundle
+
+`okf-bundle` (`plugins/okf-bundle/`) is a skill with no scripts, hooks, or runtime
+dependencies. Each row stays at `manifest prepared` until a marketplace install
+is proven for that harness.
+
+| harness | V1 support tier | manifest file | notes |
+| --- | --- | --- | --- |
+| Claude Code | manifest prepared | `plugins/okf-bundle/.claude-plugin/plugin.json` | Skill only. |
+| Codex | manifest prepared | `plugins/okf-bundle/.codex-plugin/plugin.json` | Skill only. |
+| GitHub Copilot CLI | manifest prepared | `plugins/okf-bundle/plugin.json` | Skill only. |
+| Gemini/Antigravity | manifest prepared | `plugins/okf-bundle/gemini-extension.json` | Metadata only, matching this repo's existing convention for this harness. |
+
 ## Local Marketplace Layouts
 
 These layouts validate marketplace registration and skill installation only;

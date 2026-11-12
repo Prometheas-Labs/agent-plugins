@@ -119,8 +119,18 @@ NODE
   assert_file_contains "$REPO_ROOT/README.md" "# Prometheas Labs Agent Plugins"
   assert_file_contains "$REPO_ROOT/README.md" "Prometheas-Labs/agent-plugins"
   assert_file_contains "$REPO_ROOT/README.md" "product-development@prometheas-labs"
-  assert_file_contains "$REPO_ROOT/README.md" "currently contains two plugins"
+  assert_file_contains "$REPO_ROOT/README.md" "currently contains three plugins"
+  assert_file_contains "$REPO_ROOT/README.md" "okf-bundle@prometheas-labs"
   ! grep -Fq "product-development@prometheas-product-development" "$REPO_ROOT/README.md"
+}
+
+@test "root marketplace manifests expose okf-bundle from plugins/okf-bundle" {
+  assert_file_contains "$REPO_ROOT/.agents/plugins/marketplace.json" '"name": "okf-bundle"'
+  assert_file_contains "$REPO_ROOT/.agents/plugins/marketplace.json" '"path": "./plugins/okf-bundle"'
+  assert_file_contains "$REPO_ROOT/.claude-plugin/marketplace.json" '"name": "okf-bundle"'
+  assert_file_contains "$REPO_ROOT/.claude-plugin/marketplace.json" '"source": "./plugins/okf-bundle"'
+  assert_file_contains "$REPO_ROOT/.github/plugin/marketplace.json" '"name": "okf-bundle"'
+  assert_file_contains "$REPO_ROOT/.github/plugin/marketplace.json" '"source": "./plugins/okf-bundle"'
 }
 
 @test "root marketplace manifests expose branch-guard from plugins/branch-guard" {

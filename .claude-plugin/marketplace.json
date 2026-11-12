@@ -12,6 +12,10 @@
     {
       "name": "branch-guard",
       "source": "./plugins/branch-guard"
+    },
+    {
+      "name": "okf-bundle",
+      "source": "./plugins/okf-bundle"
     }
   ]
 }

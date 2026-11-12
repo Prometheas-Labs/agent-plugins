@@ -18,6 +18,13 @@
         "source": "local",
         "path": "./plugins/branch-guard"
       }
+    },
+    {
+      "name": "okf-bundle",
+      "source": {
+        "source": "local",
+        "path": "./plugins/okf-bundle"
+      }
     }
   ]
 }
