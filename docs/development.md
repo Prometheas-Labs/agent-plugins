@@ -1,8 +1,8 @@
 # Development
 
 This document covers marketplace maintenance at the repository root and plugin
-package development under `plugins/product-development/`. The public README is
-focused on plugin consumers.
+package development under `plugins/`. The public README is focused on plugin
+consumers.
 
 ## Development Environment
 
@@ -39,10 +39,17 @@ root docs. Methodology belongs in
 
 ## Plugin Package Development
 
+Each plugin package lives under `plugins/<name>/`. Plugin manifests, any command
+or agent wrappers, the canonical skill tree, and plugin package tests are
+developed from that directory.
+
 The Product Development plugin package lives under
-`plugins/product-development/`. Plugin manifests, command wrappers, agent
-wrappers, the canonical skill tree, and plugin package tests are developed from
-that directory.
+`plugins/product-development/`. It ships shared command wrappers, shared agent
+wrappers, and the canonical `product-development` skill tree.
+
+The Delivery Engineering plugin package lives under
+`plugins/delivery-engineering/`. It ships the `review-gated-implementation-loop`
+skill tree, whose `resources/` directory is an Open Knowledge Format bundle.
 
 When plugin behavior changes, update the canonical skill tree first. Shared
 command and agent wrappers should remain thin routing entrypoints.
@@ -50,7 +57,9 @@ command and agent wrappers should remain thin routing entrypoints.
 ## Installing From A Local Checkout
 
 Use local checkout installs for development. Register the checkout root as the
-marketplace, then install `product-development@prometheas-labs`.
+marketplace, then install each plugin you develop. The commands below install
+`product-development@prometheas-labs`. To install another plugin, replace the
+plugin name, for example with `delivery-engineering` or `branch-guard`.
 
 ### Codex
 
@@ -121,7 +130,9 @@ should reflect the target project's domain.
 nix develop -c bats tests/marketplace-package.bats
 nix develop -c bats plugins/product-development/tests/plugin-package.bats
 nix develop -c bats plugins/product-development/skills/product-development/tests/init.bats
+nix develop -c bats plugins/delivery-engineering/tests/plugin-package.bats
 nix develop -c bats plugins/okf-bundle/tests/plugin-package.bats
+nix develop -c bats plugins/branch-guard/tests
 git diff --check
 ```
 
@@ -136,15 +147,33 @@ agent-plugins/
 ├── docs/
 ├── tests/marketplace-package.bats
 └── plugins/
-    └── product-development/
+    ├── product-development/
+    │   ├── plugin.json
+    │   ├── package.json
+    │   ├── gemini-extension.json
+    │   ├── .codex-plugin/plugin.json
+    │   ├── .claude-plugin/plugin.json
+    │   ├── README.md
+    │   ├── agents/shared/
+    │   ├── commands/shared/
+    │   ├── skills/product-development/
+    │   └── tests/plugin-package.bats
+    ├── branch-guard/
+    │   ├── README.md
+    │   ├── hooks/
+    │   └── tests/
+    ├── okf-bundle/
+    │   ├── README.md
+    │   ├── skills/okf-bundle/
+    │   └── tests/plugin-package.bats
+    └── delivery-engineering/
         ├── plugin.json
         ├── package.json
         ├── gemini-extension.json
         ├── .codex-plugin/plugin.json
         ├── .claude-plugin/plugin.json
-        ├── agents/shared/
-        ├── commands/shared/
-        ├── skills/product-development/
+        ├── README.md
+        ├── skills/review-gated-implementation-loop/
         └── tests/plugin-package.bats
 ```
 

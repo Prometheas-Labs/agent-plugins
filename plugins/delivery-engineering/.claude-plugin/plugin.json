@@ -1,0 +1,11 @@
+{
+  "name": "delivery-engineering",
+  "version": "0.1.0",
+  "description": "Engineering delivery workflows: turning an approved plan into merged, shipped, and coordinated work.",
+  "author": {
+    "name": "Prometheas Labs"
+  },
+  "skills": [
+    "./skills/review-gated-implementation-loop"
+  ]
+}

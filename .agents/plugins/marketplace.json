@@ -20,6 +20,13 @@
       }
     },
     {
+      "name": "delivery-engineering",
+      "source": {
+        "source": "local",
+        "path": "./plugins/delivery-engineering"
+      }
+    },
+    {
       "name": "okf-bundle",
       "source": {
         "source": "local",

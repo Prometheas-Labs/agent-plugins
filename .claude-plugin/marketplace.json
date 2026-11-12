@@ -14,6 +14,10 @@
       "source": "./plugins/branch-guard"
     },
     {
+      "name": "delivery-engineering",
+      "source": "./plugins/delivery-engineering"
+    },
+    {
       "name": "okf-bundle",
       "source": "./plugins/okf-bundle"
     }

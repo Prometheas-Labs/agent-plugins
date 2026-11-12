@@ -2,11 +2,21 @@
 
 This repository is the Prometheas Labs agent plugin marketplace. The root
 marketplace exposes `product-development@prometheas-labs` from
-`plugins/product-development/`.
+`plugins/product-development/` and `delivery-engineering@prometheas-labs` from
+`plugins/delivery-engineering/`.
 
-Marketplace manifests expose the plugin package. Plugin manifests inside
-`plugins/product-development/` route supported harnesses to the canonical skill
+Marketplace manifests expose the plugin packages. Plugin manifests inside each
+plugin directory route supported harnesses to that plugin's canonical skill
 tree and do not duplicate the methodology.
+
+The V1 Contract table below is proven for `product-development`. The
+`delivery-engineering` plugin is newer: its manifests exist and its declared
+paths validate (`plugins/delivery-engineering/tests/plugin-package.bats`), and
+it is registered in all three marketplace manifests, but no per-harness install
+or runtime smoke test has been performed for it yet. Its support tier is
+therefore **manifest prepared** across harnesses until a smoke test proves
+otherwise. Do not claim runtime support for `delivery-engineering` on any
+harness without that proof.
 
 V1 includes shared Markdown command wrappers under
 `plugins/product-development/commands/shared/` and shared agent wrappers under
