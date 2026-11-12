@@ -4,17 +4,12 @@ okf_version: "0.1"
 
 # Adversarial review loop — knowledge bundle
 
-This bundle defines a vendor-neutral process for large or high-risk
-implementation work. An independent reviewer gates each step. A dispatcher can
-run the process across many pull requests. Load a file only at its decision
-point. The description in each file's frontmatter states when to load it.
-
 ## Route
 
-1. Classify the change → [planning-altitude](./planning-altitude.md)
-2. Run the loop for one pull request → [the-shape](./the-shape.md)
-3. Coordinate many pull requests → [dispatcher-orchestration](./dispatcher-orchestration.md)
-4. Continue without the owner → [autonomous-runs](./autonomous-runs.md)
+- [planning-altitude](./planning-altitude.md) - Classify the change first.
+- [the-shape](./the-shape.md) - Run the loop for one pull request.
+- [dispatcher-orchestration](./dispatcher-orchestration.md) - Coordinate many pull requests.
+- [autonomous-runs](./autonomous-runs.md) - Continue without the owner.
 
 ## Concepts
 
@@ -29,9 +24,3 @@ point. The description in each file's frontmatter states when to load it.
 - [platform-adapters](./platform-adapters.md) - Load to map the abstract gates onto real tools.
 - [rationale](./rationale.md) - Load only to see the evidence behind a rule. Optional.
 - [templates/index](./templates/index.md) - Load to copy a starting artifact.
-
-## One rule
-
-Load only the resource that your current decision names. Start at the Route
-above. [severity-and-never-defer](./severity-and-never-defer.md) is the one file
-that classifies a finding; other files link to it.

@@ -53,13 +53,18 @@ use the higher level.
 
 ## The decision table
 
+Every "Fix" row is mandatory, including at a round cap or when a reviewer will
+not converge. Critical and High findings always block delivery. The three
+never-defer classes also require fixes at every level. If a required fix cannot
+be completed, escalate and stop delivery; do not park or defer it.
+
 | Finding | Action |
 |---|---|
 | **Critical or High** | Fix every such finding in this review. Re-review. Then commit. |
 | **Medium or Low** | You may log it and commit — EXCEPT the never-defer rows below. |
 | **Any reachable security finding** | Fix now, at any level. See never-defer class 1. |
 | **Anything that blocks a named person's critical path** | Fix now, at any level. See never-defer class 2. |
-| **A false claim in docs, a comment, or a PR description** | Fix now, at any level. |
+| **A false claim in docs, a comment, or a PR description** | Fix now, at any level. See never-defer class 3. |
 
 ## Never-defer class 1 — security, at any level
 
@@ -86,13 +91,20 @@ This clause aims the loop at outcomes. It is not a level. It is a named person
 doing a named thing. Use it to settle disputes: do not ask "how bad is this"; ask
 "which link in the chain does it break." If it breaks no link, it can wait.
 
+## Never-defer class 3: false claims
+
+Fix a false claim in documentation, a code comment, or a pull-request
+description before delivery. Its severity does not make it safe to leave a
+reader with incorrect instructions or evidence.
+
 ## Classify every finding into one bucket
 
 A reviewer's finding is a lead. Verify it against the code first. Then sort it:
 
 - **Must-fix** — real correctness or safety. Apply the decision table.
-- **Deferred** — real, but out of scope now. Open a tracked issue with an owner.
-  Record it. Never drop it silently. See [dispatcher-orchestration](./dispatcher-orchestration.md).
+- **Deferred** — real, but the decision table permits deferral. Open a tracked
+  issue with an owner. Record it. Never drop it silently. See
+  [dispatcher-orchestration](./dispatcher-orchestration.md).
 - **Accepted design** — a conscious trade-off. Record it in the pull request or a
   decision record, so the next reviewer does not raise it again.
 - **Over-strict** — trivial or wrong. Push back with a reason. Repeated

@@ -47,8 +47,11 @@ These notes apply when the reviewer is a command-line model.
 
 ## Automated-reviewer notes
 
-- A "pass" status can mean the reviewer reviewed nothing. Confirm a review body
-  exists, dated after your last push.
+- A "pass" status can mean the reviewer reviewed nothing. Check reviews,
+  conversation comments, and the review check for explicit completion covering
+  the latest pushed head. A clean review can publish its summary in a
+  conversation comment without creating a review object. A skipped or
+  rate-limited review does not satisfy the gate.
 - Enumerate review threads from the API. A summary count can undercount.
 - A draft pull request may not trigger the automated reviewer. Start the review
   with the reviewer's manual command. Confirm that it ran.

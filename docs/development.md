@@ -131,6 +131,8 @@ nix develop -c bats tests/marketplace-package.bats
 nix develop -c bats plugins/product-development/tests/plugin-package.bats
 nix develop -c bats plugins/product-development/skills/product-development/tests/init.bats
 nix develop -c bats plugins/delivery-engineering/tests/plugin-package.bats
+nix develop -c bats plugins/okf-bundle/tests/plugin-package.bats
+nix develop -c bats plugins/branch-guard/tests
 git diff --check
 ```
 
@@ -155,6 +157,14 @@ agent-plugins/
     │   ├── agents/shared/
     │   ├── commands/shared/
     │   ├── skills/product-development/
+    │   └── tests/plugin-package.bats
+    ├── branch-guard/
+    │   ├── README.md
+    │   ├── hooks/
+    │   └── tests/
+    ├── okf-bundle/
+    │   ├── README.md
+    │   ├── skills/okf-bundle/
     │   └── tests/plugin-package.bats
     └── delivery-engineering/
         ├── plugin.json

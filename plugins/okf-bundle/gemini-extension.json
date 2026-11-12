@@ -1,0 +1,5 @@
+{
+  "name": "okf-bundle",
+  "version": "0.1.0",
+  "description": "Authors and migrates Open Knowledge Format (OKF) v0.2 bundles, with no tooling required."
+}

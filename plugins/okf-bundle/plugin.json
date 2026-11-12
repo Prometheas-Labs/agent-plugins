@@ -1,0 +1,17 @@
+{
+  "name": "okf-bundle",
+  "version": "0.1.0",
+  "description": "Authors and migrates Open Knowledge Format (OKF) v0.2 bundles, with no tooling required.",
+  "author": {
+    "name": "Prometheas Labs"
+  },
+  "license": "Apache-2.0",
+  "keywords": [
+    "agent-skill",
+    "open-knowledge-format",
+    "copilot-cli-plugin"
+  ],
+  "skills": [
+    "skills/okf-bundle"
+  ]
+}

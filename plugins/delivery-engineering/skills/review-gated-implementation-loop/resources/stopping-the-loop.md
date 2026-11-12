@@ -18,8 +18,11 @@ finding, see [severity-and-never-defer](./severity-and-never-defer.md).
 ## Bound the rounds
 
 - **Set a fixed cap of fix-rounds per task.** Five is a good default.
-- **At the cap, adjudicate.** Escalate if any surviving finding is load-bearing.
-  Otherwise park it with a written ruling and move on.
+- **At the cap, apply the [decision table](./severity-and-never-defer.md#the-decision-table).**
+  A round limit never overrides a required fix. Fix or escalate any surviving
+  must-fix finding; do not commit or ship while it remains open. Park only a
+  finding the table permits you to defer, with a written ruling, a tracked
+  issue, and an owner.
 
 ## Break the pattern, do not add effort
 
@@ -41,8 +44,10 @@ When you see this, make a judgment call. Do not chase the verdict.
 
 1. Fix the findings that are genuinely real.
 2. Record the accepted-design stance for the rest.
-3. Defer the remainder to tracked issues, except never-defer findings.
-4. Ship.
+3. Apply the [decision table](./severity-and-never-defer.md#the-decision-table)
+   to every remaining finding. Fix or escalate required fixes. Defer only
+   findings the table permits, to tracked issues with owners.
+4. Ship only after all required fixes and the normal delivery gates are clear.
 
 The reviewer informs the decision. It does not own the decision.
 

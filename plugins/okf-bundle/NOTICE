@@ -1,0 +1,12 @@
+okf-bundle
+Copyright (c) 2026 Prometheas Labs
+Licensed under the Apache License, Version 2.0. See LICENSE.
+
+okf-bundle summarizes and adapts the Open Knowledge Format (OKF) v0.2
+specification. The field descriptions, migration rules, and examples under
+skills/okf-bundle/ were condensed and rewritten from that specification.
+
+Open Knowledge Format specification
+Copyright (c) Google LLC
+Licensed under the Apache License, Version 2.0.
+Source: https://github.com/GoogleCloudPlatform/open-knowledge-format/blob/0b87c52c6ef999286c745e19998fdfcd03d5dbee/SPEC.md

@@ -18,7 +18,8 @@ and coordinate the pull requests with [dispatcher-orchestration](./dispatcher-or
    The pull request body is the plan. Put a delivery overview and a checklist of
    the expected commits in it. Use the [draft-PR template](./templates/draft-pr-body.md).
 2. **Plan each phase up front.** Write the decisions and the rejected
-   alternatives. A settled decision is out of scope for review.
+   alternatives. Give the reviewer settled decisions and the owner's rulings;
+   findings that challenge them are escalations.
 3. **Per task, write the failing test first.** Run it. See it fail.
 4. **Implement to green.** Run the workspace check and the end-to-end check.
 5. **Review the staged diff.** Use an independent reviewer. See

@@ -7,7 +7,7 @@ adapter wrappers expose plugins without duplicating their content.
 
 `branch-guard` is the marketplace's first hook-bearing plugin; see
 `docs/compatibility/hooks.md` for the policy governing hook-bearing plugins.
-`product-development` and `delivery-engineering` remain hook-free.
+`product-development`, `delivery-engineering`, and `okf-bundle` remain hook-free.
 
 For detailed harness compatibility, see
 `docs/compatibility/harness-matrix.md`. For development setup and local checkout
@@ -20,6 +20,7 @@ installs, see `docs/development.md`.
 | `product-development` | Product definition: from constitution and vision through PRD/TRD, user stories, scenarios, and the implementation plan. | [`plugins/product-development/README.md`](plugins/product-development/README.md) |
 | `delivery-engineering` | Engineering delivery: turning an approved plan into merged, shipped, and coordinated work. | [`plugins/delivery-engineering/README.md`](plugins/delivery-engineering/README.md) |
 | `branch-guard` | Nudges agents away from directly editing a repository's protected branch. | [`plugins/branch-guard/README.md`](plugins/branch-guard/README.md) |
+| `okf-bundle` | Author, migrate, and check Open Knowledge Format v0.2 bundles. | [`plugins/okf-bundle/README.md`](plugins/okf-bundle/README.md) |
 
 `product-development` and `delivery-engineering` meet at one hand-off: `product-development` ends at an approved
 implementation plan; `delivery-engineering` starts there.
@@ -36,6 +37,7 @@ codex plugin marketplace add Prometheas-Labs/agent-plugins --ref main
 codex plugin add product-development@prometheas-labs
 codex plugin add branch-guard@prometheas-labs
 codex plugin add delivery-engineering@prometheas-labs
+codex plugin add okf-bundle@prometheas-labs
 ```
 
 For private forks, pinned mirrors, or development from a local checkout, see
@@ -51,6 +53,7 @@ claude plugin marketplace add --scope user Prometheas-Labs/agent-plugins@main
 claude plugin install product-development@prometheas-labs
 claude plugin install branch-guard@prometheas-labs
 claude plugin install delivery-engineering@prometheas-labs
+claude plugin install okf-bundle@prometheas-labs
 ```
 
 For private forks, pinned mirrors, or development from a local checkout, see
@@ -66,6 +69,7 @@ copilot plugin marketplace add Prometheas-Labs/agent-plugins
 copilot plugin install product-development@prometheas-labs
 copilot plugin install branch-guard@prometheas-labs
 copilot plugin install delivery-engineering@prometheas-labs
+copilot plugin install okf-bundle@prometheas-labs
 ```
 
 `branch-guard`'s hooks require an extra manual step for Copilot CLI; see
@@ -110,6 +114,7 @@ directory per plugin.
 - `plugins/product-development/` - Product Development plugin package.
 - `plugins/branch-guard/` - branch-guard plugin package.
 - `plugins/delivery-engineering/` - Delivery Engineering plugin package.
+- `plugins/okf-bundle/` - okf-bundle plugin package.
 
 Each plugin package contains its own plugin manifests and skill tree. Manifests
 that declare component paths route back into that plugin's `skills/` tree, which
@@ -123,9 +128,13 @@ Codex adds a model-visible reminder and lets the action proceed. It is an
 MVP-scoped best-practices nudge, not a security boundary, implemented in
 POSIX `sh` with no runtime dependency beyond `git`.
 
+The `okf-bundle` plugin package (see `plugins/okf-bundle/README.md`) guides
+agents through authoring and migrating Open Knowledge Format v0.2 bundles. It is
+instructions only, with no scripts, hooks, or runtime dependencies.
+
 Local marketplace install smoke tests have passed for `product-development` on
 Codex, Claude Code, and GitHub Copilot CLI at the skill-package level.
-`delivery-engineering` is manifest prepared, and `branch-guard` is
+`delivery-engineering` and `okf-bundle` are manifest prepared, and `branch-guard` is
 smoke-test-required; see `docs/compatibility/harness-matrix.md`. Those tests prove a package can be
 registered and installed through those harnesses; they do not prove runtime
 loading for shared command wrappers, shared agent wrappers, or hooks.

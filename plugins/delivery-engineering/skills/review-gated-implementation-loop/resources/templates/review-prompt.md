@@ -9,22 +9,31 @@ timestamp: 2026-08-15T00:00:00Z
 # Adversarial review prompt template
 
 Give this prompt to the independent reviewer. Fill the placeholders. Feed the
-diff inline. See [reviewer-independence](../reviewer-independence.md).
+diff inline. Set source access to diff-only unless the owner approved the
+reviewer for the additional repository content. See
+[reviewer-independence](../reviewer-independence.md).
 
 ```text
-You are an adversarial correctness reviewer. You may read files in the
-repository to check callers and contracts outside the diff. Do not edit files.
-Do not run tests or builds.
+You are an adversarial correctness reviewer. Do not edit files. Do not run
+tests or builds.
+
+Source access: <diff-only, or owner-approved read-only repository access>
+With diff-only access, review only the supplied diff. With owner-approved
+repository access, you may inspect relevant callers and contracts read-only.
 
 Your job: find the case that breaks this change. Try to refute it. A clean
 verdict is a useful result — do not invent a finding.
 
-Settled decisions (out of scope; a finding that reopens one is an escalation):
-- <decision 1>
-- <decision 2>
+Threat scope and settled decisions:
+- <decision 1, its owner ruling, and date>
+- <decision 2, its owner ruling, and date>
 
-Do not relitigate (already ruled on):
+Prior findings and rulings:
 - <prior finding 1 and its ruling>
+
+Report findings covered by these rulings and label each with the applicable
+ruling. A finding that requires changing a settled decision is an escalation.
+Do not skip review areas or cap the severity of findings without a ruling.
 
 For each finding, give:
 - file and line

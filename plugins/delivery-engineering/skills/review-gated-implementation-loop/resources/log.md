@@ -1,5 +1,15 @@
 # Update Log
 
+## 2026-11-12
+- **Revision**: The decision table governs round caps and nonconverging reviews.
+  Required fixes cannot be parked, and false claims are never-defer class 3.
+- **Revision**: Review prompts preserve source-access approval and report
+  findings covered by owner rulings instead of suppressing them.
+- **Revision**: Automated-review evidence can be a conversation summary and a
+  completed check covering the latest pushed head, without a review object.
+- **Revision**: Indexes use headed link lists, and the log uses unique ISO date
+  groups. The bundle remains v0.1; no metadata migration was performed.
+
 ## 2026-11-11
 - **Revision**: Aligned with the owner's current practice, and added autonomous runs.
   - `severity-and-never-defer.md`: a reachability test (actor, entry point,
@@ -22,7 +32,7 @@
     broken builds, and false claims; the skill's scope lines exclude only
     one-file fixes that leave security and contracts unchanged.
 
-## 2026-08-15 (pass 2)
+## 2026-08-15
 - **Revision**: Second cross-vendor review pass.
   - STE: removed residual metaphors ("spine", "weight", "ships defects"), split
     two-instruction sentences, fixed fragments and vague pronouns, made the index
@@ -38,7 +48,6 @@
     audience — those live in `platform-adapters.md`); adding `description` to the
     reserved `index.md` files (OKF forbids frontmatter there).
 
-## 2026-08-15
 - **Revision**: Applied a cross-vendor STE and skill-authoring review.
   - Rewrote all files in ASD-STE100 style: short imperative sentences, one
     instruction each, active voice, consistent terms. Kept "altitude" as a
