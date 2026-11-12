@@ -49,8 +49,8 @@ These notes apply when the reviewer is a command-line model.
 - A "pass" status can mean the reviewer reviewed nothing. Confirm a review body
   exists, dated after your last push.
 - Enumerate review threads from the API. A summary count can undercount.
-- A draft pull request may not trigger the automated reviewer. Mark it ready to
-  start the review.
+- A draft pull request may not trigger the automated reviewer. Start the review
+  with the reviewer's manual command. Confirm that it ran.
 
 ## Related
 

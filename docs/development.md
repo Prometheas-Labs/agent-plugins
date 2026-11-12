@@ -57,7 +57,9 @@ command and agent wrappers should remain thin routing entrypoints.
 ## Installing From A Local Checkout
 
 Use local checkout installs for development. Register the checkout root as the
-marketplace, then install `product-development@prometheas-labs`.
+marketplace, then install each plugin you develop. The commands below install
+`product-development@prometheas-labs`. To install another plugin, replace the
+plugin name, for example with `delivery-engineering` or `branch-guard`.
 
 ### Codex
 

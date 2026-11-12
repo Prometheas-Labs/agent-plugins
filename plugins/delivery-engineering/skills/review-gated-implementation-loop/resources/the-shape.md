@@ -29,12 +29,15 @@ and coordinate the pull requests with [dispatcher-orchestration](./dispatcher-or
 7. **Commit and push one commit.** Tick its checklist item. Record the commit id.
 8. **Review the whole phase as one composed diff.** Some defects live only in the
    combination of correct commits. This gate finds them.
-9. **Run the automated review.** Work every finding to closure. Reply, resolve,
-   push.
+9. **Run the automated review.** A draft pull request may not trigger it. Start
+   it by command; see [platform-adapters](./platform-adapters.md). Work every
+   finding to closure. Reply, resolve, push.
 10. **At final delivery, mark the pull request ready.** Verify each completion
     criterion, one at a time.
-11. **Merge.** Then triage every deferred item into a tracked issue. Never drop
-    one silently.
+11. **Track every deferred item. Then merge.** Give each item a tracked issue
+    with an owner, and list it in the pull request. Never drop one silently. The
+    human merges unless the owner delegated it; see
+    [dispatcher-orchestration](./dispatcher-orchestration.md).
 
 ## Define each gate the same way
 

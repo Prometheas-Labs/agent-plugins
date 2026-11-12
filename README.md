@@ -123,8 +123,10 @@ Codex adds a model-visible reminder and lets the action proceed. It is an
 MVP-scoped best-practices nudge, not a security boundary, implemented in
 POSIX `sh` with no runtime dependency beyond `git`.
 
-Local marketplace install smoke tests have passed for Codex, Claude Code, and
-GitHub Copilot CLI at the skill-package level. Those tests prove a package can be
+Local marketplace install smoke tests have passed for `product-development` on
+Codex, Claude Code, and GitHub Copilot CLI at the skill-package level.
+`delivery-engineering` is manifest prepared, and `branch-guard` is
+smoke-test-required; see `docs/compatibility/harness-matrix.md`. Those tests prove a package can be
 registered and installed through those harnesses; they do not prove runtime
 loading for shared command wrappers, shared agent wrappers, or hooks.
 

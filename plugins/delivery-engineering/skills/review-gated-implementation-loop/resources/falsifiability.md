@@ -23,8 +23,9 @@ Do not confuse these two reverts.
 
 - **Revert the behavior under test. Keep the test.** The test must go **red**.
   This proves the test observes the behavior.
-- **Revert the mechanism you added. Keep the test and a live offender.** The suite
-  must go **green**. This proves your mechanism detects the offender, and not
+- **Revert the mechanism you added. Keep the test and a live offender.** With the
+  mechanism in place, the suite is red. After the revert, the suite must go
+  **green**. This proves your mechanism detects the offender, and not
   something else.
 
 Reverting the test itself proves nothing.

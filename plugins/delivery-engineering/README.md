@@ -25,7 +25,7 @@ acceptance criteria, and implementation *planning* — belongs to the
 
 The two plugins meet at one hand-off:
 
-```
+```text
 product-development                         delivery-engineering
   idea → constitution → vision           →    approved plan → implementation
   → PRD → TRD → stories → scenarios            → review-gated delivery
